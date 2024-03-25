@@ -11,9 +11,7 @@ const index = () => {
           <p className="text">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque
             sapiente facilis similique eos inventore, molestias tenetur dicta
-            eaque quia porro placeat quisquam illum quis delectus tempora sed
-            quasi mollitia distinctio accusamus voluptatem perferendis soluta
-            ipsum excepturi.
+            eaque quia porro placeat quisquam illum quis delectus tempora.
           </p>
           <SearchBar />
           <div className="boxes">

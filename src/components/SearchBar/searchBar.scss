@@ -1,5 +1,7 @@
 @import "../../responsive.scss";
 .searchBar {
+  height: auto;
+
   .type {
     button {
       padding: 16px 32px;
@@ -7,7 +9,6 @@
       cursor: pointer;
       background: white;
       text-transform: capitalize;
-      border-bottom: none;
 
       &.active {
         background: black;
@@ -25,19 +26,17 @@
     }
   }
   form {
-    border: 1px solid #999;
     display: flex;
     justify-content: space-between;
-    height: 64px;
     gap: 5px;
 
     @include sm {
       flex-direction: column;
     }
     input {
-      // border: none;
-      padding: 0px 10px;
-      width: 180px;
+      padding: 0px 20px;
+      width: 200px;
+      height: 64px;
 
       @include lg {
         padding: 0px 5px;
@@ -47,25 +46,29 @@
           width: 140px;
         }
       }
+      @include md {
+        width: 200px;
 
-      // @include md {
-      //   width: auto;
+        &:nth-child(2),
+        &:nth-child(3) {
+          width: 160px;
+        }
+      }
 
-      //   &:nth-child(2),
-      //   &:nth-child(3) {
-      //     width: auto;
-      //   }
-      // }
-
-      // @include sm {
-      //   padding: 0 20px;
-      // }
+      @include sm {
+        width: 100%;
+        padding: 20px;
+      }
     }
     button {
       border: none;
       cursor: pointer;
       background-color: #fece51;
       flex: 1;
+
+      @include sm {
+        padding: 10px;
+      }
 
       img {
         width: 24px;

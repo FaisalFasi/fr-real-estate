@@ -3,7 +3,6 @@
 .home {
   display: flex;
   height: 100%;
-
   .textContainer {
     flex: 3;
 
@@ -13,10 +12,15 @@
       flex-direction: column;
       justify-content: center;
       gap: 50px;
-      padding-right: 100px;
+
+      @include lg {
+        padding-right: 100px;
+        // padding: 0;
+      }
 
       @include md {
-        padding: 0;
+        padding-right: 100px;
+        // padding: 0;
       }
       @include sm {
         justify-content: start;
@@ -31,9 +35,9 @@
         display: flex;
         justify-content: space-between;
 
-        @include lg {
-          display: none;
-        }
+        // @include lg {
+        //   display: none;
+        // }
 
         h1 {
           font-size: 1.5rem;
