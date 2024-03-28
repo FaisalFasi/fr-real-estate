@@ -1,7 +1,7 @@
 import React from "react";
 import "./about.scss";
-const index = () => {
+const About = () => {
   return <div></div>;
 };
 
-export default index;
+export default About;

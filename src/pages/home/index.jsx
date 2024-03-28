@@ -2,7 +2,7 @@ import React from "react";
 import "./home.scss";
 import SearchBar from "../../components/SearchBar/SearchBar";
 
-const index = () => {
+const Home = () => {
   return (
     <div className="home">
       <div className="textContainer">
@@ -37,4 +37,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Home;

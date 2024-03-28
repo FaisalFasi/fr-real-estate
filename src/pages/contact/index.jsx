@@ -1,8 +1,8 @@
 import React from "react";
 import "./contact.scss";
 
-const index = () => {
+const Contact = () => {
   return <div></div>;
 };
 
-export default index;
+export default Contact;
