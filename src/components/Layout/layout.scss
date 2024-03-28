@@ -23,6 +23,8 @@
     //one way of doing it is to use calc function
     // height: calc(100vh - 100px);
     // another way is to use flexbox
-    flex: 1;
+    // flex: 1;
+    height: calc(100vh - 100px);
+    // background: #000;
   }
 }

@@ -1,0 +1,26 @@
+.list {
+  display: flex;
+  height: 100%;
+
+  .listContainer {
+    height: 100%;
+    flex: 3;
+
+    .wrapper {
+      height: 100%;
+      padding-right: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+      overflow-y: scroll;
+      padding-bottom: 50px;
+    }
+    .wrapper::-webkit-scrollbar {
+      display: none; /* Hide the scrollbar */
+    }
+  }
+  .mapContainer {
+    flex: 2;
+    background-color: #fcf5f3;
+  }
+}
