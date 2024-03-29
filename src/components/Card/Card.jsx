@@ -10,7 +10,9 @@ const Card = ({ item }) => {
       </Link>
       <div className="textContainer">
         <h2 className="title">
-          <Link to={`/${item.id}`}> {item.title}</Link>
+          {item.title.length > 50
+            ? item.title.slice(0, 50) + "..."
+            : item.title}
         </h2>
         <p className="address">
           <img src="/pin.png" alt="" />
