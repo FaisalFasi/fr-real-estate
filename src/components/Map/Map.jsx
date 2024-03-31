@@ -22,7 +22,7 @@ const Map = ({ items }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {items.map((item) => {
-        console.log(item.id);
+        console.log(item);
         return <PinMapMarker key={item.id} item={item} />;
       })}
     </MapContainer>

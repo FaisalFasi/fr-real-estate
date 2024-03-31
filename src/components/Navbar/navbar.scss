@@ -51,7 +51,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    background-color: #ffeee9;
+    background-color: #2bbcff;
     overflow: hidden;
 
     @include sm {
@@ -61,8 +61,48 @@ nav {
       padding: 12px 24px;
       margin: 20px;
     }
+
+    .user {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 20px;
+        object-fit: cover;
+      }
+      span {
+        @include sm {
+          display: none;
+        }
+      }
+
+      .profile {
+        padding: 12px 24px;
+        background-color: #8cdbff;
+        cursor: pointer;
+        border: none;
+        // color: white;
+        position: relative;
+
+        .notification {
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background-color: red;
+          color: white;
+          padding: 2px 6px;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
     .register {
-      background: #fece51;
+      background: #c0ffff;
     }
     .menuIcon {
       display: none;
