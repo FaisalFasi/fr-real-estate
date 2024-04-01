@@ -1,5 +1,7 @@
 import React from "react";
 import ListComp from "../../components/ListComp/ListComp";
+import "./profile.scss";
+import Chat from "../../components/Chat/Chat";
 
 const Profile = () => {
   return (
@@ -37,7 +39,9 @@ const Profile = () => {
         </div>
       </div>
       <div className="chatContainer">
-        <div className="wrapper"></div>
+        <div className="wrapper">
+          <Chat />
+        </div>
       </div>
     </div>
   );
