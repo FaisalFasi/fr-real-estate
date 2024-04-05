@@ -61,9 +61,13 @@ export const login = async (req, res) => {
     const age = 1000 * 60 * 60 * 24 * 7; // 1 week
 
     // generate jwt token and send to user
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: age,
-    });
+    const token = jwt.sign(
+      { id: user.id, isAdmin: false },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: age,
+      }
+    );
 
     // send data to user (front end request will be able to access this data)
     const { password: userPassword, ...userData } = user;
@@ -74,7 +78,7 @@ export const login = async (req, res) => {
         httpOnly: true,
         // secure: true, // for https
         maxAge: age,
-        // sameSite: "none", // for cross-site requests
+        sameSite: "none", // for cross-site requests
       })
       .status(200)
       .json(userData);

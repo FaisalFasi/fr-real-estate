@@ -3,7 +3,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import List from "./pages/list";
 import Home from "./pages/home";
 import SinglePage from "./pages/singlePage";
-import Layout from "./components/Layout/Layout";
+import { Layout, RequireAuth } from "./components/Layout/Layout";
 import Profile from "./pages/profile";
 import Signup from "./pages/signup";
 import Login from "./pages/login";
@@ -27,6 +27,11 @@ function App() {
           element: <Signup />,
         },
       ],
+    },
+    {
+      path: "/",
+      element: <RequireAuth />,
+      children: [{ path: "/profile", element: <Profile /> }],
     },
   ]);
 

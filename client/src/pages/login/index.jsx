@@ -4,8 +4,12 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const Login = () => {
+  const { updateUser } = useContext(AuthContext);
+
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +35,8 @@ const Login = () => {
 
       // add localStorage to store user data
       // adding user also adds the cookie( jwt token) coming from the server
-      localStorage.setItem("user", JSON.stringify(response.data));
+      // localStorage.setItem("user", JSON.stringify(response.data));
+      updateUser(response.data);
 
       navigate("/");
     } catch (err) {
