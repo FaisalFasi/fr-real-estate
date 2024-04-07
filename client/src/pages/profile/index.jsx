@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ListComp from "../../components/ListComp/ListComp";
 import "./profile.scss";
 import Chat from "../../components/Chat/Chat";
@@ -6,6 +6,7 @@ import apiRequest from "../../lib/apiRequest";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const { currentUserInfo, updateUser } = useContext(AuthContext);
@@ -19,8 +20,6 @@ const Profile = () => {
       // remove user from local storage and redirect to home page
       // removing user also removes the cookie (token)
       updateUser(null);
-      // localStorage.removeItem("user");
-
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -33,7 +32,9 @@ const Profile = () => {
         <div className="wrapper">
           <div className="title">
             <h1>User Information</h1>
-            <button>Update Profile</button>
+            <Link to="/profile/update">
+              <button>Update Profile</button>
+            </Link>
           </div>
           <div className="info">
             <span>

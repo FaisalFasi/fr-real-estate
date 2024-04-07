@@ -4,6 +4,7 @@ import List from "./pages/list";
 import Home from "./pages/home";
 import SinglePage from "./pages/singlePage";
 import { Layout, RequireAuth } from "./components/Layout/Layout";
+import UpdateProfile from "./pages/updateProfile";
 import Profile from "./pages/profile";
 import Signup from "./pages/signup";
 import Login from "./pages/login";
@@ -17,7 +18,6 @@ function App() {
         { path: "/", element: <Home /> },
         { path: "/list", element: <List /> },
         { path: "/:id", element: <SinglePage /> },
-        { path: "/profile", element: <Profile /> },
         {
           path: "/login",
           element: <Login />,
@@ -31,7 +31,13 @@ function App() {
     {
       path: "/",
       element: <RequireAuth />,
-      children: [{ path: "/profile", element: <Profile /> }],
+      children: [
+        { path: "/profile", element: <Profile /> },
+        {
+          path: "/profile/update",
+          element: <UpdateProfile />,
+        },
+      ],
     },
   ]);
 

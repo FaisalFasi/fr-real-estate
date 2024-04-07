@@ -6,10 +6,6 @@ router.get("/test", (req, res) => {
   res.send("Post request to the homepage");
 });
 
-// router.get("/test/:id", (req, res) => {
-//   res.send("Post request to the homepage");
-// });
-
 router.put("/test", (req, res) => {
   res.send("Post request to the homepage");
 });

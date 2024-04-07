@@ -21,21 +21,17 @@ const Layout = () => {
 const RequireAuth = () => {
   const { currentUserInfo } = useContext(AuthContext);
 
-  if (!currentUserInfo) {
-    <Navigate to="/login" />;
-  }
-
-  return (
-    currentUserInfo && (
-      <div className="layout">
-        <div className="navbar">
-          <Navbar />
-        </div>
-        <div className="content">
-          <Outlet />
-        </div>
+  return !currentUserInfo ? (
+    <Navigate to="/login" />
+  ) : (
+    <div className="layout">
+      <div className="navbar">
+        <Navbar />
       </div>
-    )
+      <div className="content">
+        <Outlet />
+      </div>
+    </div>
   );
 };
 

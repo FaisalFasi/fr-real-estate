@@ -2,7 +2,7 @@ import express from "express";
 import {
   shouldBeAdmin,
   shouldBeLoggedIn,
-} from "../controller/test.controller.js";
+} from "../controllers/test.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
