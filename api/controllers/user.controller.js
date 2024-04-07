@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma.js";
+import bcrypt from "bcrypt";
 
 const getUsers = async (req, res) => {
   console.log("getUsers");
@@ -11,12 +12,12 @@ const getUsers = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const userId = req.params.id;
+  const id = req.params.id;
 
   try {
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        id: id,
       },
     });
     res.status(200).json(user);
@@ -28,7 +29,7 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const id = req.params.id;
   const tokenUserId = req.userId;
-  const body = req.body;
+  const { password, avatar, ...inputs } = req.body;
 
   if (id !== tokenUserId) {
     return res.status(403).json({ message: "Not Authorized" });
@@ -36,12 +37,17 @@ const updateUser = async (req, res) => {
 
   let updatedPassword = null;
   try {
+    if (password) {
+      updatedPassword = await bcrypt.hash(password, 10);
+    }
     const updatedUser = await prisma.user.update({
       where: {
         id: id,
       },
       data: {
-        ...body,
+        ...inputs,
+        ...(updatedPassword && { password: updatedPassword }),
+        ...(avatar && { avatar: avatar }),
       },
     });
     res.status(200).json(updatedUser);
@@ -51,15 +57,21 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  if (req.body.userId === req.params.id || req.body.isAdmin) {
-    try {
-      await User.findByIdAndDelete(req.params.id);
-      res.status(200).json("User has been deleted...");
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  } else {
-    res.status(403).json("You can delete only your account!");
+  const id = req.params.id;
+  const tokenUserId = req.userId;
+
+  if (id !== tokenUserId) {
+    return res.status(403).json({ message: "Not Authorized" });
+  }
+  try {
+    await prisma.user.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.status(200).json("User has been deleted...");
+  } catch (err) {
+    res.status(500).json(err);
   }
 };
 

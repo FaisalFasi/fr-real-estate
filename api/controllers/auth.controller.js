@@ -19,7 +19,6 @@ export const register = async (req, res) => {
       },
     });
 
-    console.log("new user created:", newUser);
     res.status(201).json({ message: "User created successfully", newUser });
   } catch (error) {
     console.log("error:", error);
