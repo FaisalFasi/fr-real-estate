@@ -4,8 +4,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest.js";
-
-// import UploadWidget from "../../components/UploadWidget/UploadWidget";
+import UploadWidget from "../../components/UploadWidget/UploadWidget";
 
 const UpdateProfile = () => {
   const { currentUserInfo, updateUser } = useContext(AuthContext);
@@ -13,8 +12,10 @@ const UpdateProfile = () => {
   const [avatar, setAvatar] = useState([]);
 
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const formData = new FormData(e.target);
 
     const { username, email, password } = Object.fromEntries(formData);
@@ -62,9 +63,9 @@ const UpdateProfile = () => {
             <label htmlFor="password">Password</label>
             <input
               id="password"
-              autoComplete="on"
               name="password"
               type="password"
+              autoComplete="true"
             />
           </div>
           <button>Update</button>
@@ -77,16 +78,16 @@ const UpdateProfile = () => {
           alt=""
           className="avatar"
         />
-        {/* <UploadWidget
+        <UploadWidget
           uwConfig={{
-            cloudName: "lamadev",
-            uploadPreset: "estate",
+            cloudName: "faisalrehman",
+            uploadPreset: "real-estate",
             multiple: false,
             maxImageFileSize: 2000000,
             folder: "avatars",
           }}
           setState={setAvatar}
-        /> */}
+        />
       </div>
     </div>
   );
