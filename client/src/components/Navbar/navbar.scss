@@ -54,6 +54,10 @@ nav {
     background-color: #2bbcff;
     overflow: hidden;
 
+    @include md {
+      background-color: transparent;
+    }
+
     @include sm {
       background-color: transparent;
     }
@@ -100,9 +104,14 @@ nav {
         }
       }
     }
-
-    .register {
-      background: #c0ffff;
+    .loginButtons {
+      display: flex;
+      .register {
+        background: #0cffff;
+      }
+      @include sm {
+        display: none;
+      }
     }
     .menuIcon {
       display: none;
