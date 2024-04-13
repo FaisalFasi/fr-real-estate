@@ -3,7 +3,8 @@ import "./updateProfile.scss";
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import apiRequest from "../../lib/apiRequest";
+import apiRequest from "../../lib/apiRequest.js";
+
 // import UploadWidget from "../../components/UploadWidget/UploadWidget";
 
 const UpdateProfile = () => {
@@ -12,26 +13,26 @@ const UpdateProfile = () => {
   const [avatar, setAvatar] = useState([]);
 
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //   const formData = new FormData(e.target);
+    const formData = new FormData(e.target);
 
-    //   const { username, email, password } = Object.fromEntries(formData);
+    const { username, email, password } = Object.fromEntries(formData);
 
-    //   try {
-    //     const res = await apiRequest.put(`/users/${currentUser.id}`, {
-    //       username,
-    //       email,
-    //       password,
-    //       avatar: avatar[0],
-    //     });
-    //     updateUser(res.data);
-    //     navigate("/profile");
-    //   } catch (err) {
-    //     console.log(err);
-    //     setError(err.response.data.message);
-    //   }
+    try {
+      const res = await apiRequest.put(`/users/${currentUserInfo.id}`, {
+        username,
+        email,
+        password,
+        avatar: avatar[0],
+      });
+
+      updateUser(res?.data);
+      navigate("/profile");
+    } catch (err) {
+      console.log(err);
+      setError(err.response?.data?.message);
+    }
   };
 
   return (
@@ -59,7 +60,12 @@ const UpdateProfile = () => {
           </div>
           <div className="item">
             <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" />
+            <input
+              id="password"
+              autoComplete="on"
+              name="password"
+              type="password"
+            />
           </div>
           <button>Update</button>
           {error && <span>error</span>}

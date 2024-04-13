@@ -69,7 +69,7 @@ export const login = async (req, res) => {
     );
 
     // send data to user (front end request will be able to access this data)
-    const { password: userPassword, ...userData } = user;
+    const { password: userPassword, ...userInfo } = user;
 
     // set cookie options (secure, httpOnly, maxAge, sameSite)
     res
@@ -77,10 +77,10 @@ export const login = async (req, res) => {
         httpOnly: true,
         // secure: true, // for https
         maxAge: age,
-        sameSite: "none", // for cross-site requests
+        // sameSite: "none", // for cross-site requests
       })
       .status(200)
-      .json(userData);
+      .json(userInfo);
   } catch (error) {
     console.log("error:", error);
     res.status(500).json({ message: "Failed to Login!" });

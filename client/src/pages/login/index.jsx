@@ -23,13 +23,13 @@ const Login = () => {
     const formData = new FormData(e.target);
 
     const username = formData.get("username");
-    const email = formData.get("email");
+    // const email = formData.get("email");
     const password = formData.get("password");
 
     try {
       const response = await apiRequest.post("/auth/login", {
         username,
-        email,
+        // email,
         password,
       });
 
@@ -40,7 +40,6 @@ const Login = () => {
       updateUser(response.data);
       navigate("/");
     } catch (err) {
-      console.log(err);
       setError(err.response.data.message);
     } finally {
       setLoading(false);

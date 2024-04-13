@@ -50,9 +50,12 @@ const updateUser = async (req, res) => {
         ...(avatar && { avatar: avatar }),
       },
     });
-    res.status(200).json(updatedUser);
+
+    const { password: userPassword_, ...user_ } = updatedUser;
+
+    res.status(200).json(user_);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: "Failed to update users!" });
   }
 };
 
