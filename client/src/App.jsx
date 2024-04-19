@@ -8,7 +8,8 @@ import UpdateProfile from "./pages/updateProfile";
 import Profile from "./pages/profile";
 import Signup from "./pages/signup";
 import Login from "./pages/login";
-import NewPost from "./pages/newPost";
+import { singlePageLoader } from "./lib/loaders";
+import AddNewPost from "./pages/addNewPost";
 
 function App() {
   const router = createBrowserRouter([
@@ -18,7 +19,8 @@ function App() {
       children: [
         { path: "/", element: <Home /> },
         { path: "/list", element: <List /> },
-        { path: "/:id", element: <SinglePage /> },
+        { path: "/:id", element: <SinglePage />, loader: singlePageLoader },
+
         {
           path: "/login",
           element: <Login />,
@@ -40,7 +42,7 @@ function App() {
         },
         {
           path: "/add",
-          element: <NewPost />,
+          element: <AddNewPost />,
         },
       ],
     },

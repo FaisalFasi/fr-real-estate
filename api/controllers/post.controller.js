@@ -42,13 +42,14 @@ export const addPost = async (req, res) => {
 
   const tokenUserId = req.userId;
   console.log(tokenUserId);
-
+  console.log(postData);
+  console.log(postDetail);
   try {
     const newPost = await prisma.post.create({
       data: {
         ...postData,
-        // userId: tokenUserId,
-        user: { connect: { id: tokenUserId } },
+        userId: tokenUserId,
+        // user: { connect: { id: tokenUserId } },
         postDetail: {
           create: postDetail,
         },

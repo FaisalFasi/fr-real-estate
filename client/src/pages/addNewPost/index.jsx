@@ -7,7 +7,7 @@ import apiRequest from "../../lib/apiRequest";
 import UploadWidget from "../../components/UploadWidget/UploadWidget";
 import "./newPost.scss";
 
-const NewPost = () => {
+const AddNewPost = () => {
   const [value, setValue] = useState("");
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
@@ -31,8 +31,8 @@ const NewPost = () => {
           bathroom: parseInt(inputs.bathroom),
           type: inputs.type,
           property: inputs.property,
-          latitude: inputs.latitude,
-          longitude: inputs.longitude,
+          latitude: parseFloat(inputs.latitude),
+          longitude: parseFloat(inputs.longitude),
           images: images,
         },
         postDetail: {
@@ -49,7 +49,7 @@ const NewPost = () => {
       navigate("/" + res.data.id);
     } catch (err) {
       console.log(err);
-      setError(error);
+      setError(err);
     }
   };
 
@@ -178,4 +178,4 @@ const NewPost = () => {
   );
 };
 
-export default NewPost;
+export default AddNewPost;
