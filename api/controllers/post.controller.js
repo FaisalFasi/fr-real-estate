@@ -21,6 +21,15 @@ export const getPost = async (req, res) => {
       where: {
         id: id,
       },
+      include: {
+        postDetail: true,
+        user: {
+          select: {
+            username: true,
+            avatar: true,
+          },
+        },
+      },
     });
     res.status(200).json(post);
   } catch (error) {
