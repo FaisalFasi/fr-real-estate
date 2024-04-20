@@ -1,12 +1,13 @@
 import React from "react";
 import "./singlePage.scss";
 import Slider from "../../components/Slider/Slider";
-import { singlePostData, userData, listData } from "../../lib/dummydata";
+// import { singlePostData, userData, listData } from "../../lib/dummydata";
 import Map from "../../components/Map/Map";
 import { useLoaderData } from "react-router-dom";
+import DOMPurify from "dompurify";
 
 const SinglePage = () => {
-  const data = listData;
+  // const data = listData;
 
   const post = useLoaderData();
   console.log(post);
@@ -15,23 +16,28 @@ const SinglePage = () => {
     <div className="singlePage">
       <div className="details">
         <div className="wrapper">
-          <Slider images={post[0].images} />
+          <Slider images={post?.images} />
           <div className="info">
             <div className="top">
               <div className="post">
-                <h1>{post[0].title}</h1>
+                <h1>{post.title}</h1>
                 <div className="address">
                   <img src="/pin.png" alt="pin image" />
-                  <span>{post[0].address}</span>
+                  <span>{post.address}</span>
                 </div>
-                <div className="price">$ {post[0].price}</div>
+                <div className="price">$ {post.price}</div>
               </div>
               <div className="user">
                 <img src={post.user.avatar} alt="image" />
                 <span>{post.user.username}</span>
               </div>
             </div>
-            <div className="bottom">{post.postDetail.description}</div>
+            <div
+              className="bottom"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(post.postDetail.description),
+              }}
+            ></div>
           </div>
         </div>
       </div>
@@ -110,7 +116,7 @@ const SinglePage = () => {
           </div>
           <p className="title">Location</p>
           <div className="mapContainer">
-            <Map items={data} />
+            <Map items={post} />
           </div>
           <div className="buttons">
             <button>

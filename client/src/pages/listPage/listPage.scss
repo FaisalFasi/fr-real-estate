@@ -1,4 +1,4 @@
-.list {
+.listPage {
   display: flex;
   height: 100%;
 
@@ -7,16 +7,13 @@
     height: 100%;
 
     .wrapper {
-      height: 100%;
-      padding-right: 30px;
       display: flex;
       flex-direction: column;
+      height: 100%;
+      padding-right: 30px;
       gap: 50px;
       overflow-y: scroll;
       padding-bottom: 50px;
-    }
-    .wrapper::-webkit-scrollbar {
-      display: none;
     }
   }
   .mapContainer {

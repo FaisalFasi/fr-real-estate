@@ -7,10 +7,12 @@ import PinMapMarker from "../PinMapMarker/PinMapMarker";
 const Map = ({ items }) => {
   //   const position = [51.505, -0.09];
   const position = [51.1657, 10.4515]; // Coordinates for the center of Germany
-
+  console.log(items);
   return (
     <MapContainer
-      center={position}
+      center={
+        items.length === 1 ? [items[0].latitude, items[0].longitude] : position
+      }
       zoom={6}
       scrollWheelZoom={true}
       attributionControl={false} // Disable Leaflet attribution
@@ -22,7 +24,6 @@ const Map = ({ items }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {items.map((item) => {
-        console.log(item);
         return <PinMapMarker key={item.id} item={item} />;
       })}
     </MapContainer>

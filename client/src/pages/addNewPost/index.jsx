@@ -20,6 +20,31 @@ const AddNewPost = () => {
     const formData = new FormData(e.target);
     const inputs = Object.fromEntries(formData);
 
+    // Check for empty fields
+    const requiredFields = [
+      "title",
+      "price",
+      "address",
+      "city",
+      "bedroom",
+      "bathroom",
+      "type",
+      "property",
+      "latitude",
+      "longitude",
+    ];
+    const emptyField = requiredFields.find((field) => !inputs[field]);
+
+    if (emptyField) {
+      alert(`Please fill in the '${emptyField}' field.`);
+      return; // Do not proceed with submission
+    }
+
+    if (images.length < 4) {
+      setError("Please upload at least 4 images.");
+      return;
+    }
+
     try {
       const res = await apiRequest.post("/posts", {
         postData: {

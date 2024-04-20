@@ -1,6 +1,6 @@
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import List from "./pages/list";
+import ListPage from "./pages/listPage";
 import Home from "./pages/home";
 import SinglePage from "./pages/singlePage";
 import { Layout, RequireAuth } from "./components/Layout/Layout";
@@ -8,7 +8,7 @@ import UpdateProfile from "./pages/updateProfile";
 import Profile from "./pages/profile";
 import Signup from "./pages/signup";
 import Login from "./pages/login";
-import { singlePageLoader } from "./lib/loaders";
+import { listPageLoader, singlePageLoader } from "./lib/loaders";
 import AddNewPost from "./pages/addNewPost";
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
       element: <Layout />,
       children: [
         { path: "/", element: <Home /> },
-        { path: "/list", element: <List /> },
+        { path: "/list", element: <ListPage />, loader: listPageLoader },
         { path: "/:id", element: <SinglePage />, loader: singlePageLoader },
 
         {
