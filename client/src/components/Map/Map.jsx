@@ -11,19 +11,20 @@ const Map = ({ items }) => {
   return (
     <MapContainer
       center={
-        items.length === 1 ? [items[0].latitude, items[0].longitude] : position
+        position
+        // items.length === 1 ? [items[0].latitude, items[0].longitude] : position
       }
       zoom={6}
       scrollWheelZoom={true}
       attributionControl={false} // Disable Leaflet attribution
       className="map"
     >
-      {/* <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" /> */}
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {items.map((item) => {
+
+      {items?.map((item) => {
         return <PinMapMarker key={item.id} item={item} />;
       })}
     </MapContainer>
