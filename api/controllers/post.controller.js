@@ -2,7 +2,7 @@ import prisma from "../lib/prisma.js";
 
 export const getPosts = async (req, res) => {
   const query = req.query;
-
+  console.log(query);
   try {
     const posts = await prisma.post.findMany({
       where: {
@@ -17,15 +17,19 @@ export const getPosts = async (req, res) => {
       },
     });
 
+    console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Error retrieving posts" });
   }
 };
 
 export const getPost = async (req, res) => {
   const id = req.params.id;
+  console.log(req);
 
+  console.log(id);
   try {
     const post = await prisma.post.findUnique({
       where: {

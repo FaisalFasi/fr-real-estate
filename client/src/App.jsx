@@ -8,7 +8,11 @@ import UpdateProfile from "./pages/updateProfile";
 import Profile from "./pages/profile";
 import Signup from "./pages/signup";
 import Login from "./pages/login";
-import { listPageLoader, singlePageLoader } from "./lib/loaders";
+import {
+  listPageLoader,
+  profilePageLoader,
+  singlePageLoader,
+} from "./lib/loaders";
 import AddNewPost from "./pages/addNewPost";
 
 function App() {
@@ -35,7 +39,7 @@ function App() {
       path: "/",
       element: <RequireAuth />,
       children: [
-        { path: "/profile", element: <Profile /> },
+        { path: "/profile", element: <Profile />, loader: profilePageLoader },
         {
           path: "/profile/update",
           element: <UpdateProfile />,

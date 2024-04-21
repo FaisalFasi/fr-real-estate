@@ -3,10 +3,9 @@ import { Link } from "react-router-dom";
 import "./card.scss";
 
 const Card = ({ item }) => {
-  console.log(item.img);
   return (
     <div className="card">
-      <Link to={`${item.id}`} className="imageContainer">
+      <Link to={`/${item.id}`} className="imageContainer">
         <img src={item?.images[0] || "/noavatar.jpg"} alt={item.title} />
       </Link>
       <div className="textContainer">

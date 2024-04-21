@@ -4,18 +4,22 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import PinMapMarker from "../PinMapMarker/PinMapMarker";
 
+const germanyCoordinates = [51.1657, 10.4515]; // Coordinates for the center of Germany
 const Map = ({ items }) => {
-  //   const position = [51.505, -0.09];
-  const position = [51.1657, 10.4515]; // Coordinates for the center of Germany
-  console.log(items);
+  // checking if items prop is an object then convert into an array
+  const itemsArray = Array.isArray(items) ? items : [items];
+
+  // setting our map view based on number of items
+  const position =
+    itemsArray.length === 1
+      ? [itemsArray[0].latitude, itemsArray[0].longitude]
+      : germanyCoordinates;
+
   return (
     <MapContainer
-      center={
-        position
-        // items.length === 1 ? [items[0].latitude, items[0].longitude] : position
-      }
-      zoom={6}
-      scrollWheelZoom={true}
+      center={position} // map view position
+      zoom={5} // map zoom
+      scrollWheelZoom={true} // if we want to zoom the map with scrollbar
       attributionControl={false} // Disable Leaflet attribution
       className="map"
     >
@@ -24,8 +28,8 @@ const Map = ({ items }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {items?.map((item) => {
-        return <PinMapMarker key={item.id} item={item} />;
+      {itemsArray?.map((item) => {
+        return <PinMapMarker key={item.id} item={item} />; // adding marker on the places
       })}
     </MapContainer>
   );

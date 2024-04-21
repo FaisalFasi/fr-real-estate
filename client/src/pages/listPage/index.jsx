@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Await, useLoaderData } from "react-router-dom";
-// import Map from "../Map/Map";
+import Map from "../../components/Map/Map";
 import "./listPage.scss";
 
 import Card from "../../components/Card/Card";
@@ -37,7 +37,7 @@ const ListPage = () => {
           >
             {(postResponse) => {
               console.log(postResponse.data);
-              <Map items={postResponse.data} />;
+              return <Map items={postResponse.data} />;
             }}
           </Await>
         </Suspense>

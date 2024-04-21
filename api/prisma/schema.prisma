@@ -27,6 +27,7 @@ model Post {
 }
 
 enum Type {
+  any
   buy
   rent
 }
