@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import "./pinMapMarker.scss";
 
 const PinMapMarker = ({ item }) => {
-  console.log(item);
   return (
     <Marker position={[item.latitude, item.longitude]}>
       <Popup>

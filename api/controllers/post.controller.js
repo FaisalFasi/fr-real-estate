@@ -1,39 +1,49 @@
 import prisma from "../lib/prisma.js";
+import Jwt from "jsonwebtoken";
 
 export const getPosts = async (req, res) => {
-  const query = req.query;
-  console.log(query);
+  const {
+    city,
+    type,
+    property,
+    minPrice,
+    maxPrice,
+    bedroom,
+    latitude,
+    longitude,
+  } = req.query;
+
+  const normalizedCity = city ? city.toString().toLowerCase() : undefined;
+
   try {
     const posts = await prisma.post.findMany({
       where: {
-        city: query.city || undefined,
-        type: query.type || undefined,
-        property: query.property || undefined,
-        bedroom: parseInt(query.bedroom) || undefined,
+        city: normalizedCity,
+        type: type === "any" ? { in: ["buy", "rent"] } : type || undefined,
+        property: property || undefined,
+        bedroom: parseInt(bedroom) || undefined,
         price: {
-          gte: parseInt(query.minPrice) || 0,
-          lte: parseInt(query.maxPrice) || 100000,
+          gte: parseInt(minPrice) || 100,
+          lte: parseInt(maxPrice) || 1000000,
         },
+        latitude: latitude ? latitude.toString() : undefined,
+        longitude: longitude ? longitude.toString() : undefined,
       },
     });
 
-    console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: "Error retrieving posts" });
   }
 };
 
 export const getPost = async (req, res) => {
   const id = req.params.id;
-  console.log(req);
 
-  console.log(id);
   try {
     const post = await prisma.post.findUnique({
       where: {
-        id: id,
+        id,
       },
       include: {
         postDetail: true,
@@ -45,36 +55,59 @@ export const getPost = async (req, res) => {
         },
       },
     });
-    res.status(200).json(post);
+
+    // we need to verify if the user is logged in or not while saving a post
+
+    const token = req.cookies?.token;
+
+    if (token) {
+      Jwt.verify(token, process.env.JWT_SECRET, async (err, payload) => {
+        if (!err) {
+          const saved = await prisma.savedPost.findFirst({
+            where: {
+              userId_postId: {
+                postId: id,
+                userId: payload.id, // payload is the user id
+              },
+            },
+          });
+
+          console.log(saved);
+          res.status(200).json({ ...post, isSaved: saved ? true : false });
+        }
+      });
+    }
+
+    res.status(200).json({ ...post, isSaved: false });
   } catch (error) {
     res.status(500).json({ message: "Error creating post" });
   }
 };
 
 export const addPost = async (req, res) => {
-  const { postData, postDetail } = req.body;
+  const body = req.body;
 
   const tokenUserId = req.userId;
-  console.log(tokenUserId);
-  console.log(postData);
-  console.log(postDetail);
+
   try {
+    const normalizedPostData = {
+      ...body.postData,
+      city: postData.city ? postData.city.toString().toLowerCase() : undefined,
+      // Add other fields that need normalization here
+    };
     const newPost = await prisma.post.create({
       data: {
-        ...postData,
+        // ...normalizedPostData,
+        ...body.postData, // This will overwrite the normalized fields
         userId: tokenUserId,
-        // user: { connect: { id: tokenUserId } },
         postDetail: {
-          create: postDetail,
+          create: body.postDetail,
         },
       },
     });
-    console.log("New Post:", newPost);
 
     res.status(200).json(newPost);
   } catch (error) {
-    console.log("Error Creating here ................");
-    console.error("Error creating post:", error);
     res.status(500).json({ message: "Error creating post !!!" });
   }
 };

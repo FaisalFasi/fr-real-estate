@@ -1,16 +1,47 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import "./singlePage.scss";
 import Slider from "../../components/Slider/Slider";
-// import { singlePostData, userData, listData } from "../../lib/dummydata";
 import Map from "../../components/Map/Map";
 import { useLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
+import { AuthContext } from "../../context/AuthContext";
+import apiRequest from "../../lib/apiRequest.js";
+import { useNavigate } from "react-router-dom";
 
 const SinglePage = () => {
-  // const data = listData;
-
+  const navigate = useNavigate();
   const post = useLoaderData();
-  console.log(post);
+  const [saved, setSaved] = useState(post.isSaved);
+  const { currentUserInfo } = useContext(AuthContext);
+
+  const handleSave = async () => {
+    if (!currentUserInfo) {
+      navigate("/login");
+      return;
+    }
+
+    // Toggle saved state optimistically
+    setSaved((prev) => !prev);
+
+    try {
+      const response = await apiRequest.post("users/save", { postId: post.id });
+      console.log("response", response);
+
+      // Check response status and handle success (if needed)
+      if (response.status === 200) {
+        console.log("Post saved successfully:", response.data);
+        // Optionally update UI or perform additional actions on success
+      }
+    } catch (error) {
+      console.error("Error saving post:", error);
+
+      // Revert saved state if save operation fails
+      setSaved((prev) => !prev);
+
+      // Display error message to user
+      alert("Failed to save post. Please try again later."); // Use appropriate UI for error display
+    }
+  };
 
   return (
     <div className="singlePage">
@@ -28,7 +59,7 @@ const SinglePage = () => {
                 <div className="price">$ {post.price}</div>
               </div>
               <div className="user">
-                <img src={post.user.avatar || "/noavatar.jpg"} alt="image" />
+                <img src={post?.user?.avatar || "/noavatar.jpg"} alt="image" />
                 <span>{post.user.username}</span>
               </div>
             </div>
@@ -79,7 +110,7 @@ const SinglePage = () => {
           <div className="sizes">
             <div className="size">
               <img src="/size.png" alt="size image" />
-              <span>{post.postDetail.size}sqft</span>
+              <span>{post.postDetail.size} sqft</span>
             </div>
             <div className="size">
               <img src="/bed.png" alt="bed image" />
@@ -123,9 +154,12 @@ const SinglePage = () => {
               <img src="/chat.png" alt="chat icon" />
               Send a Message
             </button>
-            <button>
+            <button
+              onClick={handleSave}
+              style={{ backgroundColor: saved ? "#fece51" : "white" }}
+            >
               <img src="/save.png" alt="save icon" />
-              Save the Place
+              {saved ? "Place is Saved" : "Save The Place"}
             </button>
           </div>
         </div>

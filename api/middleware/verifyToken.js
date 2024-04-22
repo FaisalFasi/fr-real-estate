@@ -4,12 +4,10 @@ export const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    console.log("No token found in cookies");
     return res.status(401).json({
       message: "You are not authorized!",
     });
   }
-  console.log("Token found in cookies:", token);
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     req.userId = decoded.id; // Extract user ID from decoded token

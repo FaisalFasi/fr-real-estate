@@ -20,9 +20,8 @@ const Filter = () => {
     maxPrice: searchParams.get("maxPrice") || "1000000",
     bedroom: searchParams.get("bedroom") || "1",
   });
-  console.log(query);
+
   const handleChange = (e) => {
-    console.log({ [e.target.name]: e.target.value });
     setQuery({ ...query, [e.target.name]: e.target.value });
   };
 

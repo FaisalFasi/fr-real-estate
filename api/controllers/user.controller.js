@@ -2,7 +2,6 @@ import prisma from "../lib/prisma.js";
 import bcrypt from "bcrypt";
 
 const getUsers = async (req, res) => {
-  console.log("getUsers");
   try {
     const users = await prisma.user.findMany();
     res.status(200).json(users);
@@ -78,4 +77,47 @@ const deleteUser = async (req, res) => {
   }
 };
 
-export { getUsers, getUser, updateUser, deleteUser };
+const savePost = async (req, res) => {
+  const { postId } = req.body;
+  const tokenUserId = req.userId;
+
+  console.log("post Id ", postId, tokenUserId);
+  try {
+    const savedPost = await prisma.savedPost.findUnique({
+      where: {
+        userId_postId: {
+          userId: tokenUserId,
+          postId: postId,
+        },
+      },
+    });
+    console.log("savedPost", savedPost);
+
+    if (savedPost) {
+      console.log("deleting");
+      await prisma.savedPost.delete({
+        where: {
+          id: savedPost.id,
+        },
+      });
+      return res
+        .status(200)
+        .json({ message: "Post removed from the saved list" });
+    } else {
+      console.log("creating");
+      await prisma.savedPost.create({
+        data: {
+          userId: tokenUserId,
+          postId: postId,
+        },
+      });
+    }
+    console.log(savePost);
+    res.status(200).json({ message: "Post Saved" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error Saving post" });
+  }
+};
+
+export { getUsers, getUser, updateUser, deleteUser, savePost };

@@ -20,11 +20,14 @@ const ListPage = () => {
               resolve={data.postResponse}
               errorElement={<p>Failed to load data</p>}
             >
-              {(postResponse) =>
-                postResponse.data.map((post) => (
+              {(postResponse) => {
+                if (postResponse.data.length === 0) {
+                  return <p>No posts found</p>;
+                }
+                return postResponse.data.map((post) => (
                   <Card key={post.id} item={post} />
-                ))
-              }
+                ));
+              }}
             </Await>
           </Suspense>
         </div>
@@ -36,7 +39,6 @@ const ListPage = () => {
             errorElement={<p>Failed to load data</p>}
           >
             {(postResponse) => {
-              console.log(postResponse.data);
               return <Map items={postResponse.data} />;
             }}
           </Await>

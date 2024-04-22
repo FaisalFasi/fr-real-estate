@@ -9,11 +9,13 @@ const Card = ({ item }) => {
         <img src={item?.images[0] || "/noavatar.jpg"} alt={item.title} />
       </Link>
       <div className="textContainer">
-        <h2 className="title">
-          {item.title.length > 50
-            ? item.title.slice(0, 50) + "..."
-            : item.title}
-        </h2>
+        <Link to={`/${item.id}`}>
+          <h2 className="title">
+            {item.title.length > 50
+              ? item.title.slice(0, 50) + "..."
+              : item.title}
+          </h2>
+        </Link>
         <p className="address">
           <img src="/pin.png" alt="" />
           <span>{item.address}</span>
