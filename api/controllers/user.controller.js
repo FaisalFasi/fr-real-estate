@@ -120,4 +120,32 @@ const savePost = async (req, res) => {
   }
 };
 
-export { getUsers, getUser, updateUser, deleteUser, savePost };
+const profilePosts = async (req, res) => {
+  const tokenUserId = req.userId;
+
+  try {
+    const allPosts = await prisma.post.findMany({
+      where: {
+        userId: tokenUserId,
+      },
+    });
+    const saved = await prisma.savedPost.findMany({
+      where: {
+        userId: tokenUserId,
+      },
+      include: {
+        post: true,
+      },
+    });
+    console.log("saved", saved);
+
+    const savedPosts = saved.map((item) => item.post);
+
+    res.status(200).json({ allPosts, savedPosts });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "failed to get profile posts!" });
+  }
+};
+
+export { getUsers, getUser, updateUser, deleteUser, savePost, profilePosts };

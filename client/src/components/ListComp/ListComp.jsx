@@ -3,7 +3,6 @@ import "./listComp.scss";
 import Card from "../Card/Card";
 
 const ListComp = ({ posts }) => {
-  console.log(posts);
   return (
     <div className="list">
       {posts?.map((item) => (

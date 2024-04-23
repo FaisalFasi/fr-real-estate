@@ -15,6 +15,7 @@ const SinglePage = () => {
   const { currentUserInfo } = useContext(AuthContext);
 
   const handleSave = async () => {
+    // After react 19 update to useOptimisticReact Hook
     if (!currentUserInfo) {
       navigate("/login");
       return;

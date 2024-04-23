@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
-
+  console.log(token);
   if (!token) {
     return res.status(401).json({
       message: "You are not authorized!",
@@ -13,6 +13,7 @@ export const verifyToken = (req, res, next) => {
     req.userId = decoded.id; // Extract user ID from decoded token
     next(); // Proceed to the next middleware
   } catch (error) {
+    console.log(error);
     return res.status(403).json({
       message: "Token is not valid!",
     });

@@ -55,6 +55,8 @@ const Profile = () => {
             <button onClick={handleLogout}>Logout</button>
           </div>
           <div className="title">
+            {/* <ListComp /> */}
+
             <h1>My List</h1>
             <Link to="/add">
               <button>Create New Post</button>
@@ -65,11 +67,9 @@ const Profile = () => {
               resolve={data.postResponse}
               errorElement={<p>Failed to load data</p>}
             >
-              {(postResponse) =>
-                postResponse.data.map((post, index) => (
-                  <Card key={index} item={post} />
-                ))
-              }
+              {(postResponse) => (
+                <ListComp posts={postResponse.data.allPosts} />
+              )}
             </Await>
           </Suspense>
           {/* <ListComp /> */}
@@ -81,14 +81,11 @@ const Profile = () => {
               resolve={data.postResponse}
               errorElement={<p>Failed to load data</p>}
             >
-              {(postResponse) =>
-                postResponse.data.map((post, index) => (
-                  <Card key={index} item={post} />
-                ))
-              }
+              {(postResponse) => (
+                <ListComp posts={postResponse.data.savedPosts} />
+              )}
             </Await>
           </Suspense>
-          {/* <ListComp /> */}
         </div>
       </div>
       <div className="chatContainer">
