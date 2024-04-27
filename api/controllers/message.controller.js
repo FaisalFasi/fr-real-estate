@@ -18,6 +18,10 @@ const addMessage = async (req, res) => {
     if (!chat) {
       return res.status(404).json({ message: "Chat not found!" });
     }
+    // Ensure 'text' is not empty before creating the message
+    if (!text) {
+      return res.status(400).json({ error: "Text cannot be empty!" });
+    }
 
     const message = await prisma.message.create({
       data: {
@@ -26,7 +30,7 @@ const addMessage = async (req, res) => {
         userId: tokenUserId,
       },
     });
-
+    // 6628320d7d7d83c7dbc7052c
     await prisma.chat.update({
       where: {
         id: chatId,
@@ -36,6 +40,7 @@ const addMessage = async (req, res) => {
         lastMessage: text,
       },
     });
+    console.log(message);
 
     res.status(200).json(message);
   } catch (err) {

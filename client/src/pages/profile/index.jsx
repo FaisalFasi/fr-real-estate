@@ -7,7 +7,6 @@ import { useLoaderData, useNavigate, Await } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
-import Card from "../../components/Card/Card";
 
 const Profile = () => {
   const { currentUserInfo, updateUser } = useContext(AuthContext);
@@ -90,7 +89,14 @@ const Profile = () => {
       </div>
       <div className="chatContainer">
         <div className="wrapper">
-          <Chat />
+          <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.chatResponse}
+              errorElement={<p>Failed to load chats!</p>}
+            >
+              {(chatResponse) => <Chat chats={chatResponse.data} />}
+            </Await>
+          </Suspense>
         </div>
       </div>
     </div>
