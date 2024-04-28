@@ -15,6 +15,9 @@ import {
 } from "./lib/loaders";
 import AddNewPost from "./pages/addNewPost";
 
+// import dotenv from "dotenv";
+// dotenv.config();
+
 function App() {
   const router = createBrowserRouter([
     {

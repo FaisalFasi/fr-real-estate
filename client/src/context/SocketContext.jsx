@@ -11,7 +11,8 @@ export const SocketContextProvider = ({ children }) => {
   const { currentUserInfo } = useContext(AuthContext);
 
   useEffect(() => {
-    setSocket(io("http://localhost:4000"));
+    // console.log(process.env.SOCKET_IO_SERVER_URL);
+    setSocket(io("http://localhost:8800"));
     // Clean up the socket connection on component unmount (if needed)
     return () => {
       socket?.disconnect();
