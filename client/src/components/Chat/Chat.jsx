@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
 import { format } from "timeago.js";
 import { SocketContext } from "../../context/SocketContext";
+import { useNotificationStore } from "../../lib/notificationStore";
 
 const Chat = ({ chats }) => {
   const { currentUserInfo } = useContext(AuthContext);
@@ -12,15 +13,17 @@ const Chat = ({ chats }) => {
 
   const [singleChat, setSingleChat] = useState(null);
   const messageEndRef = useRef(null);
-
-  useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [singleChat]);
+  const decreaseNoti = useNotificationStore((state) => state.decrease);
 
   const handleOpenChat = async (id, receiver) => {
     try {
       // open chat
       const res = await apiRequest("/chats/" + id);
+
+      if (!res.data.seenBy.includes(currentUserInfo.id)) {
+        decreaseNoti();
+      }
+
       setSingleChat({ ...res.data, receiver });
     } catch (err) {
       console.error(err);
@@ -57,9 +60,9 @@ const Chat = ({ chats }) => {
   useEffect(() => {
     const read = async () => {
       try {
-        await apiRequest.put("/chats/read/" + singleChat.id);
+        return await apiRequest.put("/chats/read/" + singleChat.id);
       } catch (err) {
-        console.error(err);
+        console.log(err);
       }
     };
 
@@ -77,7 +80,11 @@ const Chat = ({ chats }) => {
     return () => {
       socket.off("getMessage");
     };
-  }, [socket, singleChat]);
+  }, [socket, singleChat, chats]);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [singleChat]);
 
   return (
     <div className="chat">
@@ -98,7 +105,7 @@ const Chat = ({ chats }) => {
           >
             <img src={chat.receiver.avatar || "/noavatar.jpg"} alt="icon" />
             <span>{chat.receiver.username}</span>
-            <p>{chat.lastMessage}</p>
+            <p>{chats.lastMessage}</p>
           </div>
         ))}
       </div>

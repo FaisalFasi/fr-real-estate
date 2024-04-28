@@ -31,20 +31,15 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", ({ receiverId, data }) => {
-    console.log("Receiver ID:", receiverId, "Data:", data);
-
     const receivedUser = getUser(receiverId);
     if (!receivedUser) {
       console.log(`User with ID ${receiverId} not found.`);
       return; // Exit early if user is not found
     }
 
-    console.log("Received User:", receivedUser);
-
     const { socketId } = receivedUser;
     if (socketId) {
       io.to(socketId).emit("getMessage", data);
-      console.log("Message sent to receiver:", receiverId);
     } else {
       console.log(`Socket ID not found for user with ID ${receiverId}`);
     }
