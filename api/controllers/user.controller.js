@@ -81,7 +81,6 @@ const savePost = async (req, res) => {
   const { postId } = req.body;
   const tokenUserId = req.userId;
 
-  console.log("post Id ", postId, tokenUserId);
   try {
     const savedPost = await prisma.savedPost.findUnique({
       where: {
@@ -91,10 +90,8 @@ const savePost = async (req, res) => {
         },
       },
     });
-    console.log("savedPost", savedPost);
 
     if (savedPost) {
-      console.log("deleting");
       await prisma.savedPost.delete({
         where: {
           id: savedPost.id,
@@ -104,7 +101,6 @@ const savePost = async (req, res) => {
         .status(200)
         .json({ message: "Post removed from the saved list" });
     } else {
-      console.log("creating");
       await prisma.savedPost.create({
         data: {
           userId: tokenUserId,
@@ -112,7 +108,6 @@ const savePost = async (req, res) => {
         },
       });
     }
-    console.log(savePost);
     res.status(200).json({ message: "Post Saved" });
   } catch (error) {
     console.log(error);
@@ -137,7 +132,6 @@ const profilePosts = async (req, res) => {
         post: true,
       },
     });
-    console.log("saved", saved);
 
     const savedPosts = saved.map((item) => item.post);
 

@@ -40,7 +40,6 @@ const addMessage = async (req, res) => {
         lastMessage: text,
       },
     });
-    console.log(message);
 
     res.status(200).json(message);
   } catch (err) {

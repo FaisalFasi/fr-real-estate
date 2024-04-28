@@ -45,9 +45,6 @@ const Chat = ({ chats }) => {
       }));
       e.target.reset();
 
-      console.log(singleChat.receiver.id);
-      console.log(response.data);
-
       socket.emit("sendMessage", {
         receiverId: singleChat.receiver.id,
         data: response.data,

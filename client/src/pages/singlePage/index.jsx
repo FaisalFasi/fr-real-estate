@@ -26,7 +26,6 @@ const SinglePage = () => {
 
     try {
       const response = await apiRequest.post("users/save", { postId: post.id });
-      console.log("response", response);
 
       // Check response status and handle success (if needed)
       if (response.status === 200) {

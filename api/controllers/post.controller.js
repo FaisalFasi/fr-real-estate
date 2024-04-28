@@ -72,7 +72,6 @@ export const getPost = async (req, res) => {
             },
           });
 
-          console.log(saved);
           res.status(200).json({ ...post, isSaved: saved ? true : false });
         }
       });

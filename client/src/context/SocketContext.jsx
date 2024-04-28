@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "./AuthContext";
 
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 
 export const SocketContext = createContext();
 
@@ -12,10 +12,14 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     setSocket(io("http://localhost:4000"));
+    // Clean up the socket connection on component unmount (if needed)
+    return () => {
+      socket?.disconnect();
+    };
   }, []);
 
   useEffect(() => {
-    currentUserInfo && socket?.emit("newUser", currentUserInfo._id);
+    currentUserInfo && socket?.emit("newUser", currentUserInfo.id);
   }, [currentUserInfo, socket]);
 
   return (
