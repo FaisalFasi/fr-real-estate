@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import ListComp from "../../components/ListComp/ListComp";
 import "./profile.scss";
 import Chat from "../../components/Chat/Chat";

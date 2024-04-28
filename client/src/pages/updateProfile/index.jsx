@@ -16,11 +16,10 @@ const UpdateProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
-
-    const { username, email, password } = Object.fromEntries(formData);
-
     try {
+      const formData = new FormData(e.target);
+      const { username, email, password } = Object.fromEntries(formData);
+
       const res = await apiRequest.put(`/users/${currentUserInfo.id}`, {
         username,
         email,

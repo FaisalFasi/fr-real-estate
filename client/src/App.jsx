@@ -1,22 +1,32 @@
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import ListPage from "./pages/listPage";
-import Home from "./pages/home";
-import SinglePage from "./pages/singlePage";
 import { Layout, RequireAuth } from "./components/Layout/Layout";
-import UpdateProfile from "./pages/updateProfile";
-import Profile from "./pages/profile";
-import Signup from "./pages/signup";
-import Login from "./pages/login";
+
+// Simple import
+// import ListPage from "./pages/listPage";
+// import Home from "./pages/home";
+// import SinglePage from "./pages/singlePage";
+// import UpdateProfile from "./pages/updateProfile";
+// import Profile from "./pages/profile";
+// import Signup from "./pages/signup";
+// import Login from "./pages/login";
+// import AddNewPost from "./pages/addNewPost";
+
+// Lazy load components using React.lazy
+const Home = React.lazy(() => import("./pages/home"));
+const ListPage = React.lazy(() => import("./pages/listPage"));
+const SinglePage = React.lazy(() => import("./pages/singlePage"));
+const UpdateProfile = React.lazy(() => import("./pages/updateProfile"));
+const Profile = React.lazy(() => import("./pages/profile"));
+const Signup = React.lazy(() => import("./pages/signup"));
+const Login = React.lazy(() => import("./pages/login"));
+const AddNewPost = React.lazy(() => import("./pages/addNewPost"));
+
 import {
   listPageLoader,
   profilePageLoader,
   singlePageLoader,
 } from "./lib/loaders";
-import AddNewPost from "./pages/addNewPost";
-
-// import dotenv from "dotenv";
-// dotenv.config();
 
 function App() {
   const router = createBrowserRouter([
@@ -55,7 +65,12 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  //   return <RouterProvider router={router} />;
+  return (
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <RouterProvider router={router} />
+    </React.Suspense>
+  );
 }
 
 export default App;
