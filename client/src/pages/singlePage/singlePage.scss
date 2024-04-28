@@ -97,9 +97,6 @@
       }
     }
   }
-  .details::-webkit-scrollbar {
-    display: none;
-  }
 
   .features {
     flex: 2;
@@ -211,9 +208,6 @@
       }
       padding-bottom: 20px;
     }
-  }
-  .features::-webkit-scrollbar {
-    display: none;
   }
 }
 // .singlePage::-webkit-scrollbar {

@@ -1,6 +1,6 @@
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import List from "./pages/list";
+import ListPage from "./pages/listPage";
 import Home from "./pages/home";
 import SinglePage from "./pages/singlePage";
 import { Layout, RequireAuth } from "./components/Layout/Layout";
@@ -8,6 +8,15 @@ import UpdateProfile from "./pages/updateProfile";
 import Profile from "./pages/profile";
 import Signup from "./pages/signup";
 import Login from "./pages/login";
+import {
+  listPageLoader,
+  profilePageLoader,
+  singlePageLoader,
+} from "./lib/loaders";
+import AddNewPost from "./pages/addNewPost";
+
+// import dotenv from "dotenv";
+// dotenv.config();
 
 function App() {
   const router = createBrowserRouter([
@@ -16,8 +25,9 @@ function App() {
       element: <Layout />,
       children: [
         { path: "/", element: <Home /> },
-        { path: "/list", element: <List /> },
-        { path: "/:id", element: <SinglePage /> },
+        { path: "/list", element: <ListPage />, loader: listPageLoader },
+        { path: "/:id", element: <SinglePage />, loader: singlePageLoader },
+
         {
           path: "/login",
           element: <Login />,
@@ -32,10 +42,14 @@ function App() {
       path: "/",
       element: <RequireAuth />,
       children: [
-        { path: "/profile", element: <Profile /> },
+        { path: "/profile", element: <Profile />, loader: profilePageLoader },
         {
           path: "/profile/update",
           element: <UpdateProfile />,
+        },
+        {
+          path: "/add",
+          element: <AddNewPost />,
         },
       ],
     },

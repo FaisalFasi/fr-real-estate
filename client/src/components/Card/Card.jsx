@@ -5,20 +5,22 @@ import "./card.scss";
 const Card = ({ item }) => {
   return (
     <div className="card">
-      <Link to={`${item.id}`} className="imageContainer">
-        <img src={item.img_link} alt={item.title} />
+      <Link to={`/${item.id}`} className="imageContainer">
+        <img src={item?.images[0] || "/noavatar.jpg"} alt={item.title} />
       </Link>
       <div className="textContainer">
-        <h2 className="title">
-          {item.title.length > 50
-            ? item.title.slice(0, 50) + "..."
-            : item.title}
-        </h2>
+        <Link to={`/${item.id}`}>
+          <h2 className="title">
+            {item.title.length > 50
+              ? item.title.slice(0, 50) + "..."
+              : item.title}
+          </h2>
+        </Link>
         <p className="address">
           <img src="/pin.png" alt="" />
           <span>{item.address}</span>
         </p>
-        <p className="price"> {item.price}</p>
+        <p className="price"> ${item.price}</p>
         <div className="bottom">
           <div className="features">
             <div className="feature">
