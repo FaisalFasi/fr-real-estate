@@ -31,13 +31,8 @@ const UploadWidget = ({ uwConfig, setState }) => {
     if (loaded) {
       const myWidget = window.cloudinary.createUploadWidget(
         uwConfig,
-        // {
-        //   cloudName: "faisalrehman",
-        //   uploadPreset: "real-estate",
-        // },
         (error, result) => {
           if (!error && result && result.event === "success") {
-            // console.log("Done! Here is the image info: ", result.info);
             setState((prev) => [...prev, result.info.secure_url]);
           }
         }
