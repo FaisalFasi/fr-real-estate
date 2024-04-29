@@ -51,10 +51,17 @@ const Login = () => {
       <div className="formContainer">
         <form onSubmit={handleSubmit}>
           <h1>Welcome back</h1>
-          <input name="username" required type="text" placeholder="Username" />
+          <input
+            name="username"
+            autoComplete
+            required
+            type="text"
+            placeholder="Username"
+          />
           <input
             name="password"
             required
+            autoComplete
             type="password"
             placeholder="Password"
           />
