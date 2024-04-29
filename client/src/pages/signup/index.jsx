@@ -44,9 +44,19 @@ const Signup = () => {
       <div className="formContainer">
         <form onSubmit={handleSubmit}>
           <h1>Create an Account</h1>
-          <input name="username" type="text" placeholder="Username" />
-          <input name="email" type="text" placeholder="Email" />
-          <input name="password" type="password" placeholder="Password" />
+          <input
+            name="username"
+            autoComplete
+            type="text"
+            placeholder="Username"
+          />
+          <input name="email" autoComplete type="text" placeholder="Email" />
+          <input
+            name="password"
+            autoComplete
+            type="password"
+            placeholder="Password"
+          />
           <button disabled={loading}>Register</button>
           {error && <span className="error">{error}</span>}
           <Link to="/login">Do you have an account?</Link>

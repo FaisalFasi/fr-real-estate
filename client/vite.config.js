@@ -14,12 +14,18 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Define manual chunks here
-          // Example: Group all pages into a 'pages' chunk
-          pagesPair1: ["./src/pages/home", "./src/pages/profile"],
-          pagesPair2: ["./src/pages/listPage", "./src/pages/singlePage"],
-          pagesPair3: ["./src/pages/updateProfile", "./src/pages/addNewPost"],
-          pagesPair4: ["./src/pages/signup", "./src/pages/login"],
+          pagesPair1: [
+            "./src/pages/signup",
+            "./src/pages/login",
+            "./src/pages/home",
+            "./src/pages/profile",
+          ],
+          pagesPair2: [
+            "./src/pages/listPage",
+            "./src/pages/singlePage",
+            "./src/pages/updateProfile",
+            "./src/pages/addNewPost",
+          ],
         },
       },
     },
