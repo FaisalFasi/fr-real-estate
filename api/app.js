@@ -17,9 +17,7 @@ const app = express();
 const server = http.createServer(app); // Create HTTP server using Express app
 const io = setupSocket(server); // Setup socket.io
 
-const allowedOrigins = [process.env.CLIENT_URL, "http://localhost:5173"]; // Add your frontend URLs here
-
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -31,7 +29,7 @@ app.use("/api/test", testRoute);
 app.use("/api/chats", chatRoute);
 app.use("/api/messages", messageRoute);
 
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 8800;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

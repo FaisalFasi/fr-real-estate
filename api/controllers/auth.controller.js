@@ -39,20 +39,6 @@ export const login = async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    // check user and password seperatly and send error message
-    // if the user is incorrect
-    /* if (!user) {
-       return res.status(401).json({ message: "Invalid Credentials" });
-     }*/
-
-    // check if the password is correct
-    /* const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-    // if the password is incorrect
-     if (!isPasswordCorrect) {
-       return res.status(401).json({ message: "Invalid Credentials" });
-     }
-    */
 
     // generate cookie token and send to user using cookie-parser
     /* res
@@ -71,14 +57,17 @@ export const login = async (req, res) => {
         expiresIn: age,
       }
     );
+    jwt
+      .verify(token, process.env.JWT_SECRET_KEY)
+      .then((user) => console.log(user))
+      .catch((err) => console.log(err.toString()));
 
     // Set cookie with JWT token >> secure, httpOnly, maxAge, sameSite;
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true, // Ensure backend is served over HTTPS
-      domain:
-        process.env.NODE_ENV === "production" ? ".netlify.app" : "localhost",
-      sameSite: "None",
+      // secure: true, // Ensure backend is served over HTTPS
+      // domain: process.env.NODE_ENV,
+      // sameSite: "None",
     });
 
     // send data to user (front end request will be able to access this data)
