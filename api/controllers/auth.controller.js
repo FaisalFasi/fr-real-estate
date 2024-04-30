@@ -75,10 +75,10 @@ export const login = async (req, res) => {
     // Set cookie with JWT token >> secure, httpOnly, maxAge, sameSite;
     res.cookie("token", token, {
       httpOnly: true,
-      // secure: true, // for https
-      // maxAge: age,
-      // domain: "localhost", // for localhost
-      // sameSite: "None", // for cross-site requests
+      secure: true, // Ensure backend is served over HTTPS
+      domain:
+        process.env.NODE_ENV === "production" ? ".netlify.app" : "localhost",
+      sameSite: "None",
     });
 
     // send data to user (front end request will be able to access this data)
