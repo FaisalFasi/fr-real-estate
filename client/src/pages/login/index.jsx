@@ -53,7 +53,7 @@ const Login = () => {
           <h1>Welcome back</h1>
           <input
             name="username"
-            autoComplete
+            autoComplete="on"
             required
             type="text"
             placeholder="Username"
@@ -61,7 +61,7 @@ const Login = () => {
           <input
             name="password"
             required
-            autoComplete
+            autoComplete="on"
             type="password"
             placeholder="Password"
           />

@@ -46,14 +46,19 @@ const Signup = () => {
           <h1>Create an Account</h1>
           <input
             name="username"
-            autoComplete
+            autoComplete="on"
             type="text"
             placeholder="Username"
           />
-          <input name="email" autoComplete type="text" placeholder="Email" />
+          <input
+            name="email"
+            autoComplete="on"
+            type="text"
+            placeholder="Email"
+          />
           <input
             name="password"
-            autoComplete
+            autoComplete="on"
             type="password"
             placeholder="Password"
           />

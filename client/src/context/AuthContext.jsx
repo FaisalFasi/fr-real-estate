@@ -10,6 +10,20 @@ export const AuthContextProvider = ({ children }) => {
   const updateUser = (data) => {
     setCurrentUserInfo(data);
   };
+
+  useEffect(() => {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (storedUser) {
+        setCurrentUserInfo(storedUser);
+      }
+    } catch (error) {
+      console.error("Error loading user data from localStorage:", error);
+      // Handle error gracefully (e.g., clear localStorage or log out user)
+    }
+  }, []);
+
+  // Save user info to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(currentUserInfo));
   }, [currentUserInfo]);
