@@ -17,7 +17,7 @@ const app = express();
 const server = http.createServer(app); // Create HTTP server using Express app
 const io = setupSocket(server); // Setup socket.io
 
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 
 app.use(express.json());
 app.use(cookieParser());

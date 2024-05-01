@@ -18,7 +18,7 @@ const Chat = ({ chats }) => {
   const handleOpenChat = async (id, receiver) => {
     try {
       // open chat
-      const res = await apiRequest("/chats/" + id);
+      const res = await apiRequest.get("/chats/" + id);
 
       if (!res.data.seenBy.includes(currentUserInfo.id)) {
         decreaseNoti();

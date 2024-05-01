@@ -62,6 +62,7 @@ export const login = async (req, res) => {
       .then((user) => console.log(user))
       .catch((err) => console.log(err.toString()));
 
+    console.log(token);
     // Set cookie with JWT token >> secure, httpOnly, maxAge, sameSite;
     res.cookie("token", token, {
       httpOnly: true,
@@ -72,7 +73,7 @@ export const login = async (req, res) => {
 
     // send data to user (front end request will be able to access this data)
     const { password: userPassword, ...userInfo } = user;
-
+    console.log(userInfo);
     res.status(200).json(userInfo);
   } catch (error) {
     res.status(500).json({ message: "Failed to Login!" });
