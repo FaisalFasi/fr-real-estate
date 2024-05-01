@@ -49,33 +49,28 @@ export const login = async (req, res) => {
     // cookie expiry time
     const age = 1000 * 60 * 60 * 24 * 7; // 1 week
 
-    // generate jwt token and send to user
     const token = jwt.sign(
-      { id: user.id, isAdmin: false },
-      process.env.JWT_SECRET_KEY,
       {
-        expiresIn: age,
-      }
+        id: user.id,
+        isAdmin: false,
+      },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: age }
     );
-    jwt
-      .verify(token, process.env.JWT_SECRET_KEY)
-      .then((user) => console.log(user))
-      .catch((err) => console.log(err.toString()));
 
-    console.log(token);
-    // Set cookie with JWT token >> secure, httpOnly, maxAge, sameSite;
-    res.cookie("token", token, {
-      httpOnly: true,
-      // secure: true, // Ensure backend is served over HTTPS
-      // domain: process.env.NODE_ENV,
-      // sameSite: "None",
-    });
-
-    // send data to user (front end request will be able to access this data)
     const { password: userPassword, ...userInfo } = user;
-    console.log(userInfo);
-    res.status(200).json(userInfo);
+    console.log("userInfo: ", userInfo);
+    console.log("Token: ", token);
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        // secure:true,
+        maxAge: age,
+      })
+      .status(200)
+      .json(userInfo);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Failed to Login!" });
   }
 };
