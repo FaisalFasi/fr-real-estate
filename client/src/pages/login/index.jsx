@@ -17,6 +17,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setLoading(true);
     setError("");
 
@@ -40,6 +41,7 @@ const Login = () => {
       updateUser(response.data);
       navigate("/");
     } catch (err) {
+      console.log(err.response.data.message);
       setError(err.response.data.message);
     } finally {
       setLoading(false);
