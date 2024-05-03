@@ -89,14 +89,13 @@ export const addPost = async (req, res) => {
   const tokenUserId = req.userId;
 
   try {
-    const normalizedPostData = {
-      ...body.postData,
-      city: postData.city ? postData.city.toString().toLowerCase() : undefined,
-      // Add other fields that need normalization here
-    };
+    // const normalizedPostData = {
+    //   ...body.postData,
+    //   city: postData.city ? postData.city.toString().toLowerCase() : undefined,
+    //   // Add other fields that need normalization here
+    // };
     const newPost = await prisma.post.create({
       data: {
-        // ...normalizedPostData,
         ...body.postData, // This will overwrite the normalized fields
         userId: tokenUserId,
         postDetail: {
@@ -108,6 +107,7 @@ export const addPost = async (req, res) => {
     res.status(200).json(newPost);
   } catch (error) {
     res.status(500).json({ message: "Error creating post !!!" });
+    console.log(error);
   }
 };
 export const updatePost = async (req, res) => {
