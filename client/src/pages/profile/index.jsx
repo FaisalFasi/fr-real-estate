@@ -20,6 +20,8 @@ const Profile = () => {
 
       // remove user from local storage and redirect to home page
       // removing user also removes the cookie (token)
+      console.log("Logout Response:  ", res);
+
       updateUser(null);
       navigate("/");
     } catch (err) {

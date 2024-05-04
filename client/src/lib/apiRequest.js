@@ -11,7 +11,7 @@ export default apiRequest;
 // import axios from "axios";
 
 // const apiRequest = axios.create({
-//   baseURL: "http://localhost:8800/api",
+//   baseURL: "httxp://localhost:8800/api",
 //   withCredentials: true,
 // });
 

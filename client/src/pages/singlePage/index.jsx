@@ -32,6 +32,8 @@ const SinglePage = () => {
         console.log("Post saved successfully:", response.data);
         // Optionally update UI or perform additional actions on success
       }
+
+      console.log("Post saved successfully:", response.data);
     } catch (error) {
       console.error("Error saving post:", error);
 

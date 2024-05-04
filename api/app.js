@@ -15,40 +15,22 @@ import messageRoute from "./routes/message.route.js";
 const app = express();
 
 const server = http.createServer(app); // Create HTTP server using Express app
+
+app.use(express.json());
+
+const cookieParserSecret = process.env.COOKIE_PARSER_SECRET; // Secret key for signing cookies
+app.use(cookieParser(cookieParserSecret));
+
 const io = setupSocket(server); // Setup socket.io
 
-const allowedOrigins = [
-  "https://fr-real-estate.netlify.app/",
-  "https://fr-real-estate.netlify.app",
-  "http://localhost:5173", // Add additional localhost origin if needed
-];
-
+// origin: "https://fr-real-estate.netlify.app", // Replace with your Netlify domain
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin) {
-        // For requests without an origin (e.g., same-origin requests)
-        return callback(null, true);
-      }
-
-      // Check if the origin matches one of the allowed origins
-      if (
-        allowedOrigins.includes(origin) ||
-        allowedOrigins.includes(new URL(origin).origin)
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["POST", "PUT", "GET", "DELETE"],
+    origin: true, // Replace with your Netlify domain
 
     credentials: true, // Allow credentials (cookies)
   })
 );
-
-app.use(express.json());
-app.use(cookieParser());
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
