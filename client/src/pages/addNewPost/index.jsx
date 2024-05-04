@@ -71,6 +71,7 @@ const AddNewPost = () => {
           restaurant: parseInt(inputs.restaurant),
         },
       });
+      console.log("Add New Post Response:  ", res);
       navigate("/" + res.data.id);
     } catch (err) {
       console.log(err);
