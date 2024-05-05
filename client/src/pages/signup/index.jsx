@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./signup.scss";
-import apiRequest from "../../lib/apiRequest";
+import apiRequest from "../../lib/apiRequest.js";
 
 const Signup = () => {
   const [error, setError] = useState(false);

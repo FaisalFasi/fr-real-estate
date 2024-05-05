@@ -1,19 +1,28 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./navbar.scss";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { useNotificationStore } from "../../lib/notificationStore";
+import { useNotificationStore } from "../../lib/notificationStore.js";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { currentUserInfo } = useContext(AuthContext);
 
-  const fetch = useNotificationStore((state) => state.fetch);
+  const fetchNotifications = useNotificationStore((state) => state.fetch);
   const number = useNotificationStore((state) => state.number);
 
-  if (currentUserInfo) fetch();
+  // if (currentUserInfo) fetch();
+
+  useEffect(() => {
+    if (currentUserInfo) {
+      fetchNotifications().catch((error) => {
+        console.error("Error fetching notifications:", error);
+        // Optionally, you can handle the error here, e.g., show a message to the user
+      });
+    }
+  }, [currentUserInfo, fetchNotifications]);
 
   return (
     <nav>

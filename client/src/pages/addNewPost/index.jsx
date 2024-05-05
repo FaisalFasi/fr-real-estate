@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import apiRequest from "../../lib/apiRequest";
+import apiRequest from "../../lib/apiRequest.js";
 import UploadWidget from "../../components/UploadWidget/UploadWidget";
 import "./newPost.scss";
 

@@ -2,10 +2,10 @@ import React, { useContext, useEffect } from "react";
 import "./chat.scss";
 import { useState, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import apiRequest from "../../lib/apiRequest";
+import apiRequest from "../../lib/apiRequest.js";
 import { format } from "timeago.js";
 import { SocketContext } from "../../context/SocketContext";
-import { useNotificationStore } from "../../lib/notificationStore";
+import { useNotificationStore } from "../../lib/notificationStore.js";
 
 const Chat = ({ chats }) => {
   const { currentUserInfo } = useContext(AuthContext);
