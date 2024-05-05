@@ -1,0 +1,7 @@
+Access-Control-Allow-Origin:http://localhost:8800
+Access-Control-Allow-Credentials:true
+
+# Optional: Specify allowed methods and headers if needed
+
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: Content-Type, Authorization
