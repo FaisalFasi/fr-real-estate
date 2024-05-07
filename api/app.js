@@ -14,14 +14,10 @@ import messageRoute from "./routes/message.route.js";
 
 const app = express();
 
-const server = http.createServer(app); // Create HTTP server using Express app
-
 app.use(express.json());
 
-const cookieParserSecret = process.env.COOKIE_PARSER_SECRET; // Secret key for signing cookies
+const cookieParserSecret = process.env.JWT_SECRET_KEY; // Secret key for signing cookies
 app.use(cookieParser(cookieParserSecret));
-
-const io = setupSocket(server); // Setup socket.io
 
 // origin: "https://fr-real-estate.netlify.app", // Replace with your Netlify domain
 app.use(
@@ -39,7 +35,10 @@ app.use("/api/test", testRoute);
 app.use("/api/chats", chatRoute);
 app.use("/api/messages", messageRoute);
 
+// const server = http.createServer(app); // Create HTTP server using Express app
+// const io = setupSocket(server); // Setup socket.io
+
 const PORT = process.env.PORT || 8800;
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
