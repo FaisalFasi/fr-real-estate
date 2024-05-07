@@ -3,7 +3,7 @@ import "./login.scss";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiRequest from "../../lib/apiRequest";
+import apiRequest from "../../lib/apiRequest.js";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 

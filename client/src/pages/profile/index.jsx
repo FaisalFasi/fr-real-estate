@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import ListComp from "../../components/ListComp/ListComp";
 import "./profile.scss";
 import Chat from "../../components/Chat/Chat";
-import apiRequest from "../../lib/apiRequest";
+import apiRequest from "../../lib/apiRequest.js";
 import { useLoaderData, useNavigate, Await } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
