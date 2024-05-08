@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import setupSocket from "./lib/socket.js";
-import http from "http";
+// import setupSocket from "./lib/socket.js";
+// import http from "http";
 
 // routes import here
 import postRoute from "./routes/post.route.js";
@@ -15,15 +15,14 @@ import messageRoute from "./routes/message.route.js";
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
-const cookieParserSecret = process.env.JWT_SECRET_KEY; // Secret key for signing cookies
-app.use(cookieParser(cookieParserSecret));
-
+// const cookieParserSecret = process.env.JWT_SECRET_KEY; // Secret key for signing cookies
+console.log("Client URL :", process.env.CLIENT_URL);
 // origin: "https://fr-real-estate.netlify.app", // Replace with your Netlify domain
 app.use(
   cors({
-    origin: true, // Replace with your Netlify domain
-
+    origin: process.env.CLIENT_URL, // Replace with your Netlify domain
     credentials: true, // Allow credentials (cookies)
   })
 );

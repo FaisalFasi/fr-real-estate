@@ -16,12 +16,17 @@ const Navbar = () => {
   // if (currentUserInfo) fetch();
 
   useEffect(() => {
-    if (currentUserInfo) {
-      fetchNotifications().catch((error) => {
+    const fetchNotifications = async () => {
+      try {
+        if (currentUserInfo) {
+          await fetchNotifications();
+        }
+      } catch (error) {
         console.error("Error fetching notifications:", error);
-        // Optionally, you can handle the error here, e.g., show a message to the user
-      });
-    }
+      }
+    };
+
+    fetchNotifications();
   }, [currentUserInfo, fetchNotifications]);
 
   return (
@@ -45,7 +50,7 @@ const Navbar = () => {
             />
             <span>{currentUserInfo.username}</span>
             <Link to="/profile" className="profile">
-              {number > 0 && <div className="notification">{number}</div>}{" "}
+              {number > 0 && <div className="notification">{number}</div>}
               <span>Profile</span>
             </Link>
           </div>

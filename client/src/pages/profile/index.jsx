@@ -25,9 +25,16 @@ const Profile = () => {
       updateUser(null);
       navigate("/");
     } catch (err) {
-      console.error(err);
+      console.error("Logout error:", err);
     }
   };
+
+  // Check if user is authenticated
+  if (!currentUserInfo) {
+    // Redirect unauthenticated users to login page
+    navigate("/");
+    return null; // Optionally render a loading spinner or message
+  }
 
   return (
     <div className="profilePage">
