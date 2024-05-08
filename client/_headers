@@ -1,4 +1,4 @@
-Access-Control-Allow-Origin:http://localhost:8800
+Access-Control-Allow-Origin:https://fr-real-estate-client.onrender.com
 Access-Control-Allow-Credentials:true
 
 # Optional: Specify allowed methods and headers if needed
