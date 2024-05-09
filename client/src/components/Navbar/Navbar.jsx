@@ -16,7 +16,9 @@ const Navbar = () => {
   // if (currentUserInfo) fetch();
 
   useEffect(() => {
-    const fetchNotifications = async () => {
+    console.log("useEffect running"); // Log when useEffect runs
+
+    const getNotifications = async () => {
       try {
         if (currentUserInfo) {
           await fetchNotifications();
@@ -26,8 +28,8 @@ const Navbar = () => {
       }
     };
 
-    fetchNotifications();
-  }, [currentUserInfo, fetchNotifications]);
+    getNotifications();
+  }, [currentUserInfo]);
 
   return (
     <nav>
