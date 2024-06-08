@@ -16,17 +16,12 @@ const Navbar = () => {
   // if (currentUserInfo) fetch();
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        if (currentUserInfo) {
-          await fetchNotifications();
-        }
-      } catch (error) {
+    if (currentUserInfo) {
+      fetchNotifications().catch((error) => {
         console.error("Error fetching notifications:", error);
-      }
-    };
-
-    fetchNotifications();
+        // Optionally, you can handle the error here, e.g., show a message to the user
+      });
+    }
   }, [currentUserInfo, fetchNotifications]);
 
   return (

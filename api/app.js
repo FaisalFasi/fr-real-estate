@@ -1,10 +1,14 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-// import setupSocket from "./lib/socket.js";
-// import http from "http";
+import setupSocket from "./lib/socket.js";
+import http from "http";
+import dotenv from "dotenv";
 
-// routes import here
+// Load environment variables from .env file
+dotenv.config();
+
+// Routes import here
 import postRoute from "./routes/post.route.js";
 import authRoute from "./routes/auth.route.js";
 import testRoute from "./routes/test.route.js";
@@ -15,14 +19,13 @@ import messageRoute from "./routes/message.route.js";
 const app = express();
 
 app.use(express.json());
-app.use(cookieParser());
 
-// const cookieParserSecret = process.env.JWT_SECRET_KEY; // Secret key for signing cookies
-console.log("Client URL :", process.env.CLIENT_URL);
-// origin: "https://fr-real-estate.netlify.app", // Replace with your Netlify domain
+const cookieParserSecret = process.env.JWT_SECRET_KEY; // Secret key for signing cookies
+app.use(cookieParser(cookieParserSecret));
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL, // Replace with your Netlify domain
+    origin: process.env.CLIENT_URL || "http://localhost:3000", // Replace with your client domain
     credentials: true, // Allow credentials (cookies)
   })
 );
@@ -34,10 +37,10 @@ app.use("/api/test", testRoute);
 app.use("/api/chats", chatRoute);
 app.use("/api/messages", messageRoute);
 
-// const server = http.createServer(app); // Create HTTP server using Express app
-// const io = setupSocket(server); // Setup socket.io
+const server = http.createServer(app); // Create HTTP server using Express app
+const io = setupSocket(server); // Setup socket.io
 
 const PORT = process.env.PORT || 8800;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

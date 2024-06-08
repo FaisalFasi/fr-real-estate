@@ -6,7 +6,7 @@ export const useNotificationStore = create((set) => ({
 
   fetch: async () => {
     try {
-      const res = await apiRequest.get("/users/notification");
+      const res = await apiRequest("/users/notification");
 
       console.log("Response Notifications: ", res?.data);
       set({ number: res?.data });
