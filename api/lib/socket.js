@@ -3,7 +3,7 @@ import { Server } from "socket.io";
 const setupSocket = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: true,
+      origin: process.env.CLIENT_URL || "http://localhost:5173", // Replace with your client domain
       methods: ["GET", "POST"],
       credentials: true,
     },
