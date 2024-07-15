@@ -65,9 +65,11 @@ export const login = async (req, res) => {
     //  Testing 002 - 2021-09-29
     res.cookie("token", token, {
       withCredentials: true,
+      httpOnly: true,
       sameSite: "none",
       secure: true,
-      httpOnly: true,
+      maxAge: age,
+      path: "/",
     });
 
     //  Testing 001 - 2021-09-29
