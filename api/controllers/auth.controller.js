@@ -69,7 +69,6 @@ export const login = async (req, res) => {
       secure: process.env.NODE_ENV === "production", // Set secure only in production
       maxAge: age,
       path: "/",
-      domain: process.env.CLIENT_URL || "localhost",
     });
 
     console.log("res.cookie: ", res.cookie);
