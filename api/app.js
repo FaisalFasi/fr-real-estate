@@ -38,7 +38,7 @@ app.use("/api/chats", chatRoute);
 app.use("/api/messages", messageRoute);
 
 const server = http.createServer(app); // Create HTTP server using Express app
-const io = setupSocket(server); // Setup socket.io
+// const io = setupSocket(server); // Setup socket.io
 
 const PORT = process.env.PORT || 8800;
 server.listen(PORT, () => {
