@@ -16,6 +16,7 @@ const Navbar = () => {
   // if (currentUserInfo) fetch();
 
   useEffect(() => {
+    console.log("currentUserInfo :", currentUserInfo);
 
     if (currentUserInfo) {
       fetchNotifications().catch((error) => {

@@ -17,8 +17,10 @@ import chatRoute from "./routes/chat.route.js";
 import messageRoute from "./routes/message.route.js";
 
 const app = express();
+app.set("trust proxy", 1);
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const cookieParserSecret = process.env.JWT_SECRET_KEY; // Secret key for signing cookies
 app.use(cookieParser(cookieParserSecret));
