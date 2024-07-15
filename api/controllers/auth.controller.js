@@ -59,20 +59,19 @@ export const login = async (req, res) => {
     );
 
     const { password: userPassword, ...userInfo } = user;
-    console.log("userInfo: ", userInfo);
-    console.log("Token: ", token);
 
     //  Testing 002 - 2021-09-29
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "none",
       secure: process.env.NODE_ENV === "production", // Set secure only in production
       maxAge: age,
-      path: "/",
+      // for localhost uncomment
+      // sameSite: "lax",
+      // for deployment uncomment
+      sameSite: "none",
     });
 
     console.log("res.cookie: ", res.cookie);
-    console.log("response: ", res);
     res.status(200).json(userInfo);
 
     // here is the original code
