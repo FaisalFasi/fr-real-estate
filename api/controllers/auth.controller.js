@@ -63,30 +63,18 @@ export const login = async (req, res) => {
     console.log("Token: ", token);
 
     //  Testing 002 - 2021-09-29
-    res
-      .cookie("token", token, {
-        withCredentials: true,
-        httpOnly: true,
-        sameSite: "none",
-        secure: process.env.NODE_ENV === "production", // Set secure only in production
-        maxAge: age,
-        path: "/",
-        domain: process.env.CLIENT_URL || "http://localhost:5173",
-      })
-      .status(200)
-      .json(userInfo);
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: process.env.NODE_ENV === "production", // Set secure only in production
+      maxAge: age,
+      path: "/",
+      domain: process.env.CLIENT_URL || "localhost",
+    });
 
-    //  Testing 001 - 2021-09-29
-    // res
-    //   .send("token", token, {
-    //     httpOnly: true,
-    //     secure: process.env.NODE_ENV === "production", // Set secure only in production
-    //     sameSite: "none",
-    //     maxAge: age,
-    //     path: "/",
-    //   })
-    //   .status(200)
-    //   .json(userInfo);
+    console.log("res.cookie: ", res.cookie);
+    console.log("response: ", res);
+    res.status(200).json(userInfo);
 
     // here is the original code
     // res
@@ -99,7 +87,7 @@ export const login = async (req, res) => {
     //   .status(200)
     //   .json(userInfo);
   } catch (error) {
-    console.log(error);
+    console.error("Error logging in:", error);
     res.status(500).json({ message: "Failed to Login!" });
   }
 };

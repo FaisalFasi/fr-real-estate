@@ -49,8 +49,8 @@ const Chat = ({ chats }) => {
       e.target.reset();
 
       socket.emit("sendMessage", {
-        receiverId: singleChat.receiver.id,
-        data: response.data,
+        receiverId: singleChat?.receiver?.id,
+        data: response?.data,
       });
     } catch (err) {
       console.error(err);
@@ -103,9 +103,9 @@ const Chat = ({ chats }) => {
             }}
             onClick={() => handleOpenChat(chat.id, chat.receiver)}
           >
-            <img src={chat.receiver.avatar || "/noavatar.jpg"} alt="icon" />
-            <span>{chat.receiver.username}</span>
-            <p>{chats.lastMessage}</p>
+            <img src={chat?.receiver?.avatar || "/noavatar.jpg"} alt="icon" />
+            <span>{chat?.receiver?.username}</span>
+            <p>{chats?.lastMessage}</p>
           </div>
         ))}
       </div>
@@ -114,10 +114,10 @@ const Chat = ({ chats }) => {
           <div className="top">
             <div className="user">
               <img
-                src={singleChat.receiver.avatar || "/noavatar.jpg"}
+                src={singleChat?.receiver?.avatar || "/noavatar.jpg"}
                 alt="icon"
               />
-              {singleChat.receiver.username}
+              {singleChat?.receiver?.username}
             </div>
             <span className="close" onClick={() => setSingleChat(false)}>
               X

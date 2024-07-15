@@ -13,18 +13,7 @@ const Navbar = () => {
   const fetchNotifications = useNotificationStore((state) => state.fetch);
   const number = useNotificationStore((state) => state.number);
 
-  // if (currentUserInfo) fetch();
-
-  useEffect(() => {
-    console.log("currentUserInfo :", currentUserInfo);
-
-    if (currentUserInfo) {
-      fetchNotifications().catch((error) => {
-        console.error("Error fetching notifications:", error);
-        // Optionally, you can handle the error here, e.g., show a message to the user
-      });
-    }
-  }, [currentUserInfo, fetchNotifications]);
+  if (currentUserInfo) fetchNotifications();
 
   return (
     <nav>
