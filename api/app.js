@@ -26,7 +26,7 @@ app.use(cookieParser(cookieParserSecret));
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173", // Replace with your client domain
-    withCredentials: true, // Allow credentials (cookies)
+    credentials: true, // Allow credentials (cookies)
   })
 );
 

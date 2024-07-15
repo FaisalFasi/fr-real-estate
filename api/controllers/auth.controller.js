@@ -61,16 +61,28 @@ export const login = async (req, res) => {
     const { password: userPassword, ...userInfo } = user;
     console.log("userInfo: ", userInfo);
     console.log("Token: ", token);
-    res
-      .send("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Set secure only in production
-        sameSite: "none",
-        maxAge: age,
-        path: "/",
-      })
-      .status(200)
-      .json(userInfo);
+
+    //  Testing 002 - 2021-09-29
+    res.cookie("token", token, {
+      withCredentials: true,
+      sameSite: "none",
+      secure: true,
+      httpOnly: true,
+    });
+
+    //  Testing 001 - 2021-09-29
+    // res
+    //   .send("token", token, {
+    //     httpOnly: true,
+    //     secure: process.env.NODE_ENV === "production", // Set secure only in production
+    //     sameSite: "none",
+    //     maxAge: age,
+    //     path: "/",
+    //   })
+    //   .status(200)
+    //   .json(userInfo);
+
+    // here is the original code
     // res
     //   .cookie("token", token, {
     //     httpOnly: true,
