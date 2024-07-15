@@ -25,8 +25,8 @@ app.use(cookieParser(cookieParserSecret));
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000", // Replace with your client domain
-    credentials: true, // Allow credentials (cookies)
+    origin: process.env.CLIENT_URL || "http://localhost:5173", // Replace with your client domain
+    withCredentials: true, // Allow credentials (cookies)
   })
 );
 
@@ -38,7 +38,7 @@ app.use("/api/chats", chatRoute);
 app.use("/api/messages", messageRoute);
 
 const server = http.createServer(app); // Create HTTP server using Express app
-// const io = setupSocket(server); // Setup socket.io
+const io = setupSocket(server); // Setup socket.io
 
 const PORT = process.env.PORT || 8800;
 server.listen(PORT, () => {

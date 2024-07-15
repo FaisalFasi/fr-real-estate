@@ -62,14 +62,24 @@ export const login = async (req, res) => {
     console.log("userInfo: ", userInfo);
     console.log("Token: ", token);
     res
-      .cookie("token", token, {
+      .send("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Set secure only in production
+        sameSite: "none",
         maxAge: age,
-        sameSite: "lax",
+        path: "/",
       })
       .status(200)
       .json(userInfo);
+    // res
+    //   .cookie("token", token, {
+    //     httpOnly: true,
+    //     secure: process.env.NODE_ENV === "production", // Set secure only in production
+    //     maxAge: age,
+    //     sameSite: "lax",
+    //   })
+    //   .status(200)
+    //   .json(userInfo);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Failed to Login!" });
