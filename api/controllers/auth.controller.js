@@ -60,19 +60,43 @@ export const login = async (req, res) => {
 
     const { password: userPassword, ...userInfo } = user;
 
-    //  Testing 002 - 2021-09-29
+    // Testing 003 - 2021-09-29
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Set secure only in production
-      maxAge: age,
-      // for localhost uncomment
-      // sameSite: "lax",
-      // for deployment uncomment
-      sameSite: "none",
+      secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
+      maxAge: age, // Cookie expiry time
+      sameSite: "none", // Necessary for cross-origin requests
+      path: "/", // Root path
+      domain: "fr-real-estate-1.onrender.com", // Frontend domain
     });
 
-    console.log("res.cookie: ", res.cookie);
+    // Debugging information
+    console.log("Cookie settings: ", {
+      token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: age,
+      sameSite: "none",
+      path: "/",
+      domain: "fr-real-estate-1.onrender.com",
+    });
+
     res.status(200).json(userInfo);
+
+    //  Testing 002 - 2021-09-29
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production", // Set secure only in production
+    //   maxAge: age,
+    //   // for localhost uncomment
+    //   // sameSite: "lax",
+    //   // for deployment uncomment
+    //   sameSite: "none",
+    // });
+
+    // console.log("res.cookie: ", res.cookie);
+    // res.status(200).json(userInfo);
 
     // here is the original code
     // res
