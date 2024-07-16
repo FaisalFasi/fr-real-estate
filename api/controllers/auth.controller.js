@@ -66,20 +66,9 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
       maxAge: age, // Cookie expiry time
-      sameSite: "none", // Necessary for cross-origin requests
+      sameSite: "lax",
       path: "/", // Root path
       domain: "fr-real-estate-1.onrender.com", // Frontend domain
-    });
-
-    // Debugging information
-    console.log("Cookie settings: ", {
-      token,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: age,
-      sameSite: "none",
-      path: "/",
-      domain: "fr-real-estate-1.onrender.com",
     });
 
     res.status(200).json(userInfo);
