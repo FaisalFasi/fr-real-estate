@@ -60,33 +60,17 @@ export const login = async (req, res) => {
 
     const { password: userPassword, ...userInfo } = user;
 
-    // Testing 003 - 2021-09-29
-
+    // working cookie code
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
       maxAge: age, // Cookie expiry time
       sameSite: "none",
       path: "/", // Root path
-      // domain: process.env.CLIENT_URL,
     });
 
     console.log(" cookie domain name ", process.env.CLIENT_URL);
     res.status(200).json(userInfo);
-
-    //  Testing 002 - 2021-09-29
-    // res.cookie("token", token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production", // Set secure only in production
-    //   maxAge: age,
-    //   // for localhost uncomment
-    //   // sameSite: "lax",
-    //   // for deployment uncomment
-    //   sameSite: "none",
-    // });
-
-    // console.log("res.cookie: ", res.cookie);
-    // res.status(200).json(userInfo);
 
     // here is the original code
     // res
