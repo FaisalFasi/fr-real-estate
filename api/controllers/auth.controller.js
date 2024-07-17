@@ -60,17 +60,32 @@ export const login = async (req, res) => {
 
     const { password: userPassword, ...userInfo } = user;
 
+    const allowedDomains = [
+      "https://fr-real-estate-1.onrender.com",
+      "https://fr-real-estate-1.onrender.com/",
+      "fr-real-estate-1.onrender.com",
+      "fr-real-estate-1.onrender.com/",
+      "onrender.com",
+      "localhost:5173",
+    ];
+    const cookieDomain =
+      process.env.CLIENT_URL || "fr-real-estate-1.onrender.com";
+
+    if (!allowedDomains.includes(cookieDomain)) {
+      console.error(`Invalid domain: ${cookieDomain}`);
+    }
     // Testing 003 - 2021-09-29
 
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
       maxAge: age, // Cookie expiry time
-      sameSite: "lax",
+      sameSite: "none",
       path: "/", // Root path
-      domain: "fr-real-estate-1.onrender.com", // Frontend domain
+      domain: cookieDomain,
     });
 
+    console.log(" cookie domain name ", process.env.CLIENT_URL);
     res.status(200).json(userInfo);
 
     //  Testing 002 - 2021-09-29
