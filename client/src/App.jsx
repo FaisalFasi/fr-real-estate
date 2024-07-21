@@ -15,6 +15,9 @@ import {
   profilePageLoader,
   singlePageLoader,
 } from "./lib/loaders";
+import Agents from "./pages/agents";
+import Contact from "./pages/contact";
+import About from "./pages/about";
 
 function App() {
   const router = createBrowserRouter([
@@ -25,6 +28,9 @@ function App() {
         { path: "/", element: <Home /> },
         { path: "/list", element: <ListPage />, loader: listPageLoader },
         { path: "/:id", element: <SinglePage />, loader: singlePageLoader },
+        { path: "/about", element: <About /> },
+        { path: "/contact", element: <Contact /> },
+        { path: "/agents", element: <Agents /> },
 
         {
           path: "/login",

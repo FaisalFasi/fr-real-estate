@@ -65,11 +65,10 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
       maxAge: age, // Cookie expiry time
-      sameSite: "none",
+      sameSite: "lax",
       path: "/", // Root path
     });
 
-    console.log(" cookie domain name ", process.env.CLIENT_URL);
     res.status(200).json(userInfo);
 
     // here is the original code

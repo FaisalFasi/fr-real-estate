@@ -25,10 +25,10 @@ app.use(cookieParser(cookieParserSecret));
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    // origin: process.env.CLIENT_URL,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true, // Allow credentials (cookies)
-    // origin: process.env.CLIENT_URL || "http://localhost:5173", // Replace with your client domain
+    origin: process.env.CLIENT_URL, // Replace with your client domain
   })
 );
 

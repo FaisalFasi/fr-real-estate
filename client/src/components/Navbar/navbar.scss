@@ -6,7 +6,7 @@ nav {
   justify-content: space-between;
   align-items: center;
 
-  a {
+  Link {
     transition: all 0.3s ease;
 
     @include sm {
@@ -24,6 +24,55 @@ nav {
     align-items: center;
     gap: 20px;
 
+    .links {
+      @include md {
+        display: flex;
+        gap: 10px;
+      }
+      @include sm {
+        display: none;
+      }
+
+      a {
+        text-decoration: none;
+        color: #333;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 500;
+        position: relative;
+        transition: background-color 0.3s ease, color 0.3s ease,
+          box-shadow 0.3s ease;
+
+        &:hover {
+          background-color: #4b8bd0;
+          color: white;
+          box-shadow: 0 0 12px rgba(75, 139, 208, 0.7);
+        }
+
+        &:active {
+          background-color: white;
+          color: #4b8bd0;
+          box-shadow: 0 0 12px rgba(75, 139, 208, 0.7);
+        }
+
+        &.active {
+          &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 50%;
+            height: 2px;
+            background-color: #4b8bd0;
+            transform: translateX(-50%);
+          }
+
+          color: #4b8bd0;
+          background-color: white;
+        }
+      }
+    }
+
     .logo {
       font-size: 20px;
       font-weight: bold;
@@ -32,7 +81,7 @@ nav {
       gap: 10px;
 
       img {
-        width: 28px;
+        width: 45px;
       }
 
       span {
@@ -42,6 +91,9 @@ nav {
         @include sm {
           display: initial;
         }
+      }
+      &:hover {
+        color: #4b8bd0; /* Change logo color on hover to match icon color */
       }
     }
   }
