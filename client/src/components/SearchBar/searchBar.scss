@@ -23,27 +23,33 @@
         border-top-right-radius: 5px;
         border-left: none;
       }
+
+      @include sm {
+        padding: 5px 10px;
+      }
     }
   }
   form {
     display: flex;
     justify-content: space-between;
-    gap: 5px;
+    // gap: 5px;
 
     @include sm {
       flex-direction: column;
     }
     input {
-      padding: 0px 20px;
+      padding: 0px 10px;
       width: 200px;
       height: 64px;
+      flex: auto;
 
       @include lg {
-        padding: 0px 5px;
+        padding: 0px 10px;
 
         &:nth-child(2),
         &:nth-child(3) {
           width: 140px;
+          border-left: 1px solid #999;
         }
       }
       @include md {
@@ -56,8 +62,10 @@
       }
 
       @include sm {
+        height: 30px;
         width: 100%;
-        padding: 20px;
+        padding: 10px;
+        border-bottom: 1px solid black;
       }
     }
 
@@ -66,12 +74,12 @@
       flex: 1;
       justify-content: center;
       align-items: center;
-      background-color: #fece51;
+      background-color: #4b8bd0;
 
       button {
         border: none;
         cursor: pointer;
-        background-color: #fece51;
+        background-color: #4b8bd0;
 
         @include sm {
           padding: 10px;

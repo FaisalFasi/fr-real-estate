@@ -1,30 +1,23 @@
 @import "../../responsive.scss";
 
 .layout {
-  height: 100vh;
-  max-width: 1366px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 20px;
-  padding-right: 20px;
+  min-height: 100vh;
+  height: 100%;
+
   display: flex;
   flex-direction: column;
+  // background-color: #f7f7f7;
+  // background-color: #f4f4f4;
+  // background-color: #d0e4f3; /* Light Blue */
+  // background-color: #f5f5dc; /* Beige */
+  // background: linear-gradient(to bottom, #ffffff, #f0f4f8);
 
-  @include lg {
-    max-width: 1280px;
-  }
-  @include md {
-    max-width: 768px;
-  }
-  @include sm {
-    max-width: 640px;
-  }
   .content {
     //one way of doing it is to use calc function
     // height: calc(100vh - 100px);
     // another way is to use flexbox
     // flex: 1;
-    height: calc(100vh - 100px);
+    // height: calc(100vh - 100px);
     // background: #000;
   }
 }
