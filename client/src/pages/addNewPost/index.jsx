@@ -186,9 +186,11 @@ const AddNewPost = () => {
         </div>
       </div>
       <div className="sideContainer">
-        {images.map((image, index) => (
-          <img src={image} key={index} alt="" />
-        ))}
+        <div className="uploadImages">
+          {images.map((image, index) => (
+            <img src={image} key={index} alt="" />
+          ))}
+        </div>
 
         <UploadWidget
           uwConfig={{

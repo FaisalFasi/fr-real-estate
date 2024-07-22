@@ -15,7 +15,6 @@ const Home = () => {
           alt="BG"
           className="absolute top-0 left-0 w-full min-h-[370px] max-h-[430px] object-cover bg-black "
         />
-        {/* <div className="absolute top-0 left-0 w-full h-full min-h-[370px] object-cover bg-black bg-opacity-50 "></div> */}
         <div className="relative w-full h-full ">
           <div className="textContainer">
             <div className="wrapper">

@@ -15,10 +15,10 @@ const MobileNavbar = ({ anchor, state, toggleDrawer, currentUserInfo }) => {
   const additionalLinks = currentUserInfo
     ? [{ path: "/profile", label: "Profile" }]
     : [
-        { path: "/login", label: "Login" },
-        { path: "/register", label: "Signup" },
+        { path: "/login", label: "Log In" },
+        { path: "/register", label: "Sign Up" },
       ];
-  const links = [...baseLinks, ...additionalLinks];
+  const links = [...additionalLinks, ...baseLinks];
 
   const list = (anchor) => (
     <Box

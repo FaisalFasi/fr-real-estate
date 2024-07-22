@@ -3,6 +3,7 @@
 .profilePage {
   display: flex;
   height: 100%;
+  padding: 40px;
 
   @include md {
     flex-direction: column;

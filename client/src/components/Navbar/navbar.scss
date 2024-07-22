@@ -5,8 +5,14 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 40px;
 
+  @include md {
+    padding: 0px 20px;
+  }
+  @include sm {
+    padding: 0px 10px;
+  }
   Link {
     transition: all 0.3s ease;
 
@@ -116,18 +122,29 @@ nav {
     }
     a {
       padding: 12px 24px;
-      margin: 20px;
+      // margin: 20px;
     }
 
     .user {
       display: flex;
       align-items: center;
       font-weight: bold;
+      gap: 20px;
+
+      .userName {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        @include sm {
+          margin-right: 20px;
+        }
+      }
       img {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        margin-right: 20px;
+
         object-fit: cover;
       }
       span {
@@ -138,11 +155,15 @@ nav {
 
       .profile {
         padding: 12px 24px;
-        background-color: #8cdbff;
+        background-color: #2bbcff;
         cursor: pointer;
         border: none;
-        // color: white;
         position: relative;
+
+        &:hover {
+          background-color: #4b8bd0;
+          color: white;
+        }
 
         .notification {
           position: absolute;

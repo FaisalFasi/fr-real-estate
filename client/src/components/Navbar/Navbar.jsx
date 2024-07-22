@@ -64,11 +64,13 @@ const Navbar = () => {
       <div className="right">
         {currentUserInfo ? (
           <div className="user">
-            <img
-              src={currentUserInfo.avatar || "/noavatar.jpg"}
-              alt="user image"
-            />
-            <span>{currentUserInfo.username}</span>
+            <div className="userName">
+              <img
+                src={currentUserInfo.avatar || "/noavatar.jpg"}
+                alt="user image"
+              />
+              <span>{currentUserInfo.username}</span>
+            </div>
             <Link to="/profile" className="profile hidden md:block">
               {number > 0 && <div className="notification">{number}</div>}
               <span>Profile</span>
