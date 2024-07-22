@@ -42,31 +42,40 @@ const Signup = () => {
   };
   return (
     <div className="register">
-      <div className="formContainer">
-        <form onSubmit={handleSubmit}>
-          <h1>Create an Account</h1>
-          <input
-            name="username"
-            autoComplete="on"
-            type="text"
-            placeholder="Username"
-          />
-          <input
-            name="email"
-            autoComplete="on"
-            type="text"
-            placeholder="Email"
-          />
-          <input
-            name="password"
-            autoComplete="on"
-            type="password"
-            placeholder="Password"
-          />
-          <button disabled={loading}>Register</button>
-          {error && <span className="error">{error}</span>}
-          <Link to="/login">Do you have an account?</Link>
-        </form>
+      <div className="relative w-full h-full min-h-[500px] max-h-[630px]">
+        <img
+          src="/images/bgSignIn.jpg"
+          alt="BG"
+          className="absolute top-0 left-0 w-full min-h-[500px] max-h-[630px] object-cover bg-black "
+        />
+        <div className="relative w-full h-fit flex  ">
+          <div className="formContainer">
+            <form onSubmit={handleSubmit}>
+              <h1>Create an Account</h1>
+              <input
+                name="username"
+                autoComplete="on"
+                type="text"
+                placeholder="Username"
+              />
+              <input
+                name="email"
+                autoComplete="on"
+                type="text"
+                placeholder="Email"
+              />
+              <input
+                name="password"
+                autoComplete="on"
+                type="password"
+                placeholder="Password"
+              />
+              <button disabled={loading}>Register</button>
+              {error && <span className="error">{error}</span>}
+              <Link to="/login">Do you have an account?</Link>
+            </form>
+          </div>
+        </div>
       </div>
       <div className="imgContainer">
         <img src="/bg.png" alt="" />

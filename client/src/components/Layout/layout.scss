@@ -20,4 +20,11 @@
     // height: calc(100vh - 100px);
     // background: #000;
   }
+  .signInWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: #f7f7f7;
+  }
 }

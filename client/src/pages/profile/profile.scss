@@ -86,7 +86,7 @@
   .chatContainer {
     flex: 2;
     background-color: #8cdbff;
-    height: 100%;
+    min-height: 100%;
 
     @include md {
       flex: none;
