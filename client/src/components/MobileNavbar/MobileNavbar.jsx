@@ -4,15 +4,22 @@ import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import { Link } from "react-router-dom";
 
-const links = [
+const baseLinks = [
   { path: "/", label: "Home" },
-  { path: "/profile", label: "Profile" },
   { path: "/about", label: "About" },
   { path: "/contact", label: "Contact" },
   { path: "/agents", label: "Agents" },
 ];
 
-const MobileNavbar = ({ anchor, state, toggleDrawer }) => {
+const MobileNavbar = ({ anchor, state, toggleDrawer, currentUserInfo }) => {
+  const additionalLinks = currentUserInfo
+    ? [{ path: "/profile", label: "Profile" }]
+    : [
+        { path: "/login", label: "Login" },
+        { path: "/register", label: "Signup" },
+      ];
+  const links = [...baseLinks, ...additionalLinks];
+
   const list = (anchor) => (
     <Box
       sx={{

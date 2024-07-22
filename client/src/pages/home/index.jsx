@@ -6,7 +6,6 @@ import { AuthContext } from "../../context/AuthContext";
 
 const Home = () => {
   const { currentUserInfo } = useContext(AuthContext);
-  console.log(" current user info ", currentUserInfo);
 
   return (
     <section className="home">

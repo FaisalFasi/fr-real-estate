@@ -93,6 +93,7 @@ const Navbar = () => {
           anchor="right"
           state={state}
           toggleDrawer={toggleDrawer}
+          currentUserInfo={currentUserInfo}
         />
       </div>
     </nav>
