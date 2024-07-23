@@ -143,7 +143,7 @@ const SinglePage = () => {
               <img src="/restaurant.png" alt="restaurant image" />
               <div className="featureText">
                 <span>Restaurant</span>
-                <p>{post.postDetail.resturant}m away</p>
+                <p>{post.postDetail.restaurant}m away</p>
               </div>
             </div>
           </div>
@@ -154,14 +154,16 @@ const SinglePage = () => {
           <div className="buttons">
             <button>
               <img src="/chat.png" alt="chat icon" />
-              Send a Message
+              <label htmlFor="">Send a Message</label>
             </button>
             <button
               onClick={handleSave}
               style={{ backgroundColor: saved ? "#fece51" : "white" }}
             >
               <img src="/save.png" alt="save icon" />
-              {saved ? "Place is Saved" : "Save The Place"}
+              <label htmlFor="">
+                {saved ? "Place is Saved" : "Save The Place"}
+              </label>
             </button>
           </div>
         </div>
