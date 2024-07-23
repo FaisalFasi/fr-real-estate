@@ -10,7 +10,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 20px 10px;
+    padding: 20px 0px;
 
     @include lg {
       height: 300px;
@@ -26,7 +26,8 @@
     }
 
     h1 {
-      font-weight: 300;
+      font-size: 20px;
+      font-weight: 400;
     }
     .message {
       background-color: #fff;
@@ -55,6 +56,7 @@
     flex-direction: column;
     // justify-content: space-between;
     background-color: #fff;
+    border: 1px solid #2bbcff;
 
     @include lg {
       justify-content: space-between;
@@ -70,7 +72,7 @@
     }
 
     .top {
-      background-color: #ffc68d;
+      background-color: #2bbcff;
       padding: 20px;
       display: flex;
       font-weight: bold;
@@ -139,7 +141,7 @@
       }
     }
     .bottom {
-      border-top: 2px solid #ffc68d;
+      border-top: 2px solid #2bbcff;
       height: 60px;
       display: flex;
       align-items: center;
@@ -155,7 +157,7 @@
       button {
         flex: 1;
         height: 100%;
-        background-color: #ffc68d;
+        background-color: #2bbcff;
         border: none;
         cursor: pointer;
         font-weight: bold;

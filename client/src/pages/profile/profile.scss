@@ -4,6 +4,7 @@
   display: flex;
   height: 100%;
   padding: 40px;
+  gap: 20px;
 
   @include md {
     flex-direction: column;
@@ -12,6 +13,7 @@
   @include sm {
     flex-direction: column;
     overflow-y: scroll;
+    padding: 20px 10px;
   }
 
   .details {
@@ -27,7 +29,7 @@
     }
 
     .wrapper {
-      padding-right: 50px;
+      // padding-right: 50px;
       display: flex;
       flex-direction: column;
       gap: 50px;
@@ -43,15 +45,32 @@
         justify-content: space-between;
         align-items: center;
 
-        h1 {
-          font-weight: 300;
+        @include sm {
+          flex-direction: column;
+          align-items: start;
+          gap: 20px;
         }
 
-        button: {
+        h1 {
+          font-weight: 400;
+          font-size: 2.5rem;
+
+          @include sm {
+            font-weight: 400;
+            font-size: 2rem;
+          }
+        }
+
+        button {
           padding: 12px 24px;
-          background-color: #fece51;
+          background-color: #2bbcff;
           cursor: pointer;
           gap: 20px;
+
+          &:hover {
+            background-color: #4b8bd0;
+            color: white;
+          }
         }
       }
 
@@ -73,6 +92,10 @@
           border: none;
           border-radius: 5px;
           cursor: pointer;
+
+          &:hover {
+            background-color: rgb(0, 97, 97);
+          }
         }
 
         img {
@@ -87,7 +110,8 @@
   .chatContainer {
     flex: 2;
     background-color: #8cdbff;
-    min-height: 100%;
+    // min-height: fit-content;
+    height: 100%;
 
     @include md {
       flex: none;
@@ -101,6 +125,10 @@
     .wrapper {
       height: 100%;
       padding: 0px 20px;
+
+      @include sm {
+        padding: 0px 0px;
+      }
     }
   }
 }
