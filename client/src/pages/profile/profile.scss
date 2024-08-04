@@ -112,10 +112,9 @@
     background-color: #8cdbff;
     // min-height: fit-content;
     height: 100%;
-
     @include md {
       flex: none;
-      height: max-content;
+      height: fit-content;
       // margin-bottom: 0;
     }
     @include sm {
