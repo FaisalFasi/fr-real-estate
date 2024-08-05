@@ -80,7 +80,7 @@ const SinglePage = () => {
       </div>
       <div className="features">
         <div className="wrapper">
-          <p className="title">General</p>
+          <h3 className="title">General</h3>
           <div className="listVertical">
             <div className="feature">
               <img src="/utility.png" alt="feature image" />
@@ -112,7 +112,7 @@ const SinglePage = () => {
               </div>
             </div>
           </div>
-          <p className="title"> Sizes</p>
+          <h3 className="title"> Sizes</h3>
           <div className="sizes">
             <div className="size">
               <img src="/size.png" alt="size image" />
@@ -127,7 +127,7 @@ const SinglePage = () => {
               <span>{post.bathroom} bathroom</span>
             </div>
           </div>
-          <p className="title">Nearby Places </p>
+          <h3 className="title">Nearby Places </h3>
           <div className="listHorizontal">
             <div className="feature">
               <img src="/school.png" alt="school image" />
@@ -151,25 +151,27 @@ const SinglePage = () => {
               </div>
             </div>
           </div>
-          <p className="title">Location</p>
+          <h3 className="title">Location</h3>
           <div className="mapContainer">
             <Map items={post} />
           </div>
-          <div className="buttons">
-            <button>
-              <img src="/chat.png" alt="chat icon" />
-              <label htmlFor="">Send a Message</label>
-            </button>
-            <button
-              onClick={handleSave}
-              style={{ backgroundColor: saved ? "#2bbcff" : "" }}
-            >
-              <img src="/save.png" alt="save icon" />
-              <label htmlFor="">
-                {saved ? "Place is Saved" : "Save The Place"}
-              </label>
-            </button>
-          </div>
+          {post?.userId != currentUserInfo?.id && (
+            <div className="buttons">
+              <button>
+                <img src="/chat.png" alt="chat icon" />
+                <label htmlFor="">Send a Message</label>
+              </button>
+              <button
+                onClick={handleSave}
+                style={{ backgroundColor: saved ? "#2bbcff" : "" }}
+              >
+                <img src="/save.png" alt="save icon" />
+                <label htmlFor="">
+                  {saved ? "Place is Saved" : "Save The Place"}
+                </label>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
