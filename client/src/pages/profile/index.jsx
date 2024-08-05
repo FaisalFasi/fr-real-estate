@@ -13,6 +13,7 @@ const Profile = () => {
   const data = useLoaderData();
 
   const navigate = useNavigate();
+  console.log("Profile Data: ", data);
 
   const handleLogout = async () => {
     try {
@@ -65,7 +66,7 @@ const Profile = () => {
           <div className="title">
             {/* <ListComp /> */}
 
-            <h1>My List</h1>
+            <h1>My Posts</h1>
             <Link to="/add">
               <button>Create New Post</button>
             </Link>
@@ -104,7 +105,6 @@ const Profile = () => {
               errorElement={<p>Failed to load chats!</p>}
             >
               {(chatResponse) => {
-                console.log(chatResponse?.data);
                 return <Chat chats={chatResponse.data} />;
               }}
             </Await>

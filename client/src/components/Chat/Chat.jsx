@@ -6,6 +6,7 @@ import apiRequest from "../../lib/apiRequest.js";
 import { format } from "timeago.js";
 import { SocketContext } from "../../context/SocketContext";
 import { useNotificationStore } from "../../lib/notificationStore.js";
+import ShowText from "../ShowText/ShowText.jsx";
 
 const Chat = ({ chats }) => {
   const { currentUserInfo } = useContext(AuthContext);
@@ -29,6 +30,8 @@ const Chat = ({ chats }) => {
       console.error(err);
     }
   };
+
+  console.log("Chat Data: ", chats.length);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,24 +93,28 @@ const Chat = ({ chats }) => {
     <div className="chat">
       <div className="messages">
         <h1>Messages</h1>
-        {chats?.map((chat) => (
-          <div
-            className="message"
-            key={chat.id}
-            style={{
-              backgroundColor:
-                chat.seenBy.includes(currentUserInfo.id) ||
-                singleChat?.id === chat.id
-                  ? "white"
-                  : "lightblue",
-            }}
-            onClick={() => handleOpenChat(chat.id, chat.receiver)}
-          >
-            <img src={chat?.receiver?.avatar || "/noavatar.jpg"} alt="icon" />
-            <span>{chat?.receiver?.username}</span>
-            <p>{chats?.lastMessage}</p>
-          </div>
-        ))}
+        {chats.length > 0 ? (
+          chats?.map((chat) => (
+            <div
+              className="message"
+              key={chat.id}
+              style={{
+                backgroundColor:
+                  chat.seenBy.includes(currentUserInfo.id) ||
+                  singleChat?.id === chat.id
+                    ? "white"
+                    : "lightblue",
+              }}
+              onClick={() => handleOpenChat(chat.id, chat.receiver)}
+            >
+              <img src={chat?.receiver?.avatar || "/noavatar.jpg"} alt="icon" />
+              <span>{chat?.receiver?.username}</span>
+              <p>{chats?.lastMessage}</p>
+            </div>
+          ))
+        ) : (
+          <ShowText message="No message found" />
+        )}
       </div>
       {singleChat && (
         <div className="chatBox">

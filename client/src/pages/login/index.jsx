@@ -60,7 +60,7 @@ const Login = () => {
         <div className="relative w-full h-fit flex  ">
           <div className="formContainer">
             <form onSubmit={handleSubmit}>
-              <h1>Welcome back</h1>
+              <h1 className="text-xl font-bold">Welcome Back</h1>
               <input
                 name="username"
                 autoComplete="on"

@@ -51,7 +51,7 @@ const Signup = () => {
         <div className="relative w-full h-fit flex  ">
           <div className="formContainer">
             <form onSubmit={handleSubmit}>
-              <h1>Create an Account</h1>
+              <h1 className="text-xl font-bold">Sign Up</h1>
               <input
                 name="username"
                 autoComplete="on"

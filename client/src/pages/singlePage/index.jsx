@@ -53,7 +53,11 @@ const SinglePage = () => {
           <div className="info">
             <div className="top">
               <div className="post">
-                <h1>{post.title}</h1>
+                <h1>
+                  {post.title.length <= 30
+                    ? post.title
+                    : `${post.title.slice(0, 30)}...`}
+                </h1>
                 <div className="address">
                   <img src="/pin.png" alt="pin image" />
                   <span>{post.address}</span>
@@ -158,7 +162,7 @@ const SinglePage = () => {
             </button>
             <button
               onClick={handleSave}
-              style={{ backgroundColor: saved ? "#fece51" : "white" }}
+              style={{ backgroundColor: saved ? "#2bbcff" : "" }}
             >
               <img src="/save.png" alt="save icon" />
               <label htmlFor="">

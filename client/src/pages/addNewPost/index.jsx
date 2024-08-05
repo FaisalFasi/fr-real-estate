@@ -193,6 +193,9 @@ const AddNewPost = () => {
         </div>
         <div className="sideContainer">
           <div className="uploadImages">
+            {images.length < 1 && (
+              <h1 className="text-xl font-bold pb-8">Please Upload Photos</h1>
+            )}
             {images.map((image, index) => (
               <img src={image} key={index} alt="" />
             ))}
