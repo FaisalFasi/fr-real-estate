@@ -51,11 +51,11 @@ const Login = () => {
 
   return (
     <div className="login">
-      <div className="relative w-full h-full min-h-[400px] max-h-[530px]">
+      <div className="relative w-full h-full min-h-[500px] max-h-[630px]">
         <img
           src="/images/bgSignUp.jpg"
           alt="BG"
-          className="absolute top-0 left-0 w-full min-h-[400px] max-h-[530px] object-cover bg-black "
+          className="absolute top-0 left-0 w-full min-h-[500px] max-h-[630px] object-cover bg-black "
         />
         <div className="relative w-full h-fit flex  ">
           <div className="formContainer">

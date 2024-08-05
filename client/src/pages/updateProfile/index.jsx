@@ -39,7 +39,7 @@ const UpdateProfile = () => {
 
   return (
     <div className="profileUpdatePage">
-      <div className="relative w-full h-full min-h-[400px] max-h-[530px]">
+      <div className="relative w-full h-full min-h-[600px] max-h-[830px]">
         <img
           src="/images/bgSignUp.jpg"
           alt="BG"
@@ -83,7 +83,7 @@ const UpdateProfile = () => {
         </div>
       </div>
 
-      <div className="sideContainer relative mt-20">
+      <div className="sideContainer relative">
         <img
           src={avatar[0] || currentUserInfo.avatar || "/noavatar.jpg"}
           alt=""
