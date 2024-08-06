@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./singlePage.scss";
 import Slider from "../../components/Slider/Slider";
 import Map from "../../components/Map/Map";
@@ -11,8 +11,11 @@ import { useNavigate } from "react-router-dom";
 const SinglePage = () => {
   const navigate = useNavigate();
   const post = useLoaderData();
+
   const [saved, setSaved] = useState(post.isSaved);
   const { currentUserInfo } = useContext(AuthContext);
+
+  // useEffect(() => {}, [currentUserInfo]);
 
   const handleSave = async () => {
     // After react 19 update to useOptimisticReact Hook

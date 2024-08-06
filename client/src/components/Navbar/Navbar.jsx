@@ -71,7 +71,7 @@ const Navbar = () => {
               />
               <span>{currentUserInfo.username}</span>
             </div>
-            <Link to="/profile" className="profile hidden md:block">
+            <Link to="/profile" className="profile">
               {number > 0 && <div className="notification">{number}</div>}
               <span>Profile</span>
             </Link>

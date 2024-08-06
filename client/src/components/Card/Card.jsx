@@ -38,7 +38,11 @@ const Card = ({ item }) => {
           </div>
           {item?.userId != currentUserInfo?.id && (
             <div className="icons">
-              <div className="icon">
+              <div
+                className={`${
+                  currentUserInfo.id === item.userId ? "bg-blue-300" : ""
+                } icon`}
+              >
                 <img src="/save.png" alt="Save for later image" />
               </div>
               <div className="icon">

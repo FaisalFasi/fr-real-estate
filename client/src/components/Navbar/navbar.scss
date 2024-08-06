@@ -160,6 +160,13 @@ nav {
         border: none;
         position: relative;
 
+        @include md {
+          display: block;
+        }
+        @include sm {
+          display: none;
+        }
+
         &:hover {
           background-color: #4b8bd0;
           color: white;

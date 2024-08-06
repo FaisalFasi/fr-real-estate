@@ -13,7 +13,6 @@ const Profile = () => {
   const data = useLoaderData();
 
   const navigate = useNavigate();
-  console.log("Profile Data: ", data);
 
   const handleLogout = async () => {
     try {

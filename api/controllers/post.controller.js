@@ -1,5 +1,5 @@
 import prisma from "../lib/prisma.js";
-import Jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 export const getPosts = async (req, res) => {
   const {
@@ -41,6 +41,7 @@ export const getPost = async (req, res) => {
   const id = req.params.id;
 
   try {
+    // Fetch the post from the database
     const post = await prisma.post.findUnique({
       where: {
         id,
@@ -56,32 +57,108 @@ export const getPost = async (req, res) => {
       },
     });
 
-    // we need to verify if the user is logged in or not while saving a post
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
 
+    // Initialize the isSaved variable
+    let isSaved = false;
+
+    // Check if the user is logged in
     const token = req.cookies?.token;
 
     if (token) {
-      Jwt.verify(token, process.env.JWT_SECRET, async (err, payload) => {
-        if (!err) {
-          const saved = await prisma.savedPost.findFirst({
-            where: {
-              userId_postId: {
-                postId: id,
-                userId: payload.id, // payload is the user id
-              },
-            },
+      try {
+        // Promisify the JWT verification
+        const payload = await new Promise((resolve, reject) => {
+          jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(decoded);
+            }
           });
+        });
 
-          res.status(200).json({ ...post, isSaved: saved ? true : false });
-        }
-      });
+        // Check if the post is saved by the user
+        const saved = await prisma.savedPost.findUnique({
+          where: {
+            userId_postId: {
+              postId: id,
+              userId: payload.id,
+            },
+          },
+        });
+
+        isSaved = !!saved;
+      } catch (err) {
+        console.error("Token verification or database query error:", err);
+        // Continue with default isSaved value if there's an error
+      }
     }
 
-    res.status(200).json({ ...post, isSaved: false });
+    // Send the response after all async operations are completed
+    res.status(200).json({ ...post, isSaved });
   } catch (error) {
-    res.status(500).json({ message: "Error creating post" });
+    console.error("Error fetching post:", error);
+    res.status(500).json({ message: "Error fetching post" });
   }
 };
+
+// export const getPost = async (req, res) => {
+//   const id = req.params.id;
+
+//   try {
+//     const post = await prisma.post.findUnique({
+//       where: {
+//         id,
+//       },
+//       include: {
+//         postDetail: true,
+//         user: {
+//           select: {
+//             username: true,
+//             avatar: true,
+//           },
+//         },
+//       },
+//     });
+
+//     if (!post) {
+//       return res.status(404).json({ message: "Post not found" });
+//     }
+//     // we need to verify if the user is logged in or not while saving a post
+
+//     const token = req.cookies?.token;
+//     let isSaved = false;
+
+//     if (token) {
+//       jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
+//         if (!err) {
+//           console.log("payload ---", payload);
+//           const saved = await prisma.savedPost.findUnique({
+//             where: {
+//               userId_postId: {
+//                 postId: id,
+//                 userId: payload.id,
+//               },
+//             },
+//           });
+
+//           console.log("saved ---", saved);
+//           isSaved = !!saved;
+//           console.log(" is saved ---", isSaved);
+
+//           // res.status(200).json({ ...post, isSaved: saved ? true : false });
+//         }
+//       });
+//     }
+//     console.log(" isSaved after ---", isSaved);
+//     res.status(200).json({ ...post, isSaved: isSaved });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error creating post" });
+//   }
+// };
 
 export const addPost = async (req, res) => {
   const body = req.body;
