@@ -11,10 +11,13 @@ import { useNavigate } from "react-router-dom";
 const SinglePage = () => {
   const navigate = useNavigate();
   const post = useLoaderData();
-
   const [saved, setSaved] = useState(post.isSaved);
   const { currentUserInfo } = useContext(AuthContext);
 
+  const res = useLoaderData();
+
+  console.log("Posts in list page: ", res);
+  // console.log("Post is saved Data in single page: ", post);
   // useEffect(() => {}, [currentUserInfo]);
 
   const handleSave = async () => {
@@ -30,13 +33,11 @@ const SinglePage = () => {
     try {
       const response = await apiRequest.post("users/save", { postId: post.id });
 
-      // Check response status and handle success (if needed)
+      // Check response status and handle success
       if (response.status === 200) {
         console.log("Post saved successfully:", response.data);
-        // Optionally update UI or perform additional actions on success
+        alert("Post saved successfully.");
       }
-
-      console.log("Post saved successfully:", response.data);
     } catch (error) {
       console.error("Error saving post:", error);
 

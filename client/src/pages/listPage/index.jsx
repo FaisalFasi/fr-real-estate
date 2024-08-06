@@ -15,21 +15,23 @@ const ListPage = () => {
         <div className="wrapper">
           <Filter />
 
-          <Suspense fallback={<p>Loading...</p>}>
-            <Await
-              resolve={data.postResponse}
-              errorElement={<p>Failed to load data</p>}
-            >
-              {(postResponse) => {
-                if (postResponse.data.length === 0) {
-                  return <p>No posts found</p>;
-                }
-                return postResponse.data.map((post) => (
-                  <Card key={post.id} item={post} />
-                ));
-              }}
-            </Await>
-          </Suspense>
+          <div className="flex flex-col gap-4 overflow-y-auto">
+            <Suspense fallback={<p>Loading...</p>}>
+              <Await
+                resolve={data.postResponse}
+                errorElement={<p>Failed to load data</p>}
+              >
+                {(postResponse) => {
+                  if (postResponse.data.length === 0) {
+                    return <p>No posts found</p>;
+                  }
+                  return postResponse.data.map((post) => (
+                    <Card key={post.id} item={post} />
+                  ));
+                }}
+              </Await>
+            </Suspense>
+          </div>
         </div>
       </div>
       <div className="mapContainer">

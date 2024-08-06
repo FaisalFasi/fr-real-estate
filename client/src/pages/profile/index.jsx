@@ -7,12 +7,22 @@ import { useLoaderData, useNavigate, Await } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
   const { currentUserInfo, updateUser } = useContext(AuthContext);
   const data = useLoaderData();
+  const [savedPosts, setSavedPosts] = useState(
+    data.postResponse ? data.postResponse.data.savedPosts : []
+  );
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (data.postResponse) {
+      setSavedPosts(data.postResponse.data.savedPosts);
+    }
+  }, [data.postResponse]);
 
   const handleLogout = async () => {
     try {
@@ -35,6 +45,29 @@ const Profile = () => {
     navigate("/");
     return null; // Optionally render a loading spinner or message
   }
+
+  // handle unsave post
+  const handleUnsavePost = async (postId) => {
+    // Optimistically update the state
+    setSavedPosts((prevPosts) =>
+      prevPosts.filter((post) => post.id !== postId)
+    );
+
+    try {
+      const response = await apiRequest.post("users/save", { postId });
+
+      if (response.status !== 200) {
+        throw new Error("Failed to unsave post");
+      }
+      console.log("Post unsaved successfully:", response.data);
+      alert("Post unsaved successfully");
+    } catch (error) {
+      console.error("Error unsaving post:", error);
+      // Revert state if unsave operation fails
+      setSavedPosts((prevPosts) => [...prevPosts, { id: postId }]);
+      alert("Failed to unsave post. Please try again later.");
+    }
+  };
 
   return (
     <div className="profilePage">
@@ -70,30 +103,40 @@ const Profile = () => {
               <button>Create New Post</button>
             </Link>
           </div>
-          <Suspense fallback={<p>Loading...</p>}>
-            <Await
-              resolve={data.postResponse}
-              errorElement={<p>Failed to load data</p>}
-            >
-              {(postResponse) => (
-                <ListComp posts={postResponse.data.allPosts} />
-              )}
-            </Await>
-          </Suspense>
+          <div className="postsComponents">
+            <Suspense fallback={<p>Loading...</p>}>
+              <Await
+                resolve={data.postResponse}
+                errorElement={<p>Failed to load data</p>}
+              >
+                {(postResponse) => (
+                  <ListComp posts={postResponse.data.allPosts} />
+                )}
+              </Await>
+            </Suspense>
+          </div>
+
           {/* <ListComp /> */}
           <div className="title">
             <h1>Saved List</h1>
           </div>
-          <Suspense fallback={<p>Loading...</p>}>
-            <Await
-              resolve={data.postResponse}
-              errorElement={<p>Failed to load data</p>}
-            >
-              {(postResponse) => (
-                <ListComp posts={postResponse.data.savedPosts} />
-              )}
-            </Await>
-          </Suspense>
+          <div className="postsComponents">
+            <Suspense fallback={<p>Loading...</p>}>
+              <Await
+                resolve={data.postResponse}
+                errorElement={<p>Failed to load data</p>}
+              >
+                {(postResponse) => (
+                  <ListComp
+                    // posts={postResponse.data.savedPosts}
+                    posts={savedPosts}
+                    isSaved={true}
+                    onUnsavePost={handleUnsavePost}
+                  />
+                )}
+              </Await>
+            </Suspense>
+          </div>
         </div>
       </div>
       <div className="chatContainer">

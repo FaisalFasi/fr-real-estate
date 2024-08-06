@@ -4,9 +4,14 @@ import "./card.scss";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
-const Card = ({ item }) => {
+const Card = ({ item, isSaved, onUnsavePost }) => {
   const { currentUserInfo } = useContext(AuthContext);
 
+  const handleUnsaveClick = () => {
+    if (onUnsavePost) {
+      onUnsavePost(item.id);
+    }
+  };
   return (
     <div className="card">
       <Link to={`/${item.id}`} className="imageContainer">
@@ -39,9 +44,8 @@ const Card = ({ item }) => {
           {item?.userId != currentUserInfo?.id && (
             <div className="icons">
               <div
-                className={`${
-                  currentUserInfo.id === item.userId ? "bg-blue-300" : ""
-                } icon`}
+                className={`${isSaved ? "bg-blue-300" : ""} icon`}
+                onClick={handleUnsaveClick}
               >
                 <img src="/save.png" alt="Save for later image" />
               </div>
