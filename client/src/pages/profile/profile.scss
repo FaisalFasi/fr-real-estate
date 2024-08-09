@@ -41,19 +41,13 @@
         overflow: hidden;
       }
       .postsComponents {
+        height: fit-content;
+        max-height: calc(100vh - 300px);
         display: flex;
         flex-direction: column;
         gap: 20px;
         overflow-y: scroll;
-        height: fit-content;
-        max-height: calc(100vh - 300px);
-
-        // @include md {
-        //   height: max-content;
-        // }
-        // @include sm {
-        //   height: max-content;
-        // }
+        padding: 10px 0px;
       }
 
       .title {
