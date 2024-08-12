@@ -18,57 +18,65 @@ const ChatModal = ({
     if (isOpen) {
       const fetchChatData = async () => {
         try {
-          // Check if a chat already exists
-          let chatResponse = await apiRequest.get(`/chats`, {
-            params: { receiverId: recipientUserId },
+          const chatDataResponse = await apiRequest.post("/chats/addMessage", {
+            receiverId: recipientUserId,
+            text: "", // Initial message text
           });
-          console.log("Chat recipientUserId", recipientUserId);
 
-          console.log("Chat Response", chatResponse);
-          // If no chat exists, create a new one
-          if (chatResponse.data.length === 0) {
-            console.log("Creating new chat...");
-            chatResponse = await apiRequest.post("/chats", {
-              receiverId: recipientUserId,
-            });
-          }
-          console.log("Chat Response later", chatResponse);
+          if (!fetchChatData) return console.log("No chat data found");
+          console.log("Chat Data Response", chatDataResponse);
 
-          setChatId(chatResponse?.data?.id);
-          console.log("Chat ID", chatId);
-          let messagesResponse = "";
-          // Fetch messages for the chat
-          if (chatResponse?.data?.id) {
-            console.log("chat id exist");
-
-            try {
-              messagesResponse = await apiRequest.get(
-                `/chats/${chatResponse.data.id}`
-              );
-
-              console.log("Messages Response", messagesResponse);
-            } catch (error) {
-              console.error("Error loading chat data:", error);
-            }
-          }
-
-          console.log("Messages Response", messagesResponse);
-          setMessages(messagesResponse?.data | []);
+          setChatId(chatDataResponse.data.chatId);
+          setMessages([chatDataResponse.data.message]);
         } catch (error) {
-          console.error("Error loading chat:", error);
+          console.error("Error loading chat data:", error);
+          setMessages([]); // Fallback to empty messages on error
         }
       };
+
       fetchChatData();
     }
   }, [isOpen, recipientUserId]);
+
+  useEffect(() => {
+    console.log("Chat ID", chatId);
+  }, [chatId]);
+
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     const fetchChatData = async () => {
+  //       try {
+  //         const chatDataResponse = await apiRequest.post("/chats/addMessage", {
+  //           receiverId: recipientUserId,
+  //           text: newMessage | "", // Initial message text
+  //         });
+
+  //         console.log("Chat Data Response", chatDataResponse);
+
+  //         setChatId(chatDataResponse.data.chatId);
+  //         setMessages([chatDataResponse.data.message]);
+  //       } catch (error) {
+  //         console.error("Error loading chat data:", error);
+  //         setMessages([]); // Fallback to empty messages on error
+  //       }
+  //     };
+
+  //     fetchChatData();
+  //   }
+  // }, [isOpen, recipientUserId]);
 
   const handleSendMessage = async () => {
     console.log("Chat ID", chatId);
     if (newMessage.trim() !== "" && chatId) {
       try {
-        // Send the message
-        await apiRequest.post(`/messages/${chatId}`, { text: newMessage });
-        setMessages([...messages, { text: newMessage, sender: "You" }]);
+        // Send the message to the existing chat
+        const response = await apiRequest.post(`/messages/${chatId}`, {
+          text: newMessage,
+        });
+        const sentMessage = response.data;
+
+        // Add the sent message to the message list
+        setMessages([...messages, { text: sentMessage.text, sender: "You" }]);
         setNewMessage(""); // Clear input field
       } catch (error) {
         console.error("Error sending message:", error);
