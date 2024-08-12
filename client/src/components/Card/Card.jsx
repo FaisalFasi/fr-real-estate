@@ -13,11 +13,9 @@ const Card = ({ item, isSaved, onUnsavePost }) => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    console.log("close modal");
   };
   const handleOpenModal = () => {
     setIsOpenModal(true);
-    console.log("open modal");
   };
 
   const handleUnsaveClick = () => {
@@ -25,9 +23,11 @@ const Card = ({ item, isSaved, onUnsavePost }) => {
       onUnsavePost(item.id);
     }
   };
+
+  console.log("Item", item);
   return (
     <div className="card">
-      <div onClick={handleOpenModal}>Open modal </div>{" "}
+      {/* <div onClick={handleOpenModal}>Open modal </div>{" "} */}
       <Link to={`/${item.id}`} className="imageContainer">
         <img src={item?.images[0] || "/noavatar.jpg"} alt={item.title} />
       </Link>
@@ -71,7 +71,15 @@ const Card = ({ item, isSaved, onUnsavePost }) => {
         </div>
       </div>
       <div>
-        <ChatModal isOpen={isOpenModal} onClose={handleCloseModal} />
+        {/* <ChatModal isOpen={isOpenModal} onClose={handleCloseModal} /> */}
+        <ChatModal
+          isOpen={isOpenModal}
+          onClose={handleCloseModal}
+          postId={item?.id}
+          recipientUserId={item?.userId} // Pass the recipient user ID
+          recipientUsername={item?.user?.username} // Pass the recipient username
+          currentUserInfo={currentUserInfo} // Pass current user info
+        />
       </div>
     </div>
   );

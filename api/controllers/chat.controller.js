@@ -70,12 +70,15 @@ const getChat = async (req, res) => {
 const addChat = async (req, res) => {
   const tokentUserId = req.userId;
 
+  console.log("Request Body: ", req.body);
+  console.log("tokentUserId: ", tokentUserId);
   try {
     const newChat = await prisma.chat.create({
       data: {
         userIDs: [tokentUserId, req.body.receiverId],
       },
     });
+    console.log("New chat: ", newChat);
 
     res.status(200).json(newChat);
   } catch (err) {

@@ -29,7 +29,16 @@ export const getPosts = async (req, res) => {
         latitude: latitude ? latitude.toString() : undefined,
         longitude: longitude ? longitude.toString() : undefined,
       },
+      include: {
+        user: {
+          select: {
+            username: true, // Include the username of the user who created the post
+          },
+        },
+      },
     });
+
+    console.log("posts", posts);
 
     res.status(200).json(posts);
   } catch (error) {
@@ -40,6 +49,7 @@ export const getPosts = async (req, res) => {
 export const getPost = async (req, res) => {
   const id = req.params.id;
 
+  console.log("id", id);
   try {
     // Fetch the post from the database
     const post = await prisma.post.findUnique({
@@ -164,13 +174,9 @@ export const addPost = async (req, res) => {
   const body = req.body;
 
   const tokenUserId = req.userId;
+  console.log("tokenUserId", tokenUserId);
 
   try {
-    // const normalizedPostData = {
-    //   ...body.postData,
-    //   city: postData.city ? postData.city.toString().toLowerCase() : undefined,
-    //   // Add other fields that need normalization here
-    // };
     const newPost = await prisma.post.create({
       data: {
         ...body.postData, // This will overwrite the normalized fields

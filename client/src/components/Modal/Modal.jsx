@@ -8,16 +8,9 @@ const Modal = ({ isOpen, onClose, title, children }) => {
     onClose();
   };
 
-  const handleContentClick = (e) => {
-    e.stopPropagation(); // Stop the event from bubbling up to the background
-  };
-
   return ReactDOM.createPortal(
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-      onClick={handleBackgroundClick}
-    >
-      <div className=" w-full h-full p-6 overflow-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className=" w-full h-full p-6">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">{title ? title : ""}</h2>
           <button
@@ -40,7 +33,10 @@ const Modal = ({ isOpen, onClose, title, children }) => {
             </svg>
           </button>
         </div>
-        <div className="w-full" onClick={handleContentClick}>
+        <div
+          className="w-full h-full flex justify-center items-center py-20 md:py-0"
+          onClick={handleBackgroundClick}
+        >
           {children}
         </div>
       </div>

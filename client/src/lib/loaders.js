@@ -25,7 +25,12 @@ export const profilePageLoader = async ({ request, params }) => {
   });
 };
 
-// export const allPostsLoader = async ({ request, params }) => {
-//   const res = await apiRequest("/posts/");
-//   return res;
-// };
+export const sendMessageLoader = async ({ request, params }) => {
+  const messagePromise = await apiRequest("/message");
+  const chatPromise = await apiRequest("/chats");
+
+  return defer({
+    messagePromise: messagePromise,
+    chatResponse: chatPromise,
+  });
+};
