@@ -14,74 +14,58 @@ const ChatModal = ({
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
-  useEffect(() => {
-    if (isOpen) {
-      const fetchChatData = async () => {
-        try {
-          const chatDataResponse = await apiRequest.post("/chats/addMessage", {
-            receiverId: recipientUserId,
-            text: "", // Initial message text
-          });
-
-          if (!fetchChatData) return console.log("No chat data found");
-          console.log("Chat Data Response", chatDataResponse);
-
-          setChatId(chatDataResponse.data.chatId);
-          setMessages([chatDataResponse.data.message]);
-        } catch (error) {
-          console.error("Error loading chat data:", error);
-          setMessages([]); // Fallback to empty messages on error
-        }
-      };
-
-      fetchChatData();
-    }
-  }, [isOpen, recipientUserId]);
-
-  useEffect(() => {
-    console.log("Chat ID", chatId);
-  }, [chatId]);
-
   // useEffect(() => {
+  //   console.log("Modal is not open");
   //   if (isOpen) {
-  //     const fetchChatData = async () => {
-  //       try {
-  //         const chatDataResponse = await apiRequest.post("/chats/addMessage", {
-  //           receiverId: recipientUserId,
-  //           text: newMessage | "", // Initial message text
-  //         });
-
-  //         console.log("Chat Data Response", chatDataResponse);
-
-  //         setChatId(chatDataResponse.data.chatId);
-  //         setMessages([chatDataResponse.data.message]);
-  //       } catch (error) {
-  //         console.error("Error loading chat data:", error);
-  //         setMessages([]); // Fallback to empty messages on error
-  //       }
-  //     };
-
-  //     fetchChatData();
+  //     fetchMessages(); // Fetch messages when the modal opens
   //   }
-  // }, [isOpen, recipientUserId]);
+  // }, [isOpen]);
 
-  const handleSendMessage = async () => {
-    console.log("Chat ID", chatId);
-    if (newMessage.trim() !== "" && chatId) {
+  const fetchMessages = async () => {
+    try {
+      const response = await apiRequest(`/chats/${recipientUserId}`);
+
+      console.log("Messages Response", response);
+
+      if (response && response.data) {
+        setMessages(response.data.messages);
+        setChatId(response.data.chatId);
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
+  };
+
+  // handle the message sending
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+
+    const typedMessage = formData.get("message");
+    console.log("Typed Message", typedMessage);
+
+    const fetchChatData = async () => {
       try {
-        // Send the message to the existing chat
-        const response = await apiRequest.post(`/messages/${chatId}`, {
-          text: newMessage,
+        const chatDataResponse = await apiRequest.post("/chats/addMessage", {
+          receiverId: recipientUserId,
+          text: typedMessage, // Initial message text
         });
-        const sentMessage = response.data;
 
-        // Add the sent message to the message list
-        setMessages([...messages, { text: sentMessage.text, sender: "You" }]);
+        if (!chatDataResponse) return console.log("No chat data found");
+
+        console.log("Chat Data Response", chatDataResponse);
+
+        // setChatId(chatDataResponse.data.chatId);
+        setMessages([...messages, { sender: "You", text: typedMessage }]);
         setNewMessage(""); // Clear input field
       } catch (error) {
-        console.error("Error sending message:", error);
+        console.error("Error loading chat data:", error);
+        setMessages([]); // Fallback to empty messages on error
       }
-    }
+    };
+
+    fetchChatData();
   };
 
   const handleContentClick = (e) => {
@@ -115,19 +99,22 @@ const ChatModal = ({
           )}
         </div>
         <div className="flex mt-4">
-          <input
-            type="text"
-            className="flex-1 border border-gray-300 rounded px-4 py-2"
-            placeholder="Type your message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-          />
-          <button
-            className="bg-[#2bbcff] text-black font-bold px-4 py-2 rounded ml-2 hover:bg-blue-600"
-            onClick={handleSendMessage}
-          >
-            Send
-          </button>
+          <form className="w-full flex" onSubmit={handleSendMessage}>
+            <input
+              name="message"
+              type="text"
+              className="flex-1 border border-gray-300 rounded px-4 py-2"
+              placeholder="Type your message..."
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+            />
+            <button
+              className="bg-[#2bbcff] text-black font-bold px-4 py-2 rounded ml-2 hover:bg-blue-600"
+              type="submit"
+            >
+              Send
+            </button>
+          </form>
         </div>
       </div>
     </Modal>
