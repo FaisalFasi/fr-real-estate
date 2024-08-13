@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "../Modal/Modal"; // Adjust the path as necessary
 import apiRequest from "../../lib/apiRequest";
+import { useChatContext } from "../../context/ChatContext";
 
 const ChatModal = ({
   isOpen,
@@ -10,9 +11,10 @@ const ChatModal = ({
   recipientUsername,
   currentUserInfo,
 }) => {
-  const [chatId, setChatId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+
+  const { chats, setChats } = useChatContext();
 
   useEffect(() => {
     if (isOpen) {
@@ -25,11 +27,12 @@ const ChatModal = ({
     try {
       const response = await apiRequest.get(`/chats/${recipientUserId}`);
 
-      console.log("Messages Response", response);
+      // setChats(response?.data?.chatId);
+
+      console.log("Chat Response", response);
 
       if (response && response.data) {
-        setMessages(response.data.messages);
-        setChatId(response.data.chatId);
+        setMessages(response?.data?.messages);
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -39,6 +42,7 @@ const ChatModal = ({
   // handle the message sending
   const handleSendMessage = async (e) => {
     e.preventDefault();
+    if (!newMessage.trim()) return console.log("Message is empty");
 
     const formData = new FormData(e.target);
 
@@ -56,8 +60,8 @@ const ChatModal = ({
 
         console.log("Chat Data Response", chatDataResponse);
 
-        // setChatId(chatDataResponse.data.chatId);
         setMessages([...messages, { sender: "You", text: typedMessage }]);
+
         setNewMessage(""); // Clear input field
       } catch (error) {
         console.error("Error loading chat data:", error);

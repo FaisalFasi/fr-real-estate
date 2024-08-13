@@ -4,7 +4,6 @@ import Card from "../Card/Card";
 import ShowText from "../ShowText/ShowText";
 
 const ListComp = ({ posts, isSaved, onUnsavePost }) => {
-  console.log("List Comp Posts :", posts ? posts : "No posts found");
   return (
     <div className="list">
       {posts && posts.length > 0 ? (

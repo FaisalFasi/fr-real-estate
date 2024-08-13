@@ -7,14 +7,20 @@ import { format } from "timeago.js";
 import { SocketContext } from "../../context/SocketContext";
 import { useNotificationStore } from "../../lib/notificationStore.js";
 import ShowText from "../ShowText/ShowText.jsx";
+import { ChatContext } from "../../context/ChatContext";
 
-const Chat = ({ chats }) => {
+// const Chat = ({ chats }) => {
+const Chat = () => {
   const { currentUserInfo } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
+  const { chats } = useContext(ChatContext);
 
   const [singleChat, setSingleChat] = useState(null);
   const messageEndRef = useRef(null);
   const decreaseNoti = useNotificationStore((state) => state.decrease);
+
+  console.log("Chat Data: ", chats);
+  console.log("Chat Data Length: ", chats?.length);
 
   const handleOpenChat = async (id, receiver) => {
     try {
@@ -30,8 +36,6 @@ const Chat = ({ chats }) => {
       console.error(err);
     }
   };
-
-  console.log("Chat Data: ", chats.length);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,7 +97,7 @@ const Chat = ({ chats }) => {
     <div className="chat">
       <div className="messages">
         <h1>Messages</h1>
-        {chats.length > 0 ? (
+        {chats?.length > 0 ? (
           chats?.map((chat) => (
             <div
               className="message"

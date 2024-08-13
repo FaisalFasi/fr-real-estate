@@ -141,15 +141,23 @@ const addChatAndMessage = async (req, res) => {
         },
       },
     });
-    console.log("Chat", chat);
+    console.log("Is Chat exists:", chat);
 
     // If no chat exists, create a new one
-    if (!chat) {
-      chat = await prisma.chat.create({
-        data: {
-          userIDs: [tokenUserId, receiverId],
-        },
-      });
+    try {
+      if (!chat) {
+        console.log("Chat does not exists:", chat);
+
+        chat = await prisma.chat.create({
+          data: {
+            userIDs: [tokenUserId, receiverId],
+          },
+        });
+        console.log("created a new Chat:", chat);
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: "Failed to create chat!" });
     }
 
     // Add the message to the chat
@@ -177,7 +185,7 @@ const addChatAndMessage = async (req, res) => {
     console.log("Chat ID", chat.id);
     console.log("Message", message);
     // Return the chat ID and the newly added message
-    res.status(200).json({ chatId: chat.id, message });
+    res.status(200).json({ chatId: chat.id, message, chat });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed to add chat and message!" });

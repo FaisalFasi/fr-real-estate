@@ -11,14 +11,13 @@ import { useEffect, useState } from "react";
 
 const Profile = () => {
   const { currentUserInfo, updateUser } = useContext(AuthContext);
+
   const data = useLoaderData();
   const navigate = useNavigate();
 
   const [savedPosts, setSavedPosts] = useState(
     data.postResponse ? data.postResponse.data.savedPosts : []
   );
-
-  console.log("Data", data.postResponse.data.allPosts);
 
   useEffect(() => {
     if (data.postResponse) {

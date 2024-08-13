@@ -11,7 +11,6 @@ const Card = ({ item, isSaved, onUnsavePost }) => {
 
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  console.log("Item", item);
   const handleCloseModal = () => {
     setIsOpenModal(false);
   };
@@ -25,7 +24,6 @@ const Card = ({ item, isSaved, onUnsavePost }) => {
     }
   };
 
-  console.log("Item", item);
   return (
     <div className="card">
       {/* <div onClick={handleOpenModal}>Open modal </div>{" "} */}
