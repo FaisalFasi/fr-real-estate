@@ -11,6 +11,7 @@ const Card = ({ item, isSaved, onUnsavePost }) => {
 
   const [isOpenModal, setIsOpenModal] = useState(false);
 
+  console.log("Item", item);
   const handleCloseModal = () => {
     setIsOpenModal(false);
   };

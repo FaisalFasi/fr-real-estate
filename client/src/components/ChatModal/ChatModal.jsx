@@ -14,16 +14,16 @@ const ChatModal = ({
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
-  // useEffect(() => {
-  //   console.log("Modal is not open");
-  //   if (isOpen) {
-  //     fetchMessages(); // Fetch messages when the modal opens
-  //   }
-  // }, [isOpen]);
+  useEffect(() => {
+    if (isOpen) {
+      console.log("Modal is open");
+      fetchMessages(); // Fetch messages when the modal opens
+    }
+  }, [isOpen]);
 
   const fetchMessages = async () => {
     try {
-      const response = await apiRequest(`/chats/${recipientUserId}`);
+      const response = await apiRequest.get(`/chats/${recipientUserId}`);
 
       console.log("Messages Response", response);
 
