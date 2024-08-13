@@ -17,19 +17,18 @@ const ChatModal = ({
   const { chats, setChats } = useChatContext();
 
   useEffect(() => {
+    console.log("Chat Modal Opened and chats", chats);
     if (isOpen) {
       console.log("Modal is open");
-      fetchMessages(); // Fetch messages when the modal opens
+      fetchChatMessages(); // Fetch messages when the modal opens
     }
   }, [isOpen]);
 
-  const fetchMessages = async () => {
+  const fetchChatMessages = async () => {
     try {
       const response = await apiRequest.get(`/chats/${recipientUserId}`);
 
-      // setChats(response?.data?.chatId);
-
-      console.log("Chat Response", response);
+      console.log("Chat Response fetch msgs:", response, recipientUserId);
 
       if (response && response.data) {
         setMessages(response?.data?.messages);
@@ -39,37 +38,51 @@ const ChatModal = ({
     }
   };
 
+  const fetchChatData = async (newMessage) => {
+    try {
+      const chatDataResponse = await apiRequest.post("/chats/addMessage", {
+        receiverId: recipientUserId,
+        text: newMessage, // Initial message text
+      });
+
+      console.log("Chat Data Response", chatDataResponse);
+      const { chat, message } = chatDataResponse?.data;
+
+      setChats((prevChats) => {
+        const existingChatIndex = prevChats.findIndex((c) => c.id === chat.id);
+
+        if (existingChatIndex > -1) {
+          // Update existing chat with the last message
+          const updatedChats = [...prevChats];
+          updatedChats[existingChatIndex] = {
+            ...chat,
+            lastMessage: message.text,
+          };
+          return updatedChats;
+        }
+
+        // Add new chat if it doesn't exist
+        return [...prevChats, { ...chat, lastMessage: message }];
+      });
+      setMessages([...messages, { sender: "You", text: newMessage }]);
+
+      setNewMessage(""); // Clear input field
+    } catch (error) {
+      console.error("Error loading chat data:", error);
+      setMessages([]); // Fallback to empty messages on error
+    }
+  };
   // handle the message sending
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim()) return console.log("Message is empty");
 
     const formData = new FormData(e.target);
+    const newMessage = formData.get("message");
 
-    const typedMessage = formData.get("message");
-    console.log("Typed Message", typedMessage);
+    if (!newMessage.trim()) return console.log("Message is empty");
+    console.log("Typed Message", newMessage);
 
-    const fetchChatData = async () => {
-      try {
-        const chatDataResponse = await apiRequest.post("/chats/addMessage", {
-          receiverId: recipientUserId,
-          text: typedMessage, // Initial message text
-        });
-
-        if (!chatDataResponse) return console.log("No chat data found");
-
-        console.log("Chat Data Response", chatDataResponse);
-
-        setMessages([...messages, { sender: "You", text: typedMessage }]);
-
-        setNewMessage(""); // Clear input field
-      } catch (error) {
-        console.error("Error loading chat data:", error);
-        setMessages([]); // Fallback to empty messages on error
-      }
-    };
-
-    fetchChatData();
+    fetchChatData(newMessage);
   };
 
   const handleContentClick = (e) => {

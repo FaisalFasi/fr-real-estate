@@ -26,11 +26,11 @@ const Chat = () => {
     try {
       // open chat
       const res = await apiRequest.get("/chats/" + id);
-
+      console.log("Id and Receiver: ", id, receiver);
       if (!res.data.seenBy.includes(currentUserInfo.id)) {
         decreaseNoti();
       }
-
+      console.log("Chat Data in chats: ", res.data);
       setSingleChat({ ...res.data, receiver });
     } catch (err) {
       console.error(err);
