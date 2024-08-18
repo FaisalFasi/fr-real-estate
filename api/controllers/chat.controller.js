@@ -32,6 +32,7 @@ const getChats = async (req, res) => {
     res.status(500).json({ message: "Failed to get chats!" });
   }
 };
+
 const getChat = async (req, res) => {
   const tokenUserId = req.userId;
 
@@ -39,7 +40,7 @@ const getChat = async (req, res) => {
   console.log("Token User ID: ", tokenUserId);
 
   try {
-    const chat = await prisma.chat.findUnique({
+    const chat = await prisma.chat.findFirst({
       where: {
         id: req.params.id,
         userIDs: {
@@ -114,15 +115,50 @@ const readChat = async (req, res) => {
   }
 };
 
-const addChatAndMessage = async (req, res) => {
-  const { receiverId } = req.body;
-
+const getChatMessages = async (req, res) => {
   const tokenUserId = req.userId;
-  // const chatId = req.params.chatId;
-  const text = req.body.text;
+  const receiverId = req.params.id;
+
+  try {
+    // Check if a chat already exists between the two users
+    let chat = await prisma.chat.findFirst({
+      where: {
+        userIDs: {
+          hasEvery: [tokenUserId, receiverId],
+        },
+      },
+    });
+
+    console.log("Is Chat exists:", chat);
+
+    if (!chat) {
+      console.log("Chat does not exists:", chat);
+    }
+    // Add the message to the chat
+    const getAllMessages = await prisma.message.findMany({
+      where: {
+        chatId: chat.id,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
+    console.log("All Messages:", getAllMessages);
+
+    console.log("Chat ID: ", chat.id);
+    res.status(200).json({ messages: getAllMessages, chatId: chat.id });
+  } catch (err) {
+    console.log("Error fetching chat:", err);
+    res.status(500).json({ message: "Failed to get chat!" });
+  }
+};
+
+const addChatAndMessage = async (req, res) => {
+  const { receiverId, text } = req.body;
+  const tokenUserId = req.userId;
 
   console.log("Received addChatAndMessage request:", {
-    // chatId,
     tokenUserId,
     receiverId,
     text,
@@ -130,12 +166,14 @@ const addChatAndMessage = async (req, res) => {
 
   try {
     // Validate the input
-    if (!text) {
-      return res.status(400).json({ error: "Text cannot be empty!" });
+    if (!text || !receiverId) {
+      return res
+        .status(400)
+        .json({ error: "Text and receiverId cannot be empty!" });
     }
 
     // Check if a chat already exists between the two users
-    let chat = await prisma.chat.findFirst({
+    let chat = await prisma.chat.findUnique({
       where: {
         userIDs: {
           hasEvery: [tokenUserId, receiverId],
@@ -145,20 +183,15 @@ const addChatAndMessage = async (req, res) => {
     console.log("Is Chat exists:", chat);
 
     // If no chat exists, create a new one
-    try {
-      if (!chat) {
-        console.log("Chat does not exists:", chat);
+    if (!chat) {
+      console.log("Chat does not exists:", chat);
 
-        chat = await prisma.chat.create({
-          data: {
-            userIDs: [tokenUserId, receiverId],
-          },
-        });
-        console.log("created a new Chat:", chat);
-      }
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({ message: "Failed to create chat!" });
+      chat = await prisma.chat.create({
+        data: {
+          userIDs: [tokenUserId, receiverId],
+        },
+      });
+      console.log("created a new Chat:", chat);
     }
 
     // Add the message to the chat
@@ -171,7 +204,7 @@ const addChatAndMessage = async (req, res) => {
     });
 
     // Update the chat with the last message and seenBy status
-    await prisma.chat.update({
+    const updatedChat = await prisma.chat.update({
       where: {
         id: chat.id,
       },
@@ -186,11 +219,20 @@ const addChatAndMessage = async (req, res) => {
     console.log("Chat ID", chat.id);
     console.log("Message", message);
     // Return the chat ID and the newly added message
-    res.status(200).json({ chatId: chat.id, message, chat });
+    res
+      .status(200)
+      .json({ chatId: updatedChat.id, message, chat: updatedChat });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed to add chat and message!" });
   }
 };
 
-export { getChats, getChat, addChat, readChat, addChatAndMessage };
+export {
+  getChats,
+  getChat,
+  addChat,
+  readChat,
+  getChatMessages,
+  addChatAndMessage,
+};

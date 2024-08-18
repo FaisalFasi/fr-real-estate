@@ -26,9 +26,12 @@ const ChatModal = ({
 
   const fetchChatMessages = async () => {
     try {
-      const response = await apiRequest.get(`/chats/${recipientUserId}`);
+      const response = await apiRequest(
+        `/chats/getMessages/${recipientUserId}`
+      );
 
-      console.log("Chat Response fetch msgs:", response, recipientUserId);
+      console.log("Response Data:", response?.data);
+      console.log("Chat Response fetch msgs:", response?.data?.messages);
 
       if (response && response.data) {
         setMessages(response?.data?.messages);
