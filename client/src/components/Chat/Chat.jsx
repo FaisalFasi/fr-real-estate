@@ -95,7 +95,7 @@ const Chat = () => {
       <div className="messages">
         <h1>Messages</h1>
         {chats?.length > 0 ? (
-          chats?.map((chat) => (
+          chats.map((chat) => (
             <div
               className="message"
               key={chat.id}
@@ -134,7 +134,11 @@ const Chat = () => {
           <div className="center">
             {singleChat.messages.map((message) => (
               <div
-                className="chatMessage"
+                className={` chatMessage ${
+                  message.userId === currentUserInfo.id
+                    ? "bg-[#b2d7fc]"
+                    : "bg-gray-200"
+                }`}
                 key={message.id}
                 style={{
                   alignSelf:

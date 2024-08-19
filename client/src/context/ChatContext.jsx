@@ -1,10 +1,12 @@
 import { createContext, useContext, useEffect } from "react";
 import { useState } from "react";
 import apiRequest from "../lib/apiRequest";
+import { AuthContext } from "./AuthContext"; // Import AuthContext
 
 const ChatContext = createContext();
 
 const ChatContextProvider = ({ children }) => {
+  const { currentUserInfo } = useContext(AuthContext); // Access auth context
   const [chats, setChats] = useState([]);
 
   // console.log("Data in Chat context", chats);
@@ -24,9 +26,10 @@ const ChatContextProvider = ({ children }) => {
 
   useEffect(() => {
     // console.log("Chats Context useEffect", chats);
-
-    fetchChats();
-  }, [setChats]);
+    if (currentUserInfo) {
+      fetchChats();
+    }
+  }, [setChats, currentUserInfo]);
 
   return (
     <ChatContext.Provider value={{ chats, setChats }}>

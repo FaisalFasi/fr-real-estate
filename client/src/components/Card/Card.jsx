@@ -8,22 +8,23 @@ import ChatModal from "../ChatModal/ChatModal";
 
 const Card = ({ item, isSaved, onUnsavePost, postOwner }) => {
   const { currentUserInfo } = useContext(AuthContext);
-
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
   };
   const handleOpenModal = () => {
-    setIsOpenModal(true);
+    if (!currentUserInfo) return alert("Please login to start a chat");
+    else setIsOpenModal(true);
   };
 
   const handleUnsaveClick = () => {
-    if (onUnsavePost) {
+    if (!currentUserInfo) {
+      return alert("Please login to save the post");
+    } else if (onUnsavePost) {
       onUnsavePost(item.id);
     }
   };
-  console.log("Recepient Data in card: ", postOwner);
 
   return (
     <div className="card">
@@ -55,6 +56,7 @@ const Card = ({ item, isSaved, onUnsavePost, postOwner }) => {
               <span>{item.bathroom} bathroom</span>
             </div>
           </div>
+
           {item?.userId != currentUserInfo?.id && (
             <div className="icons">
               <div

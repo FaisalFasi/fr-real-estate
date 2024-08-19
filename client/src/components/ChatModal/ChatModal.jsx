@@ -13,7 +13,7 @@ const ChatModal = ({
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
-  const { setChats } = useChatContext();
+  const { chat, setChats } = useChatContext();
 
   useEffect(() => {
     if (isOpen) {
@@ -87,8 +87,8 @@ const ChatModal = ({
           <h2>Send a Message</h2>
         </div>
         <div className="flex-1 overflow-auto">
-          {messages.length > 0 ? (
-            messages.map((msg, index) => (
+          {messages?.length > 0 ? (
+            messages?.map((msg, index) => (
               <div
                 key={index}
                 className={`flex mb-2 ${

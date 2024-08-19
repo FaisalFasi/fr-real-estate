@@ -7,23 +7,31 @@ import DOMPurify from "dompurify";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest.js";
 import { useNavigate } from "react-router-dom";
+import ChatModal from "../../components/ChatModal/ChatModal.jsx";
 
 const SinglePage = () => {
   const navigate = useNavigate();
   const post = useLoaderData();
   const [saved, setSaved] = useState(post.isSaved);
   const { currentUserInfo } = useContext(AuthContext);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
+  const handleCloseModal = () => {
+    setIsOpenModal(false);
+  };
+  const handleOpenModal = () => {
+    if (!currentUserInfo) return alert("Please login to start a chat");
+    else setIsOpenModal(true);
+  };
   const res = useLoaderData();
 
   console.log("Posts in list page: ", res);
-  // console.log("Post is saved Data in single page: ", post);
-  // useEffect(() => {}, [currentUserInfo]);
 
   const handleSave = async () => {
     // After react 19 update to useOptimisticReact Hook
     if (!currentUserInfo) {
-      navigate("/login");
+      alert("Please login to save the post");
+      // navigate("/login");
       return;
     }
 
@@ -75,6 +83,8 @@ const SinglePage = () => {
             </div>
             <div
               className="bottom"
+              // what does the DOMPurify.sanitize do?
+              // It sanitizes the HTML string and removes any malicious code from it.
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(post.postDetail.description),
               }}
@@ -161,7 +171,7 @@ const SinglePage = () => {
           </div>
           {post?.userId != currentUserInfo?.id && (
             <div className="buttons">
-              <button>
+              <button onClick={handleOpenModal}>
                 <img src="/chat.png" alt="chat icon" />
                 <label htmlFor="">Send a Message</label>
               </button>
@@ -178,6 +188,15 @@ const SinglePage = () => {
           )}
         </div>
       </div>
+
+      <ChatModal
+        isOpen={isOpenModal}
+        onClose={handleCloseModal}
+        postId={post?.id}
+        // postOwner={postOwner} // Pass the recipient user info
+        recipientUserId={post?.userId} // Pass the recipient user ID
+        currentUserInfo={currentUserInfo} // Pass current user info
+      />
     </div>
   );
 };
