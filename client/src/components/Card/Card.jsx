@@ -6,7 +6,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
 import ChatModal from "../ChatModal/ChatModal";
 
-const Card = ({ item, isSaved, onUnsavePost }) => {
+const Card = ({ item, isSaved, onUnsavePost, postOwner }) => {
   const { currentUserInfo } = useContext(AuthContext);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -23,6 +23,7 @@ const Card = ({ item, isSaved, onUnsavePost }) => {
       onUnsavePost(item.id);
     }
   };
+  console.log("Recepient Data in card: ", postOwner);
 
   return (
     <div className="card">
@@ -75,8 +76,8 @@ const Card = ({ item, isSaved, onUnsavePost }) => {
           isOpen={isOpenModal}
           onClose={handleCloseModal}
           postId={item?.id}
+          postOwner={postOwner} // Pass the recipient user info
           recipientUserId={item?.userId} // Pass the recipient user ID
-          recipientUsername={item?.user?.username} // Pass the recipient username
           currentUserInfo={currentUserInfo} // Pass current user info
         />
       </div>

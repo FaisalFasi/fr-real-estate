@@ -15,6 +15,7 @@ const Profile = () => {
   const data = useLoaderData();
   const navigate = useNavigate();
 
+  console.log("Data in Profile Page: ", data);
   const [savedPosts, setSavedPosts] = useState(
     data.postResponse ? data.postResponse.data.savedPosts : []
   );
@@ -131,6 +132,7 @@ const Profile = () => {
                   <ListComp
                     // posts={postResponse.data.savedPosts}
                     posts={savedPosts}
+                    postOwner={data?.postResponse?.data?.postOwner}
                     isSaved={true}
                     onUnsavePost={handleUnsavePost}
                   />

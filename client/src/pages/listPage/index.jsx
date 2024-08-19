@@ -8,6 +8,7 @@ import Filter from "../../components/Filter/Filter";
 
 const ListPage = () => {
   const data = useLoaderData();
+  console.log("Data in List Page: ", data);
 
   return (
     <div className="listPage">

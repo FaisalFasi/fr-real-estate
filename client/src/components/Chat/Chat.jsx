@@ -19,9 +19,6 @@ const Chat = () => {
   const messageEndRef = useRef(null);
   const decreaseNoti = useNotificationStore((state) => state.decrease);
 
-  console.log("Chat Data: ", chats);
-  console.log("Chat Data Length: ", chats?.length);
-
   const handleOpenChat = async (id, receiver) => {
     try {
       // open chat

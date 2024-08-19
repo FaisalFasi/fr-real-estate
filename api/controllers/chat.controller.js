@@ -36,9 +36,6 @@ const getChats = async (req, res) => {
 const getChat = async (req, res) => {
   const tokenUserId = req.userId;
 
-  console.log("Request Params: ", req.params.id);
-  console.log("Token User ID: ", tokenUserId);
-
   try {
     const chat = await prisma.chat.findFirst({
       where: {
@@ -66,7 +63,6 @@ const getChat = async (req, res) => {
         },
       });
     }
-    console.log("Chat: ", chat);
 
     res.status(200).json(chat);
   } catch (err) {
@@ -77,15 +73,12 @@ const getChat = async (req, res) => {
 const addChat = async (req, res) => {
   const tokentUserId = req.userId;
 
-  console.log("Request Body: ", req.body);
-  console.log("tokentUserId: ", tokentUserId);
   try {
     const newChat = await prisma.chat.create({
       data: {
         userIDs: [tokentUserId, req.body.receiverId],
       },
     });
-    console.log("New chat: ", newChat);
 
     res.status(200).json(newChat);
   } catch (err) {
@@ -129,10 +122,8 @@ const getChatMessages = async (req, res) => {
       },
     });
 
-    console.log("Is Chat exists:", chat);
-
     if (!chat) {
-      console.log("Chat does not exists:", chat);
+      return res.status(200).json({ chatId: null, messages: [] });
     }
     // Add the message to the chat
     const getAllMessages = await prisma.message.findMany({
@@ -144,10 +135,7 @@ const getChatMessages = async (req, res) => {
       },
     });
 
-    console.log("All Messages:", getAllMessages);
-
-    console.log("Chat ID: ", chat.id);
-    res.status(200).json({ messages: getAllMessages, chatId: chat.id });
+    return res.status(200).json({ chatId: chat.id, messages: getAllMessages });
   } catch (err) {
     console.log("Error fetching chat:", err);
     res.status(500).json({ message: "Failed to get chat!" });
@@ -158,12 +146,6 @@ const addChatAndMessage = async (req, res) => {
   const { receiverId, text } = req.body;
   const tokenUserId = req.userId;
 
-  console.log("Received addChatAndMessage request:", {
-    tokenUserId,
-    receiverId,
-    text,
-  });
-
   try {
     // Validate the input
     if (!text || !receiverId) {
@@ -173,25 +155,21 @@ const addChatAndMessage = async (req, res) => {
     }
 
     // Check if a chat already exists between the two users
-    let chat = await prisma.chat.findUnique({
+    let chat = await prisma.chat.findFirst({
       where: {
         userIDs: {
           hasEvery: [tokenUserId, receiverId],
         },
       },
     });
-    console.log("Is Chat exists:", chat);
 
     // If no chat exists, create a new one
     if (!chat) {
-      console.log("Chat does not exists:", chat);
-
       chat = await prisma.chat.create({
         data: {
           userIDs: [tokenUserId, receiverId],
         },
       });
-      console.log("created a new Chat:", chat);
     }
 
     // Add the message to the chat
@@ -216,8 +194,6 @@ const addChatAndMessage = async (req, res) => {
       },
     });
 
-    console.log("Chat ID", chat.id);
-    console.log("Message", message);
     // Return the chat ID and the newly added message
     res
       .status(200)

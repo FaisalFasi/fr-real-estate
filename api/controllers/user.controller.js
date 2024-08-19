@@ -136,12 +136,21 @@ const profilePosts = async (req, res) => {
       },
       include: {
         post: true,
+        user: {
+          select: {
+            username: true,
+            avatar: true,
+          },
+        },
       },
     });
+    console.log("Post Owner", saved);
 
     const savedPosts = saved.map((item) => item.post);
+    const postOwner = saved[0].user;
+    console.log("Post Owner", postOwner);
 
-    res.status(200).json({ allPosts, savedPosts });
+    res.status(200).json({ allPosts, savedPosts, postOwner });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "failed to get profile posts!" });

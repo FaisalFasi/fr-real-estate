@@ -6,20 +6,17 @@ import { useChatContext } from "../../context/ChatContext";
 const ChatModal = ({
   isOpen,
   onClose,
-  postId,
   recipientUserId,
-  recipientUsername,
+  postOwner,
   currentUserInfo,
 }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
-  const { chats, setChats } = useChatContext();
+  const { setChats } = useChatContext();
 
   useEffect(() => {
-    console.log("Chat Modal Opened and chats", chats);
     if (isOpen) {
-      console.log("Modal is open");
       fetchChatMessages(); // Fetch messages when the modal opens
     }
   }, [isOpen]);
@@ -29,12 +26,8 @@ const ChatModal = ({
       const response = await apiRequest(
         `/chats/getMessages/${recipientUserId}`
       );
-
-      console.log("Response Data:", response?.data);
-      console.log("Chat Response fetch msgs:", response?.data?.messages);
-
       if (response && response.data) {
-        setMessages(response?.data?.messages);
+        setMessages(response.data.messages);
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -45,17 +38,14 @@ const ChatModal = ({
     try {
       const chatDataResponse = await apiRequest.post("/chats/addMessage", {
         receiverId: recipientUserId,
-        text: newMessage, // Initial message text
+        text: newMessage,
       });
 
-      console.log("Chat Data Response", chatDataResponse);
       const { chat, message } = chatDataResponse?.data;
 
       setChats((prevChats) => {
         const existingChatIndex = prevChats.findIndex((c) => c.id === chat.id);
-
         if (existingChatIndex > -1) {
-          // Update existing chat with the last message
           const updatedChats = [...prevChats];
           updatedChats[existingChatIndex] = {
             ...chat,
@@ -63,27 +53,22 @@ const ChatModal = ({
           };
           return updatedChats;
         }
-
-        // Add new chat if it doesn't exist
         return [...prevChats, { ...chat, lastMessage: message }];
       });
-      setMessages([...messages, { sender: "You", text: newMessage }]);
-
+      setMessages([...messages, { ...message, userId: currentUserInfo.id }]);
       setNewMessage(""); // Clear input field
     } catch (error) {
       console.error("Error loading chat data:", error);
       setMessages([]); // Fallback to empty messages on error
     }
   };
-  // handle the message sending
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
-
     const formData = new FormData(e.target);
     const newMessage = formData.get("message");
 
     if (!newMessage.trim()) return console.log("Message is empty");
-    console.log("Typed Message", newMessage);
 
     fetchChatData(newMessage);
   };
@@ -95,29 +80,61 @@ const ChatModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div
-        className="bg-white p-4  flex flex-col w-full h-full md:h-[600px] md:w-[600px] rounded-xl "
+        className="bg-white p-4 flex flex-col w-full h-full md:h-[600px] md:w-[600px] rounded-xl"
         onClick={handleContentClick}
       >
         <div className="mb-4 p-4 font-bold text-xl text-center bg-[#2bbcff] rounded-lg">
           <h2>Send a Message</h2>
         </div>
-
         <div className="flex-1 overflow-auto">
           {messages.length > 0 ? (
             messages.map((msg, index) => (
               <div
                 key={index}
-                className={`mb-2 p-2 rounded break-words hyphens-auto ${
-                  msg.sender === "You" ? "bg-blue-200 self-end" : "bg-gray-200"
+                className={`flex mb-2 ${
+                  msg.userId === currentUserInfo.id
+                    ? "justify-end" // Right align for current user
+                    : "justify-start" // Left align for other user
                 }`}
               >
-                <strong>{msg.sender}: </strong> {msg.text}
+                <div
+                  className={`max-w-[80%] p-2 rounded-lg ${
+                    msg.userId === currentUserInfo.id
+                      ? "bg-blue-200 text-right" // Right aligned bubble for current user
+                      : "bg-gray-200 text-left" // Left aligned bubble for other user
+                  }`}
+                >
+                  {msg.userId === currentUserInfo.id ? (
+                    <span className="flex items-center gap-4">
+                      <span>{msg.text}</span>
+                      <img
+                        src={currentUserInfo?.avatar}
+                        width={30}
+                        height={30}
+                        alt="User Avatar"
+                        className="rounded-full"
+                      />
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-4">
+                      <img
+                        src={postOwner?.avatar}
+                        width={30}
+                        height={30}
+                        alt="User Avatar"
+                        className="rounded-full"
+                      />
+                      <span>{msg.text}</span>
+                    </span>
+                  )}
+                </div>
               </div>
             ))
           ) : (
-            <p>Add a message..!</p>
+            <p>Write a message to start a chat...!</p>
           )}
         </div>
+
         <div className="flex mt-4">
           <form className="w-full flex" onSubmit={handleSendMessage}>
             <input

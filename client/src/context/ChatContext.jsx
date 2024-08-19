@@ -7,7 +7,7 @@ const ChatContext = createContext();
 const ChatContextProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
 
-  console.log("Data in Chat context", chats);
+  // console.log("Data in Chat context", chats);
 
   const fetchChats = async () => {
     try {
@@ -15,7 +15,7 @@ const ChatContextProvider = ({ children }) => {
 
       if (!response) return console.log("No chats found");
 
-      console.log("Chats Response length", response.data.length);
+      // console.log("Chats Response length", response.data.length);
       setChats(response?.data);
     } catch (error) {
       console.error("Error fetching chats", error);
@@ -23,7 +23,7 @@ const ChatContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("Chats Context useEffect", chats);
+    // console.log("Chats Context useEffect", chats);
 
     fetchChats();
   }, [setChats]);
