@@ -86,7 +86,7 @@ const ChatModal = ({
         <div className="mb-4 p-4 font-bold text-xl text-center bg-[#2bbcff] rounded-lg">
           <h2>Send a Message</h2>
         </div>
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto md:px-4">
           {messages?.length > 0 ? (
             messages?.map((msg, index) => (
               <div
@@ -107,23 +107,23 @@ const ChatModal = ({
                   {msg.userId === currentUserInfo.id ? (
                     <span className="flex items-center gap-4">
                       <span>{msg.text}</span>
-                      <img
+                      {/* <img
                         src={currentUserInfo?.avatar}
                         width={30}
                         height={30}
                         alt="User Avatar"
                         className="rounded-full"
-                      />
+                      /> */}
                     </span>
                   ) : (
                     <span className="flex items-center gap-4">
-                      <img
+                      {/* <img
                         src={postOwner?.avatar}
                         width={30}
                         height={30}
                         alt="User Avatar"
                         className="rounded-full"
-                      />
+                      /> */}
                       <span>{msg.text}</span>
                     </span>
                   )}
