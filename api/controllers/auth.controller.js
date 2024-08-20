@@ -65,7 +65,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
       maxAge: age, // Cookie expiry time
-      sameSite: "none", // SameSite attribute to prevent CSRF attacks
+      sameSite: "none", // for localhost use lax and for production use none SameSite attribute to prevent CSRF attacks
       path: "/", // Root path
     });
 
