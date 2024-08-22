@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import "./chat.scss";
 import { useState, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -16,78 +16,81 @@ const Chat = () => {
 
   const [singleChat, setSingleChat] = useState(null);
   const messageEndRef = useRef(null);
+
   const decreaseNoti = useNotificationStore((state) => state.decrease);
 
-  const handleOpenChat = async (id, receiver) => {
+  const handleOpenChat = useCallback(async (id, receiver) => {
     try {
       // open chat
       const res = await apiRequest.get("/chats/" + id);
-      console.log("Id and Receiver: ", id, receiver);
       if (!res.data.seenBy.includes(currentUserInfo.id)) {
         decreaseNoti();
       }
-      console.log("Chat Data in chats: ", res.data);
       setSingleChat({ ...res.data, receiver });
     } catch (err) {
       console.error(err);
     }
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    const formtData = new FormData(e.target);
-    const text = formtData.get("text");
+      const formtData = new FormData(e.target);
+      const text = formtData.get("text");
 
-    if (!text) return alert("Please enter a message");
+      if (!text) return alert("Please enter a message");
 
+      try {
+        const response = await apiRequest.post("/messages/" + singleChat.id, {
+          text,
+        });
+        setSingleChat((prev) => ({
+          ...prev,
+          messages: [...prev.messages, response.data],
+        }));
+        e.target.reset();
+
+        socket.emit("sendMessage", {
+          receiverId: singleChat?.receiver?.id,
+          data: response?.data,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [singleChat, socket]
+  );
+  const read = useCallback(async () => {
     try {
-      const response = await apiRequest.post("/messages/" + singleChat.id, {
-        text,
-      });
-      setSingleChat((prev) => ({
-        ...prev,
-        messages: [...prev.messages, response.data],
-      }));
-      e.target.reset();
-
-      socket.emit("sendMessage", {
-        receiverId: singleChat?.receiver?.id,
-        data: response?.data,
-      });
+      return await apiRequest.put("/chats/read/" + singleChat?.id);
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
-  };
+  }, [singleChat?.id]);
 
   useEffect(() => {
-    const read = async () => {
-      try {
-        return await apiRequest.put("/chats/read/" + singleChat.id);
-      } catch (err) {
-        console.log(err);
+    const handleMessage = (data) => {
+      if (singleChat?.id === data.chatId) {
+        setSingleChat((prev) => ({
+          ...prev,
+          messages: [...prev.messages, data],
+        }));
+        read();
       }
     };
 
     if (singleChat && socket) {
-      socket.on("getMessage", (data) => {
-        if (singleChat.id === data.chatId) {
-          setSingleChat((prev) => ({
-            ...prev,
-            messages: [...prev.messages, data],
-          }));
-          read();
-        }
-      });
+      socket.on("getMessage", handleMessage);
     }
     return () => {
-      socket.off("getMessage");
+      socket.off("getMessage", handleMessage);
     };
   }, [socket, singleChat, chats]);
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [singleChat]);
+  }, [singleChat?.messages]);
 
   return (
     <div className="chat">

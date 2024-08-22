@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import Modal from "../Modal/Modal"; // Adjust the path as necessary
 import apiRequest from "../../lib/apiRequest";
 import { useChatContext } from "../../context/ChatContext";
@@ -12,8 +18,9 @@ const ChatModal = ({
 }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const messageEndRef = useRef(null);
 
-  const { chat, setChats } = useChatContext();
+  const { setChats } = useChatContext();
 
   useEffect(() => {
     if (isOpen) {
@@ -21,7 +28,13 @@ const ChatModal = ({
     }
   }, [isOpen]);
 
-  const fetchChatMessages = async () => {
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isOpen]);
+
+  const fetchChatMessages = useCallback(async () => {
     try {
       const response = await apiRequest(
         `/chats/getMessages/${recipientUserId}`
@@ -32,50 +45,60 @@ const ChatModal = ({
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
-  };
+  }, [recipientUserId]);
 
-  const fetchChatData = async (newMessage) => {
-    try {
-      const chatDataResponse = await apiRequest.post("/chats/addMessage", {
-        receiverId: recipientUserId,
-        text: newMessage,
-      });
+  // Memoized function to send a new message and update the chat data
+  const fetchChatData = useCallback(
+    async (newMessage) => {
+      try {
+        const chatDataResponse = await apiRequest.post("/chats/addMessage", {
+          receiverId: recipientUserId,
+          text: newMessage,
+        });
 
-      const { chat, message } = chatDataResponse?.data;
+        const { chat, message } = chatDataResponse?.data;
 
-      setChats((prevChats) => {
-        const existingChatIndex = prevChats.findIndex((c) => c.id === chat.id);
-        if (existingChatIndex > -1) {
-          const updatedChats = [...prevChats];
-          updatedChats[existingChatIndex] = {
-            ...chat,
-            lastMessage: message.text,
-          };
-          return updatedChats;
-        }
-        return [...prevChats, { ...chat, lastMessage: message }];
-      });
-      setMessages([...messages, { ...message, userId: currentUserInfo.id }]);
-      setNewMessage(""); // Clear input field
-    } catch (error) {
-      console.error("Error loading chat data:", error);
-      setMessages([]); // Fallback to empty messages on error
-    }
-  };
+        setChats((prevChats) => {
+          const existingChatIndex = prevChats.findIndex(
+            (c) => c.id === chat.id
+          );
+          if (existingChatIndex > -1) {
+            const updatedChats = [...prevChats];
+            updatedChats[existingChatIndex] = {
+              ...chat,
+              lastMessage: message.text,
+            };
+            return updatedChats;
+          }
+          return [...prevChats, { ...chat, lastMessage: message }];
+        });
+        setMessages([...messages, { ...message, userId: currentUserInfo.id }]);
+        setNewMessage(""); // Clear input field
+      } catch (error) {
+        console.error("Error loading chat data:", error);
+        setMessages([]); // Fallback to empty messages on error
+      }
+    },
+    [recipientUserId, setChats, setMessages]
+  );
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const newMessage = formData.get("message");
+  // Memoized handleSendMessage function
+  const handleSendMessage = useCallback(
+    (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const newMessage = formData.get("message");
 
-    if (!newMessage.trim()) return console.log("Message is empty");
+      if (!newMessage.trim()) return console.log("Message is empty");
 
-    fetchChatData(newMessage);
-  };
+      fetchChatData(newMessage);
+    },
+    [fetchChatData]
+  );
 
-  const handleContentClick = (e) => {
+  const handleContentClick = useCallback((e) => {
     e.stopPropagation(); // Stop the event from bubbling up to the background
-  };
+  }, []);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -133,6 +156,7 @@ const ChatModal = ({
           ) : (
             <p>Write a message to start a chat...!</p>
           )}
+          <div ref={messageEndRef} />
         </div>
 
         <div className="flex mt-4">
