@@ -38,16 +38,27 @@
       width: 100%;
       // padding-right: 30px;
       gap: 50px;
-      overflow-y: scroll;
-      padding-bottom: 50px;
+      // padding-bottom: 50px;
 
       @include md {
+        // overflow-y: scroll;
         height: 100vh;
       }
       @include sm {
         min-width: 100%;
         padding-right: 0px;
-        height: 100vh;
+        height: 100%;
+      }
+      .listing {
+        overflow-y: scroll;
+        @include md {
+          height: 400px;
+          // max-height: 500px;
+        }
+        @include sm {
+          min-height: 100%;
+          max-height: 300px;
+        }
       }
     }
   }

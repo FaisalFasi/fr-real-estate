@@ -16,7 +16,7 @@ const ListPage = () => {
         <div className="wrapper">
           <Filter />
 
-          <div className="flex flex-col gap-4 overflow-y-auto">
+          <div className="listing flex flex-col gap-4 ">
             <Suspense fallback={<p>Loading...</p>}>
               <Await
                 resolve={data.postResponse}
