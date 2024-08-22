@@ -23,17 +23,16 @@ const ChatModal = ({
   const { setChats } = useChatContext();
 
   useEffect(() => {
-    const fetchAndScroll = async () => {
-      await fetchChatMessages(); // Fetch messages when the modal opens
-      if (messageEndRef?.current) {
-        messageEndRef.current.scrollIntoView({ behavior: "smooth" }); // Scroll to the bottom after fetching messages
-      }
-    };
-
     if (isOpen) {
-      fetchAndScroll();
+      fetchChatMessages(); // Fetch messages when the modal opens
     }
-  }, [isOpen, messages]);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const fetchChatMessages = useCallback(async () => {
     try {
