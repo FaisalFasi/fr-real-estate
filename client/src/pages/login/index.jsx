@@ -61,6 +61,13 @@ const Login = () => {
           <div className="formContainer">
             <form onSubmit={handleSubmit}>
               <h1 className="text-xl font-bold">Welcome Back</h1>
+              {/* <input
+                name="email"
+                autoComplete="on"
+                required
+                type="text"
+                placeholder="Email"
+              /> */}
               <input
                 name="username"
                 autoComplete="on"

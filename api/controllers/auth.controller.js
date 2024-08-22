@@ -3,11 +3,23 @@ import prisma from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, password } = req.body;
 
   try {
     // HASH THE PASSWORD
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    const isUserExists = await prisma.user.findFirst({
+      where: {
+        username,
+      },
+    });
+
+    if (isUserExists) {
+      return res
+        .status(400)
+        .json({ message: "Username or email already taken" });
+    }
 
     // CREATE A NEW USER AND SAVE IT TO THE DATABASE
     const newUser = await prisma.user.create({
@@ -17,6 +29,7 @@ export const register = async (req, res) => {
         password: hashedPassword,
       },
     });
+    console.log("newUser :", newUser);
 
     res.status(201).json({ message: "User created successfully", newUser });
   } catch (error) {
@@ -60,27 +73,28 @@ export const login = async (req, res) => {
 
     const { password: userPassword, ...userInfo } = user;
 
-    // working cookie code
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
-      maxAge: age, // Cookie expiry time
-      sameSite: "none", // for localhost use lax and for production use none SameSite attribute to prevent CSRF attacks
-      path: "/", // Root path
-    });
+    // working cookie code for https / deployment
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
+    //   maxAge: age, // Cookie expiry time
+    //   sameSite: "none", // for localhost use lax and for production use none SameSite attribute to prevent CSRF attacks
+    //   path: "/", // Root path
+    // });
+
+    // working cookie code for http / development / localhost
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Set secure only in production
+        maxAge: age,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        path: "/", // Root path
+      })
+      .status(200)
+      .json(userInfo);
 
     res.status(200).json(userInfo);
-
-    // here is the original code
-    // res
-    //   .cookie("token", token, {
-    //     httpOnly: true,
-    //     secure: process.env.NODE_ENV === "production", // Set secure only in production
-    //     maxAge: age,
-    //     sameSite: "lax",
-    //   })
-    //   .status(200)
-    //   .json(userInfo);
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ message: "Failed to Login!" });

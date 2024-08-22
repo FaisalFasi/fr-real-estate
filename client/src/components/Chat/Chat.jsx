@@ -9,7 +9,6 @@ import { useNotificationStore } from "../../lib/notificationStore.js";
 import ShowText from "../ShowText/ShowText.jsx";
 import { ChatContext } from "../../context/ChatContext";
 
-// const Chat = ({ chats }) => {
 const Chat = () => {
   const { currentUserInfo } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);

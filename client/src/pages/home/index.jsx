@@ -1,27 +1,10 @@
 import React from "react";
 import "./home.scss";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import Modal from "../../components/Modal/Modal";
-import ChatModal from "../../components/ChatModal/ChatModal";
-// import { useContext } from "react";
-// import { AuthContext } from "../../context/AuthContext";
 
 const Home = () => {
-  // const [isOpenModal, setIsOpenModal] = React.useState(false);
-
-  // const handleCloseModal = () => {
-  //   setIsOpenModal(false);
-  // };
-  // const handleOpenModal = () => {
-  //   setIsOpenModal(true);
-  // };
   return (
     <section className="home">
-      {/* <Modal isOpen={isOpenModal} onClose={handleCloseModal} title="Chat">
-        Close
-      </Modal> */}
-      {/* <ChatModal isOpen={isOpenModal} onClose={handleCloseModal} />
-      <div onClick={handleOpenModal}>Open modal </div>{" "} */}
       <div className="relative w-full h-full">
         <img
           src="/images/bgHouse.png"
