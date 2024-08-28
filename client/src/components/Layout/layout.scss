@@ -3,6 +3,7 @@
 .layout {
   min-height: 100vh;
   height: 100%;
+  margin-top: 100px;
 
   display: flex;
   flex-direction: column;
@@ -12,7 +13,15 @@
   // background-color: #f5f5dc; /* Beige */
   // background: linear-gradient(to bottom, #ffffff, #f0f4f8);
 
+  .navbar {
+    position: fixed;
+    top: 0;
+    background: #fff;
+    z-index: 50;
+    width: 100%;
+  }
   .content {
+    // padding: 20px 0;
     //one way of doing it is to use calc function
     // height: calc(100vh - 100px);
     // another way is to use flexbox

@@ -103,11 +103,12 @@
       }
     }
     .center {
-      overflow-y: scroll;
+      overflow-y: auto; // Use auto to show scroll bar only when needed
       padding: 20px;
       display: flex;
       flex-direction: column;
       gap: 20px;
+      height: 100%; // Ensure it takes available height in the container
 
       @include lg {
         height: 450px;

@@ -121,6 +121,7 @@
   .chatContainer {
     flex: 2;
     min-height: 100%;
+    max-height: 100vh;
     // min-height: fit-content;
 
     background-color: #8cdbff;
