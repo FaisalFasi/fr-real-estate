@@ -16,7 +16,7 @@ export const getPosts = async (req, res) => {
   const normalizedCity = city ? city.toString().toLowerCase() : undefined;
 
   try {
-    console.log("Get All posts :");
+    // console.log("Get All posts :");
 
     const posts = await prisma.post.findMany({
       where: {
@@ -41,7 +41,7 @@ export const getPosts = async (req, res) => {
       },
     });
 
-    console.log("posts", posts);
+    // console.log("posts", posts);
 
     res.status(200).json(posts);
   } catch (error) {
@@ -52,7 +52,7 @@ export const getPosts = async (req, res) => {
 export const getPost = async (req, res) => {
   const id = req.params.id;
 
-  console.log("Get single post by id :", id);
+  // console.log("Get single post by id :", id);
   try {
     // Fetch the post from the database
     const post = await prisma.post.findUnique({
@@ -178,7 +178,7 @@ export const addPost = async (req, res) => {
   const body = req.body;
 
   const tokenUserId = req.userId;
-  console.log("tokenUserId", tokenUserId);
+  // console.log("tokenUserId", tokenUserId);
 
   try {
     const newPost = await prisma.post.create({

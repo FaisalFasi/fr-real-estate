@@ -88,7 +88,9 @@ export const login = async (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Set secure only in production
         maxAge: age,
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        sameSite: "lax",
+
+        // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         path: "/", // Root path
       })
       .status(200)

@@ -29,7 +29,7 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const id = req.params.id;
   const tokenUserId = req.userId;
-  console.log(id, tokenUserId);
+  // console.log(id, tokenUserId);
   const { password, avatar, ...inputs } = req.body;
 
   if (id !== tokenUserId) {
@@ -65,9 +65,7 @@ const deleteUser = async (req, res) => {
   const id = req.params.id;
   const tokenUserId = req.userId;
 
-  console.log(id, tokenUserId);
   if (id !== tokenUserId) {
-    console.log("Not Authorized");
     return res.status(403).json({ message: "Not Authorized" });
   }
   try {
@@ -144,11 +142,9 @@ const profilePosts = async (req, res) => {
         },
       },
     });
-    console.log("Post Owner", saved);
 
     const savedPosts = saved.map((item) => item.post);
     const postOwner = saved[0].user;
-    console.log("Post Owner", postOwner);
 
     res.status(200).json({ allPosts, savedPosts, postOwner });
   } catch (error) {
@@ -160,7 +156,6 @@ const profilePosts = async (req, res) => {
 const getNotificationNumber = async (req, res) => {
   const tokenUserId = req.userId;
 
-  console.log("Token User ID In Notification : ", tokenUserId);
   try {
     let number = await prisma.chat.count({
       where: {
@@ -174,7 +169,7 @@ const getNotificationNumber = async (req, res) => {
         },
       },
     });
-    console.log("Notification Count: ", number);
+
     res.status(200).json(number);
   } catch (err) {
     console.log("Failed to get notification number", err);
