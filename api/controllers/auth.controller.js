@@ -3,8 +3,8 @@ import prisma from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
-  const { username, password } = req.body;
-
+  const { username, password, email } = req.body;
+  console.log("req.body :", req.body);
   try {
     // HASH THE PASSWORD
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -73,23 +73,14 @@ export const login = async (req, res) => {
 
     const { password: userPassword, ...userInfo } = user;
 
-    // working cookie code for https / deployment
-    // res.cookie("token", token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
-    //   maxAge: age, // Cookie expiry time
-    //   sameSite: "none", // for localhost use lax and for production use none SameSite attribute to prevent CSRF attacks
-    //   path: "/", // Root path
-    // });
-
     // working cookie code for http / development / localhost
     res
       .cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Set secure only in production
         maxAge: age,
-        // sameSite: "lax",
-        sameSite: "none", // for localhost use lax and for production use none SameSite attribute to prevent CSRF attacks
+        sameSite: "lax",
+        // sameSite: "none", // for localhost use lax and for production use none SameSite attribute to prevent CSRF attacks
 
         // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         path: "/", // Root path
@@ -97,7 +88,7 @@ export const login = async (req, res) => {
       .status(200)
       .json(userInfo);
 
-    res.status(200).json(userInfo);
+    // res.status(200).json(userInfo);
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ message: "Failed to Login!" });

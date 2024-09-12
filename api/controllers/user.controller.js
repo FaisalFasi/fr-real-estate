@@ -144,7 +144,9 @@ const profilePosts = async (req, res) => {
     });
 
     const savedPosts = saved.map((item) => item.post);
-    const postOwner = saved[0].user;
+    const postOwner = saved.length > 0 ? saved[0].user : null;
+
+    // const postOwner = saved[0].user;
 
     res.status(200).json({ allPosts, savedPosts, postOwner });
   } catch (error) {
