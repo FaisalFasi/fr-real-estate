@@ -18,6 +18,7 @@ import {
 import Agents from "./pages/agents";
 import Contact from "./pages/contact";
 import About from "./pages/about";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
 function App() {
   const router = createBrowserRouter([
@@ -59,7 +60,11 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <ErrorBoundary>
+      <RouterProvider router={router} />
+    </ErrorBoundary>
+  );
 }
 
 export default App;

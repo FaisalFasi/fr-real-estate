@@ -2,13 +2,18 @@ import React, { Suspense } from "react";
 import { Await, useLoaderData } from "react-router-dom";
 import Map from "../../components/Map/Map";
 import "./listPage.scss";
-
 import Card from "../../components/Card/Card";
 import Filter from "../../components/Filter/Filter";
+import { usePostsContext } from "../../context/PostsContext";
 
 const ListPage = () => {
   const data = useLoaderData();
   console.log("Data in List Page: ", data);
+  const { savedPosts, savePost, unsavePost } = usePostsContext();
+
+  const isPostSaved = (postId) => {
+    return savedPosts.some((post) => post.id === postId);
+  };
 
   return (
     <div className="listPage">
@@ -27,7 +32,14 @@ const ListPage = () => {
                     return <p>No posts found</p>;
                   }
                   return postResponse.data.map((post) => (
-                    <Card key={post.id} item={post} />
+                    <Card
+                      key={post.id}
+                      item={post}
+                      isSaved={isPostSaved(post.id)}
+                      onSave={() => savePost(post.id)}
+                      onUnsavePost={() => unsavePost(post.id)}
+                      postOwner={data?.postResponse?.data?.postOwner}
+                    />
                   ));
                 }}
               </Await>

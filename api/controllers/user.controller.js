@@ -119,7 +119,7 @@ const savePost = async (req, res) => {
   }
 };
 
-const profilePosts = async (req, res) => {
+const savedPostsByUser = async (req, res) => {
   const tokenUserId = req.userId;
 
   try {
@@ -187,6 +187,6 @@ export {
   updateUser,
   deleteUser,
   savePost,
-  profilePosts,
+  savedPostsByUser,
   getNotificationNumber,
 };

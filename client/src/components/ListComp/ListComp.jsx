@@ -8,10 +8,10 @@ const ListComp = ({ posts, isSaved, onUnsavePost, postOwner }) => {
   return (
     <div className="list">
       {posts && posts.length > 0 ? (
-        posts.map((item) => (
+        posts.map((post) => (
           <Card
-            key={item.id}
-            item={item}
+            key={post.id}
+            item={post}
             isSaved={isSaved}
             onUnsavePost={onUnsavePost}
             postOwner={postOwner}

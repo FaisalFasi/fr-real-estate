@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { usePostsContext } from "../../context/PostsContext.jsx";
 
 const Profile = () => {
   const { currentUserInfo, updateUser } = useContext(AuthContext);
@@ -15,25 +16,22 @@ const Profile = () => {
   const data = useLoaderData();
   const navigate = useNavigate();
 
-  console.log("Data in Profile Page: ", data);
-  const [savedPosts, setSavedPosts] = useState(
-    data.postResponse ? data.postResponse.data.savedPosts : []
-  );
+  const { savedPosts: savedPostsByContext, unsavePost } = usePostsContext();
 
-  useEffect(() => {
-    if (data.postResponse) {
-      setSavedPosts(data.postResponse.data.savedPosts);
-    }
-  }, [data.postResponse]);
+  // const [savedPosts, setSavedPosts] = useState(
+  //   data.postResponse ? data.postResponse.data.savedPosts : []
+  // );
+
+  // useEffect(() => {
+  //   if (data.postResponse) {
+  //     setSavedPosts(data.postResponse.data.savedPosts);
+  //   }
+  // }, [data.postResponse]);
 
   const handleLogout = async () => {
     try {
       await apiRequest.post("/auth/logout");
-
-      // remove user from local storage and redirect to home page
-      // removing user also removes the cookie (token)
       console.log("Logout Response:  ");
-
       updateUser(null);
       navigate("/");
     } catch (err) {
@@ -49,27 +47,27 @@ const Profile = () => {
   }
 
   // handle unsave post
-  const handleUnsavePost = async (postId) => {
-    // Optimistically update the state
-    setSavedPosts((prevPosts) =>
-      prevPosts.filter((post) => post.id !== postId)
-    );
+  // const handleUnsavePost = async (postId) => {
+  //   // Optimistically update the state
+  //   setSavedPosts((prevPosts) =>
+  //     prevPosts.filter((post) => post.id !== postId)
+  //   );
 
-    try {
-      const response = await apiRequest.post("users/save", { postId });
+  //   try {
+  //     const response = await apiRequest.post("users/save", { postId });
 
-      if (response.status !== 200) {
-        throw new Error("Failed to unsave post");
-      }
-      console.log("Post unsaved successfully:", response.data);
-      alert("Post unsaved successfully");
-    } catch (error) {
-      console.error("Error unsaving post:", error);
-      // Revert state if unsave operation fails
-      setSavedPosts((prevPosts) => [...prevPosts, { id: postId }]);
-      alert("Failed to unsave post. Please try again later.");
-    }
-  };
+  //     if (response.status !== 200) {
+  //       throw new Error("Failed to unsave post");
+  //     }
+  //     console.log("Post unsaved successfully:", response.data);
+  //     alert("Post unsaved successfully");
+  //   } catch (error) {
+  //     console.error("Error unsaving post:", error);
+  //     // Revert state if unsave operation fails
+  //     setSavedPosts((prevPosts) => [...prevPosts, { id: postId }]);
+  //     alert("Failed to unsave post. Please try again later.");
+  //   }
+  // };
 
   return (
     <div className="profilePage">
@@ -131,10 +129,10 @@ const Profile = () => {
                 {(postResponse) => (
                   <ListComp
                     // posts={postResponse.data.savedPosts}
-                    posts={savedPosts}
+                    posts={savedPostsByContext}
                     postOwner={data?.postResponse?.data?.postOwner}
                     isSaved={true}
-                    onUnsavePost={handleUnsavePost}
+                    onUnsavePost={unsavePost}
                   />
                 )}
               </Await>
