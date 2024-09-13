@@ -148,13 +148,22 @@
           }
 
           &:hover {
-            background-color: hsla(199, 100%, 58%);
+            background-color: #29bbff;
             color: #fff;
           }
 
           img {
             width: 16px;
             height: 16px;
+          }
+        }
+        .deleteIcon {
+          color: #29bbff;
+          border: 1px solid #29bbff;
+
+          &:hover {
+            background-color: rgb(255, 41, 41);
+            color: #fff;
           }
         }
       }

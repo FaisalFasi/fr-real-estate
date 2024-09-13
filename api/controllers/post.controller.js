@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
+// import { ObjectId } from "mongodb";
 
 export const getPosts = async (req, res) => {
   const {
@@ -206,22 +207,47 @@ export const updatePost = async (req, res) => {
 export const deletePost = async (req, res) => {
   const id = req.params.id;
   const tokenUserId = req.userId;
+
   try {
     const post = await prisma.post.findUnique({
       where: {
         id: id,
       },
+      include: { postDetail: true }, // Include related postDetail
     });
+    console.log("post", post);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
     if (post.userId !== tokenUserId) {
       return res.status(403).json({ message: "Not Authorized" });
     }
+    console.log("Authorised to delete post");
+
+    // First delete the associated PostDetail (if it exists)
+    if (post.postDetail) {
+      await prisma.postDetail.delete({
+        where: { id: post.postDetail.id },
+      });
+    }
+    console.log("Post detail deleted");
+    if (post.savedPost) {
+      await prisma.savedPost.delete({
+        where: { id: post.savedPost.id },
+      });
+    }
+    console.log("Saved post deleted");
     await prisma.post.delete({
       where: {
         id: id,
       },
     });
+    console.log("Post deleted successfully");
     res.status(200).json({ message: "Post deleted" });
   } catch (error) {
+    console.error("Error deleting post:", error);
     res.status(500).json({ message: "Error creating post" });
   }
 };

@@ -61,9 +61,27 @@ export const PostsProvider = ({ children }) => {
       setSavedPosts((prevPosts) => [...prevPosts, { id: postId }]);
     }
   };
+  const handleDeletePost = async (postId) => {
+    try {
+      const response = await apiRequest.delete(`/posts/deletePost/${postId}`);
 
+      if (response.status >= 200 && response.status < 300) {
+        console.log("Post deleted successfully");
+        alert("Post deleted successfully");
+        fetchSavedPosts();
+      } else {
+        console.error("Error deleting post:", response.data.message);
+        alert(response.data.message || "Error deleting post");
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert("An error occurred while deleting the post");
+    }
+  };
   return (
-    <PostsContext.Provider value={{ savedPosts, savePost, unsavePost }}>
+    <PostsContext.Provider
+      value={{ savedPosts, savePost, unsavePost, handleDeletePost }}
+    >
       {children}
     </PostsContext.Provider>
   );

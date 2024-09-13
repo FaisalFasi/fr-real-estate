@@ -3,7 +3,13 @@ import "./listComp.scss";
 import Card from "../Card/Card";
 import ShowText from "../ShowText/ShowText";
 
-const ListComp = ({ posts, isSaved, onUnsavePost, postOwner }) => {
+const ListComp = ({
+  posts,
+  isSaved,
+  onUnsavePost,
+  postOwner,
+  handleDeletePost,
+}) => {
   console.log("Posts in ListComp: ", posts);
   return (
     <div className="list">
@@ -15,6 +21,7 @@ const ListComp = ({ posts, isSaved, onUnsavePost, postOwner }) => {
             isSaved={isSaved}
             onUnsavePost={onUnsavePost}
             postOwner={postOwner}
+            handleDeletePost={handleDeletePost}
           />
         ))
       ) : (

@@ -4,9 +4,18 @@ import "./card.scss";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
+import { MdDeleteForever } from "react-icons/md";
+
 import ChatModal from "../ChatModal/ChatModal";
 
-const Card = ({ item, isSaved, onUnsavePost, onSave, postOwner }) => {
+const Card = ({
+  item,
+  isSaved,
+  onUnsavePost,
+  onSave,
+  postOwner,
+  handleDeletePost,
+}) => {
   const { currentUserInfo } = useContext(AuthContext);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -71,7 +80,7 @@ const Card = ({ item, isSaved, onUnsavePost, onSave, postOwner }) => {
             </div>
           </div>
 
-          {item?.userId != currentUserInfo?.id && (
+          {item?.userId != currentUserInfo?.id ? (
             <div className="icons">
               <div
                 className={`${isSaved ? "bg-green-300" : ""} icon`}
@@ -82,6 +91,13 @@ const Card = ({ item, isSaved, onUnsavePost, onSave, postOwner }) => {
               <div className="icon" onClick={handleOpenModal}>
                 <img src="/chat.png" alt="Chat image" />
               </div>
+            </div>
+          ) : (
+            <div className="icons">
+              <MdDeleteForever
+                className="deleteIcon w-fit h-[30px]"
+                onClick={() => handleDeletePost(item?.id)}
+              />
             </div>
           )}
         </div>

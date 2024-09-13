@@ -7,7 +7,6 @@ import { useLoaderData, useNavigate, Await } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { usePostsContext } from "../../context/PostsContext.jsx";
 
 const Profile = () => {
@@ -16,17 +15,11 @@ const Profile = () => {
   const data = useLoaderData();
   const navigate = useNavigate();
 
-  const { savedPosts: savedPostsByContext, unsavePost } = usePostsContext();
-
-  // const [savedPosts, setSavedPosts] = useState(
-  //   data.postResponse ? data.postResponse.data.savedPosts : []
-  // );
-
-  // useEffect(() => {
-  //   if (data.postResponse) {
-  //     setSavedPosts(data.postResponse.data.savedPosts);
-  //   }
-  // }, [data.postResponse]);
+  const {
+    savedPosts: savedPostsByContext,
+    unsavePost,
+    handleDeletePost,
+  } = usePostsContext();
 
   const handleLogout = async () => {
     try {
@@ -45,29 +38,6 @@ const Profile = () => {
     navigate("/");
     return null; // Optionally render a loading spinner or message
   }
-
-  // handle unsave post
-  // const handleUnsavePost = async (postId) => {
-  //   // Optimistically update the state
-  //   setSavedPosts((prevPosts) =>
-  //     prevPosts.filter((post) => post.id !== postId)
-  //   );
-
-  //   try {
-  //     const response = await apiRequest.post("users/save", { postId });
-
-  //     if (response.status !== 200) {
-  //       throw new Error("Failed to unsave post");
-  //     }
-  //     console.log("Post unsaved successfully:", response.data);
-  //     alert("Post unsaved successfully");
-  //   } catch (error) {
-  //     console.error("Error unsaving post:", error);
-  //     // Revert state if unsave operation fails
-  //     setSavedPosts((prevPosts) => [...prevPosts, { id: postId }]);
-  //     alert("Failed to unsave post. Please try again later.");
-  //   }
-  // };
 
   return (
     <div className="profilePage">
@@ -110,7 +80,10 @@ const Profile = () => {
                 errorElement={<p>Failed to load data</p>}
               >
                 {(postResponse) => (
-                  <ListComp posts={postResponse.data.allPosts} />
+                  <ListComp
+                    posts={postResponse.data.allPosts}
+                    handleDeletePost={handleDeletePost}
+                  />
                 )}
               </Await>
             </Suspense>
