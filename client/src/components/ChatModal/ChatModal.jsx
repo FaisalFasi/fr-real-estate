@@ -80,14 +80,12 @@ const ChatModal = ({
   const handleSendMessage = useCallback(
     (e) => {
       e.preventDefault();
-      const formData = new FormData(e.target);
-      const newMessage = formData.get("message");
 
       if (!newMessage.trim()) return console.log("Message is empty");
 
       fetchChatData(newMessage);
     },
-    [fetchChatData]
+    [fetchChatData, newMessage]
   );
 
   const handleContentClick = useCallback((e) => {
