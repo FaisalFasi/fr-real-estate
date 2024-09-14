@@ -9,7 +9,7 @@ import Modal from "../Modal/Modal";
 import ChatModal from "../ChatModal/ChatModal";
 
 const Card = ({
-  item,
+  post,
   isSaved,
   onUnsavePost,
   onSave,
@@ -19,7 +19,6 @@ const Card = ({
   const { currentUserInfo } = useContext(AuthContext);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-
   const handleCloseModal = () => {
     setIsOpenModal(false);
   };
@@ -33,9 +32,9 @@ const Card = ({
       return alert("Please login to save the post");
     }
     if (isSaved) {
-      onUnsavePost(item.id);
+      onUnsavePost(post.id);
     } else {
-      onSave(item.id);
+      onSave(post.id);
     }
   };
 
@@ -48,53 +47,53 @@ const Card = ({
   };
 
   const handleConfirmDelete = () => {
-    handleDeletePost(item.id);
+    handleDeletePost(post.id);
     handleCloseDeleteModal();
   };
 
-  if (!item || !item.images) {
+  if (!post || !post.images) {
     return <div>Loading...</div>; // You can render a loading spinner or skeleton UI here
   }
 
-  if (!item) return <div>Error: No item data</div>;
+  if (!post) return <div>Error: No item data</div>;
 
   return (
     <div className="card">
       {/* <div onClick={handleOpenModal}>Open modal </div>{" "} */}
-      <Link to={`/${item?.id}`} className="imageContainer">
+      <Link to={`/${post?.id}`} className="imageContainer">
         <img
-          src={item?.images?.[0] ? item.images[0] : "/noavatar.jpg"}
-          alt={item?.title || "No Title"}
+          src={post?.images?.[0] ? post.images[0] : "/noavatar.jpg"}
+          alt={post?.title || "No Title"}
         />
 
         {/* <img src={item?.images[0] || "/noavatar.jpg"} alt={item?.title} /> */}
       </Link>
       <div className="textContainer">
-        <Link to={`/${item.id}`}>
+        <Link to={`/${post.id}`}>
           <h2 className="title">
-            {item?.title?.length > 50
-              ? item.title.slice(0, 50) + "..."
-              : item.title}
+            {post?.title?.length > 50
+              ? post.title.slice(0, 50) + "..."
+              : post.title}
           </h2>
         </Link>
         <p className="address">
           <img src="/pin.png" alt="" />
-          <span>{item?.address}</span>
+          <span>{post?.address}</span>
         </p>
-        <p className="price"> ${item.price}</p>
+        <p className="price"> ${post.price}</p>
         <div className="bottom">
           <div className="features">
             <div className="feature">
               <img src="/bed.png" alt="Bed room Image" />
-              <span>{item?.bedroom} bedroom</span>
+              <span>{post?.bedroom} bedroom</span>
             </div>
             <div className="feature">
               <img src="/bath.png" alt="Bath room Image" />
-              <span>{item?.bathroom} bathroom</span>
+              <span>{post?.bathroom} bathroom</span>
             </div>
           </div>
 
-          {item?.userId != currentUserInfo?.id ? (
+          {post?.userId != currentUserInfo?.id ? (
             <div className="icons">
               <div
                 className={`${isSaved ? "bg-green-300" : ""} icon`}
@@ -121,9 +120,9 @@ const Card = ({
         <ChatModal
           isOpen={isOpenModal}
           onClose={handleCloseModal}
-          postId={item?.id}
+          postId={post?.id}
           postOwner={postOwner} // Pass the recipient user info
-          recipientUserId={item?.userId} // Pass the recipient user ID
+          recipientUserId={post?.userId} // Pass the recipient user ID
           currentUserInfo={currentUserInfo} // Pass current user info
         />
       </div>

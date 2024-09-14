@@ -12,22 +12,23 @@ const ChatModal = ({
 }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [receiverUser, setReceiverUser] = useState([]);
   const messageEndRef = useRef(null);
+  const { chats, setChats } = useChatContext();
 
-  const { setChats } = useChatContext();
+  const getReceiverUser = useCallback(async () => {
+    const response = await apiRequest(`/users/singleUser/${recipientUserId}`);
+    setReceiverUser(response.data);
+    console.log("Receiver User", response.data.avatar);
+    // return chats.find((chat) => chat.id === recipientUserId)?.receiver;
+  }, [chats, recipientUserId]);
 
   useEffect(() => {
-    if (isOpen) {
-      fetchChatMessages(); // Fetch messages when the modal opens
+    if (recipientUserId) {
+      getReceiverUser(); // Fetch receiver user only when recipientUserId changes
     }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
-
+  }, [recipientUserId, getReceiverUser]);
+  // console.log("Recipient User", getReceiverUser());
   const fetchChatMessages = useCallback(async () => {
     try {
       const response = await apiRequest(
@@ -41,14 +42,27 @@ const ChatModal = ({
     }
   }, [recipientUserId]);
 
+  useEffect(() => {
+    if (isOpen) {
+      fetchChatMessages(); // Fetch messages when the modal opens
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   // Memoized function to send a new message and update the chat data
   const fetchChatData = useCallback(
-    async (newMessage) => {
+    async (newMessageSent) => {
       try {
         const chatDataResponse = await apiRequest.post("/chats/addMessage", {
           receiverId: recipientUserId,
-          text: newMessage,
+          text: newMessageSent,
         });
+        console.log("chatDataResponse: ", chatDataResponse);
 
         const { chat, message } = chatDataResponse?.data;
 
@@ -66,7 +80,11 @@ const ChatModal = ({
           }
           return [...prevChats, { ...chat, lastMessage: message }];
         });
-        setMessages([...messages, { ...message, userId: currentUserInfo.id }]);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { ...message, userId: currentUserInfo.id },
+        ]);
+
         setNewMessage(""); // Clear input field
       } catch (error) {
         console.error("Error loading chat data:", error);
@@ -122,23 +140,23 @@ const ChatModal = ({
                   {msg.userId === currentUserInfo.id ? (
                     <span className="flex items-center gap-4">
                       <span>{msg.text}</span>
-                      {/* <img
+                      <img
                         src={currentUserInfo?.avatar}
                         width={30}
                         height={30}
                         alt="User Avatar"
-                        className="rounded-full"
-                      /> */}
+                        className="w-[30px] object-cover  h-[30px] rounded-full"
+                      />
                     </span>
                   ) : (
                     <span className="flex items-center gap-4">
-                      {/* <img
-                        src={postOwner?.avatar}
+                      <img
+                        src={receiverUser?.avatar}
                         width={30}
                         height={30}
                         alt="User Avatar"
-                        className="rounded-full"
-                      /> */}
+                        className="w-[30px] object-cover h-[30px] rounded-full"
+                      />
                       <span>{msg.text}</span>
                     </span>
                   )}

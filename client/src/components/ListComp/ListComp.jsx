@@ -16,7 +16,7 @@ const ListComp = ({
         posts.map((post) => (
           <Card
             key={post.id}
-            item={post}
+            post={post}
             isSaved={isSaved}
             onUnsavePost={onUnsavePost}
             postOwner={postOwner}
