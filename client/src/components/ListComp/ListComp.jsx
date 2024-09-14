@@ -10,7 +10,6 @@ const ListComp = ({
   postOwner,
   handleDeletePost,
 }) => {
-  console.log("Posts in ListComp: ", posts);
   return (
     <div className="list">
       {posts && posts.length > 0 ? (

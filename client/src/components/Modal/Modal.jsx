@@ -14,12 +14,12 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">{title ? title : ""}</h2>
           <button
-            className="text-black bg-white hover:bg-gray-200"
+            className="absolute top-5 right-5 text-black bg-white hover:bg-gray-200 rounded-lg"
             onClick={handleBackgroundClick}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
+              className="h-10 w-10"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

@@ -19,6 +19,7 @@ const Profile = () => {
     savedPosts: savedPostsByContext,
     unsavePost,
     handleDeletePost,
+    createdPosts,
   } = usePostsContext();
 
   const handleLogout = async () => {
@@ -68,7 +69,7 @@ const Profile = () => {
           <div className="title">
             {/* <ListComp /> */}
 
-            <h1>My Posts</h1>
+            <h1>My Created Posts</h1>
             <Link to="/add">
               <button>Create New Post</button>
             </Link>
@@ -81,7 +82,7 @@ const Profile = () => {
               >
                 {(postResponse) => (
                   <ListComp
-                    posts={postResponse.data.allPosts}
+                    posts={createdPosts}
                     handleDeletePost={handleDeletePost}
                   />
                 )}

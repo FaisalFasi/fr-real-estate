@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
-
+import Modal from "../Modal/Modal";
 import ChatModal from "../ChatModal/ChatModal";
 
 const Card = ({
@@ -18,6 +18,7 @@ const Card = ({
 }) => {
   const { currentUserInfo } = useContext(AuthContext);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
@@ -36,6 +37,19 @@ const Card = ({
     } else {
       onSave(item.id);
     }
+  };
+
+  const handleOpenDeleteModal = () => {
+    setIsOpenDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsOpenDeleteModal(false);
+  };
+
+  const handleConfirmDelete = () => {
+    handleDeletePost(item.id);
+    handleCloseDeleteModal();
   };
 
   if (!item || !item.images) {
@@ -96,7 +110,7 @@ const Card = ({
             <div className="icons">
               <MdDeleteForever
                 className="deleteIcon w-fit h-[30px]"
-                onClick={() => handleDeletePost(item?.id)}
+                onClick={handleOpenDeleteModal}
               />
             </div>
           )}
@@ -112,6 +126,33 @@ const Card = ({
           recipientUserId={item?.userId} // Pass the recipient user ID
           currentUserInfo={currentUserInfo} // Pass current user info
         />
+      </div>
+      <div>
+        <Modal
+          isOpen={isOpenDeleteModal}
+          onClose={handleCloseDeleteModal}
+          // title="Confirm Deletion"
+        >
+          <div className="bg-white p-4 flex flex-col items-center justify-center gap-10 w-full h-[300px] md:h-[300px] md:w-[600px] xl:w-[900px] rounded-xl">
+            <h2 className="text-xl md:text-2xl lg:text-4xl font-semibold text-center ">
+              Are you sure you want to delete this post?
+            </h2>
+            <div className="flex justify-end space-x-10 mt-4 font-bold text-xl md:text-3xl">
+              <button
+                className="px-4 py-2  bg-gray-300 text-black rounded-lg"
+                onClick={handleCloseDeleteModal}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded-lg"
+                onClick={handleConfirmDelete}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   );

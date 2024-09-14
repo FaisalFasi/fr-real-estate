@@ -123,7 +123,7 @@ const savedPostsByUser = async (req, res) => {
   const tokenUserId = req.userId;
 
   try {
-    const allPosts = await prisma.post.findMany({
+    const createdPosts = await prisma.post.findMany({
       where: {
         userId: tokenUserId,
       },
@@ -148,7 +148,7 @@ const savedPostsByUser = async (req, res) => {
 
     // const postOwner = saved[0].user;
 
-    res.status(200).json({ allPosts, savedPosts, postOwner });
+    res.status(200).json({ createdPosts: createdPosts, savedPosts, postOwner });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "failed to get profile posts!" });

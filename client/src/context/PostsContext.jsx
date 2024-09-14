@@ -6,16 +6,14 @@ const PostsContext = createContext();
 
 export const PostsProvider = ({ children }) => {
   const [savedPosts, setSavedPosts] = useState([]);
+  const [createdPosts, setCreatedPosts] = useState([]); // Add state for created posts
 
   const fetchSavedPosts = async () => {
     try {
       const response = await apiRequest.get("users/savedPostsByUser");
       if (response.status === 200) {
         setSavedPosts(response.data.savedPosts); // Assuming API returns an array of saved posts
-        console.log(
-          "Fetched saved posts from backend on initial mount:",
-          response.data.savedPosts
-        );
+        setCreatedPosts(response.data.createdPosts); // Set the created posts
       }
     } catch (error) {
       console.error("Error fetching saved posts:", error);
@@ -80,7 +78,13 @@ export const PostsProvider = ({ children }) => {
   };
   return (
     <PostsContext.Provider
-      value={{ savedPosts, savePost, unsavePost, handleDeletePost }}
+      value={{
+        createdPosts,
+        savedPosts,
+        savePost,
+        unsavePost,
+        handleDeletePost,
+      }}
     >
       {children}
     </PostsContext.Provider>

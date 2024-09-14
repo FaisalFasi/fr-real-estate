@@ -116,11 +116,38 @@ const AddNewPost = () => {
               </div>
               <div className="item">
                 <label htmlFor="latitude">Latitude</label>
-                <input id="latitude" name="latitude" type="text" />
+                <input
+                  id="latitude"
+                  name="latitude"
+                  type="text"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Regex to allow only numbers, a single dot, and a single negative sign
+                    if (/^-?\d*\.?\d*$/.test(value)) {
+                      // Only update if valid number input
+                    } else {
+                      e.target.value = ""; // Clear invalid input
+                      alert("Please enter a valid latitude.");
+                    }
+                  }}
+                />
               </div>
               <div className="item">
                 <label htmlFor="longitude">Longitude</label>
-                <input id="longitude" name="longitude" type="text" />
+                <input
+                  id="longitude"
+                  name="longitude"
+                  type="text"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Regex to allow only numbers, a single dot, and a single negative sign
+                    if (/^-?\d*\.?\d*$/.test(value)) {
+                    } else {
+                      e.target.value = ""; // Clear invalid input
+                      alert("Please enter a valid longitude.");
+                    }
+                  }}
+                />
               </div>
               <div className="item">
                 <label htmlFor="type">Type</label>
