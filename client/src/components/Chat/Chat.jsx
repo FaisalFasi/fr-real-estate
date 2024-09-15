@@ -1,36 +1,20 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import "./chat.scss";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest.js";
 import { format } from "timeago.js";
 import { SocketContext } from "../../context/SocketContext";
-import { useNotificationStore } from "../../lib/notificationStore.js";
 import ShowText from "../ShowText/ShowText.jsx";
 import { ChatContext } from "../../context/ChatContext";
 
 const Chat = () => {
   const { currentUserInfo } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
-  const { chats } = useContext(ChatContext);
+  const { chats, singleChat, setSingleChat, handleOpenChat, sendMessage } =
+    useContext(ChatContext);
 
-  const [singleChat, setSingleChat] = useState(null);
   const messageEndRef = useRef(null);
-
-  const decreaseNoti = useNotificationStore((state) => state.decrease);
-
-  const handleOpenChat = useCallback(async (id, receiver) => {
-    try {
-      // open chat
-      const res = await apiRequest.get("/chats/" + id);
-      if (!res.data.seenBy.includes(currentUserInfo.id)) {
-        decreaseNoti();
-      }
-      setSingleChat({ ...res.data, receiver });
-    } catch (err) {
-      console.error(err);
-    }
-  }, []);
 
   const handleSubmit = useCallback(
     async (e) => {
@@ -41,26 +25,12 @@ const Chat = () => {
 
       if (!text) return alert("Please enter a message");
 
-      try {
-        const response = await apiRequest.post("/messages/" + singleChat.id, {
-          text,
-        });
-        setSingleChat((prev) => ({
-          ...prev,
-          messages: [...prev.messages, response.data],
-        }));
-        e.target.reset();
-
-        socket.emit("sendMessage", {
-          receiverId: singleChat?.receiver?.id,
-          data: response?.data,
-        });
-      } catch (err) {
-        console.error(err);
-      }
+      sendMessage(singleChat?.receiver?.id, text);
+      e.target.reset();
     },
     [singleChat, socket]
   );
+
   const read = useCallback(async () => {
     try {
       return await apiRequest.put("/chats/read/" + singleChat?.id);

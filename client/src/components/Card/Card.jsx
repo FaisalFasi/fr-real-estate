@@ -133,10 +133,10 @@ const Card = ({
           // title="Confirm Deletion"
         >
           <div className="bg-white p-4 flex flex-col items-center justify-center gap-10 w-full h-[300px] md:h-[300px] md:w-[600px] xl:w-[900px] rounded-xl">
-            <h2 className="text-xl md:text-2xl lg:text-4xl font-semibold text-center ">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-center ">
               Are you sure you want to delete this post?
             </h2>
-            <div className="flex justify-end space-x-10 mt-4 font-bold text-xl md:text-3xl">
+            <div className="flex justify-end space-x-10 mt-4 font-bold text-xl md:text-2xl lg:text-3xl">
               <button
                 className="px-4 py-2  bg-gray-300 text-black rounded-lg"
                 onClick={handleCloseDeleteModal}

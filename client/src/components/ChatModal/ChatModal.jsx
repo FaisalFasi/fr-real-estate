@@ -12,40 +12,18 @@ const ChatModal = ({
 }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [receiverUser, setReceiverUser] = useState([]);
   const messageEndRef = useRef(null);
-  const { chats, setChats } = useChatContext();
-
-  const getReceiverUser = useCallback(async () => {
-    const response = await apiRequest(`/users/singleUser/${recipientUserId}`);
-    setReceiverUser(response.data);
-    console.log("Receiver User", response.data.avatar);
-    // return chats.find((chat) => chat.id === recipientUserId)?.receiver;
-  }, [chats, recipientUserId]);
+  const { chats, setChats, sendMessage, handleOpenChatModal } =
+    useChatContext();
 
   useEffect(() => {
-    if (recipientUserId) {
-      getReceiverUser(); // Fetch receiver user only when recipientUserId changes
-    }
-  }, [recipientUserId, getReceiverUser]);
-  // console.log("Recipient User", getReceiverUser());
-  const fetchChatMessages = useCallback(async () => {
-    try {
-      const response = await apiRequest(
-        `/chats/getMessages/${recipientUserId}`
-      );
-      if (response && response.data) {
-        setMessages(response.data.messages);
+    const fetChatMessages = async () => {
+      if (isOpen) {
+        const fetChatMessages = await handleOpenChatModal(recipientUserId);
+        setMessages(fetChatMessages);
       }
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-    }
-  }, [recipientUserId]);
-
-  useEffect(() => {
-    if (isOpen) {
-      fetchChatMessages(); // Fetch messages when the modal opens
-    }
+    };
+    fetChatMessages();
   }, [isOpen]);
 
   useEffect(() => {
@@ -55,56 +33,46 @@ const ChatModal = ({
   }, [messages]);
 
   // Memoized function to send a new message and update the chat data
-  const fetchChatData = useCallback(
-    async (newMessageSent) => {
-      try {
-        const chatDataResponse = await apiRequest.post("/chats/addMessage", {
-          receiverId: recipientUserId,
-          text: newMessageSent,
-        });
-        console.log("chatDataResponse: ", chatDataResponse);
+  const fetchChatData = async (newMessageSent) => {
+    try {
+      const newMessages = await sendMessage(recipientUserId, newMessageSent);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { ...newMessages, userId: currentUserInfo.id },
+      ]);
 
-        const { chat, message } = chatDataResponse?.data;
-
-        setChats((prevChats) => {
-          const existingChatIndex = prevChats.findIndex(
-            (c) => c.id === chat.id
-          );
-          if (existingChatIndex > -1) {
-            const updatedChats = [...prevChats];
-            updatedChats[existingChatIndex] = {
-              ...chat,
-              lastMessage: message.text,
-            };
-            return updatedChats;
-          }
-          return [...prevChats, { ...chat, lastMessage: message }];
-        });
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { ...message, userId: currentUserInfo.id },
-        ]);
-
-        setNewMessage(""); // Clear input field
-      } catch (error) {
-        console.error("Error loading chat data:", error);
-        setMessages([]); // Fallback to empty messages on error
-      }
-    },
-    [recipientUserId, setChats, setMessages]
-  );
+      setNewMessage(""); // Clear input field
+    } catch (error) {
+      console.error("Error loading chat data:", error);
+      setMessages([]); // Fallback to empty messages on error
+    }
+  };
 
   // Memoized handleSendMessage function
-  const handleSendMessage = useCallback(
-    (e) => {
-      e.preventDefault();
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
 
-      if (!newMessage.trim()) return console.log("Message is empty");
+    if (!newMessage.trim()) return alert("Message is empty");
 
-      fetchChatData(newMessage);
-    },
-    [fetchChatData, newMessage]
-  );
+    console.log("Sending message:", newMessage);
+    console.log("Receiver ID:", recipientUserId);
+    try {
+      const newMessagesResp = await sendMessage(recipientUserId, newMessage);
+
+      console.log("New message sent:", newMessagesResp);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { ...newMessagesResp, userId: currentUserInfo.id },
+      ]);
+
+      setNewMessage(""); // Clear input field
+    } catch (error) {
+      console.error("Error loading chat data:", error);
+      setMessages([]); // Fallback to empty messages on error
+    }
+
+    // fetchChatData(newMessage);
+  };
 
   const handleContentClick = useCallback((e) => {
     e.stopPropagation(); // Stop the event from bubbling up to the background
@@ -150,13 +118,13 @@ const ChatModal = ({
                     </span>
                   ) : (
                     <span className="flex items-center gap-4">
-                      <img
+                      {/* <img
                         src={receiverUser?.avatar}
                         width={30}
                         height={30}
                         alt="User Avatar"
                         className="w-[30px] object-cover h-[30px] rounded-full"
-                      />
+                      /> */}
                       <span>{msg.text}</span>
                     </span>
                   )}

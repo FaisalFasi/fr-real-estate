@@ -193,7 +193,7 @@ const addChatAndMessage = async (req, res) => {
         lastMessage: text,
       },
     });
-
+    console.log("message----", message);
     // Return the chat ID and the newly added message
     res
       .status(200)
