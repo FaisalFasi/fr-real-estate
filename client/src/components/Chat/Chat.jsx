@@ -1,48 +1,85 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import "./chat.scss";
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest.js";
 import { format } from "timeago.js";
 import { SocketContext } from "../../context/SocketContext";
+import { useNotificationStore } from "../../lib/notificationStore.js";
 import ShowText from "../ShowText/ShowText.jsx";
 import { ChatContext } from "../../context/ChatContext";
 
 const Chat = () => {
   const { currentUserInfo } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
-  const { chats, singleChat, setSingleChat, handleOpenChat, sendMessage } =
+  const { chats, setChatMessages, chatMessages, getChatMessages } =
     useContext(ChatContext);
+
+  const [chatReceiver, setChatReceiver] = useState(null);
+  const [openChat, setOpenChat] = useState(false);
 
   const messageEndRef = useRef(null);
 
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
+  const decreaseNoti = useNotificationStore((state) => state.decrease);
 
-      const formtData = new FormData(e.target);
-      const text = formtData.get("text");
+  const handleOpenChat = async (chatId, receiver) => {
+    try {
+      setOpenChat(!openChat);
+      setChatReceiver(receiver);
+      const res = await getChatMessages(receiver.id);
 
-      if (!text) return alert("Please enter a message");
+      if (!res) return console.log("No Messages found");
 
-      sendMessage(singleChat?.receiver?.id, text);
-      e.target.reset();
-    },
-    [singleChat, socket]
-  );
+      setChatMessages(res?.messages);
+
+      if (res.seenBy.includes(currentUserInfo.id)) {
+        decreaseNoti();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formtData = new FormData(e.target);
+    const inputText = formtData.get("text");
+
+    if (!inputText.trim()) return alert("Message is empty");
+    try {
+      const response = await apiRequest.post("/chats/addMessage", {
+        text: inputText,
+        receiverId: chatReceiver?.id,
+      });
+
+      if (response?.data) {
+        setChatMessages((prev) => [...prev, response.data.message]);
+
+        e.target.reset();
+
+        socket.emit("sendMessage", {
+          receiverId: chatMessages?.receiver?.id,
+          data: response?.data,
+        });
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
 
   const read = useCallback(async () => {
     try {
-      return await apiRequest.put("/chats/read/" + singleChat?.id);
+      return await apiRequest.put("/chats/read/" + chatMessages?.id);
     } catch (err) {
       console.log(err);
     }
-  }, [singleChat?.id]);
+  }, [chatMessages?.id]);
 
   useEffect(() => {
     const handleMessage = (data) => {
-      if (singleChat?.id === data.chatId) {
-        setSingleChat((prev) => ({
+      if (chatMessages?.id === data.chatId) {
+        setChatMessages((prev) => ({
           ...prev,
           messages: [...prev.messages, data],
         }));
@@ -50,22 +87,24 @@ const Chat = () => {
       }
     };
 
-    if (singleChat && socket) {
+    if (chatMessages && socket) {
       socket.on("getMessage", handleMessage);
     }
     return () => {
       socket.off("getMessage", handleMessage);
     };
-  }, [socket, singleChat, chats]);
+  }, [socket, chatMessages, chats]);
 
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [singleChat?.messages]);
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatMessages]);
 
   return (
     <div className="chat">
       <div className="messages">
-        <h1>Messages</h1>
+        <h1 className="">Your Chats</h1>
         {chats?.length > 0 ? (
           chats.map((chat) => (
             <div
@@ -74,7 +113,7 @@ const Chat = () => {
               style={{
                 backgroundColor:
                   chat.seenBy.includes(currentUserInfo.id) ||
-                  singleChat?.id === chat.id
+                  chatMessages?.id === chat.id
                     ? "white"
                     : "lightblue",
               }}
@@ -86,25 +125,22 @@ const Chat = () => {
             </div>
           ))
         ) : (
-          <ShowText message="No message found" />
+          <ShowText message="No Chat found" />
         )}
       </div>
-      {singleChat && (
+      {chatMessages && openChat && (
         <div className="chatBox">
           <div className="top">
             <div className="user">
-              <img
-                src={singleChat?.receiver?.avatar || "/noavatar.jpg"}
-                alt="icon"
-              />
-              {singleChat?.receiver?.username}
+              <img src={chatReceiver?.avatar || "/noavatar.jpg"} alt="icon" />
+              {chatMessages?.receiver?.username}
             </div>
-            <span className="close" onClick={() => setSingleChat(false)}>
+            <span className="close" onClick={() => setOpenChat(!openChat)}>
               X
             </span>
           </div>
           <div className="center">
-            {singleChat.messages.map((message) => (
+            {chatMessages?.map((message) => (
               <div
                 className={` chatMessage ${
                   message.userId === currentUserInfo.id

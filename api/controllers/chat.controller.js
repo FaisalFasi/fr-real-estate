@@ -123,7 +123,7 @@ const getChatMessages = async (req, res) => {
     });
 
     if (!chat) {
-      return res.status(200).json({ chatId: null, messages: [] });
+      return res.status(200).json({ chatId: null, messages: [], seenBy: [] });
     }
     // Add the message to the chat
     const getAllMessages = await prisma.message.findMany({
@@ -135,7 +135,23 @@ const getChatMessages = async (req, res) => {
       },
     });
 
-    return res.status(200).json({ chatId: chat.id, messages: getAllMessages });
+    // Only update `seenBy` if the current user hasn't already seen the messages
+    if (!chat.seenBy.includes(tokenUserId)) {
+      await prisma.chat.update({
+        where: {
+          id: chat.id,
+        },
+        data: {
+          seenBy: {
+            push: tokenUserId, // Add the current user to the `seenBy` array
+          },
+        },
+      });
+    }
+
+    return res
+      .status(200)
+      .json({ chatId: chat.id, messages: getAllMessages, seenBy: chat.seenBy });
   } catch (err) {
     console.log("Error fetching chat:", err);
     res.status(500).json({ message: "Failed to get chat!" });
@@ -146,14 +162,13 @@ const addChatAndMessage = async (req, res) => {
   const { receiverId, text } = req.body;
   const tokenUserId = req.userId;
 
+  // Validate the input
+  if (!text || !receiverId) {
+    return res
+      .status(400)
+      .json({ error: "Text and receiverId cannot be empty!" });
+  }
   try {
-    // Validate the input
-    if (!text || !receiverId) {
-      return res
-        .status(400)
-        .json({ error: "Text and receiverId cannot be empty!" });
-    }
-
     // Check if a chat already exists between the two users
     let chat = await prisma.chat.findFirst({
       where: {
@@ -193,7 +208,8 @@ const addChatAndMessage = async (req, res) => {
         lastMessage: text,
       },
     });
-    console.log("message----", message);
+
+    console.log("updatedChat----", updatedChat);
     // Return the chat ID and the newly added message
     res
       .status(200)

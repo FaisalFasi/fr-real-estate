@@ -11,8 +11,8 @@ import ChatModal from "../ChatModal/ChatModal";
 const Card = ({
   post,
   isSaved,
-  onUnsavePost,
   onSave,
+  onUnsavePost,
   postOwner,
   handleDeletePost,
 }) => {
@@ -27,6 +27,7 @@ const Card = ({
     else setIsOpenModal(true);
   };
 
+  console.log("Post in Card: ", post);
   const handleSaveOrUnsave = () => {
     if (!currentUserInfo) {
       return alert("Please login to save the post");
@@ -115,17 +116,17 @@ const Card = ({
           )}
         </div>
       </div>
+      {/* //! Modal for chat */}
       <div>
-        {/* <ChatModal isOpen={isOpenModal} onClose={handleCloseModal} /> */}
         <ChatModal
           isOpen={isOpenModal}
           onClose={handleCloseModal}
-          postId={post?.id}
-          postOwner={postOwner} // Pass the recipient user info
-          recipientUserId={post?.userId} // Pass the recipient user ID
           currentUserInfo={currentUserInfo} // Pass current user info
+          recipientUserId={post?.userId} // Pass the recipient user ID
+          postOwner={postOwner} // Pass the recipient user info
         />
       </div>
+      {/* Modal for delete confirmation */}
       <div>
         <Modal
           isOpen={isOpenDeleteModal}

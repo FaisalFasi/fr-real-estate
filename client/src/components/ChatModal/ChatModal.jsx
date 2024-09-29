@@ -10,68 +10,55 @@ const ChatModal = ({
   postOwner,
   currentUserInfo,
 }) => {
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const messageEndRef = useRef(null);
-  const { chats, setChats, sendMessage, handleOpenChatModal } =
-    useChatContext();
+  const [newMessageSent, setNewMessageSent] = useState("");
+  const { chatMessages, setChatMessages, getChatMessages } = useChatContext();
 
-  useEffect(() => {
-    const fetChatMessages = async () => {
-      if (isOpen) {
-        const fetChatMessages = await handleOpenChatModal(recipientUserId);
-        setMessages(fetChatMessages);
-      }
-    };
-    fetChatMessages();
-  }, [isOpen]);
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [chatMessages]);
 
-  // Memoized function to send a new message and update the chat data
-  const fetchChatData = async (newMessageSent) => {
-    try {
-      const newMessages = await sendMessage(recipientUserId, newMessageSent);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { ...newMessages, userId: currentUserInfo.id },
-      ]);
+  useEffect(() => {
+    const fetchChatMessages = async () => {
+      if (isOpen && recipientUserId) {
+        const response = await getChatMessages(recipientUserId);
+        if (response) {
+          console.log(
+            "Chat Messages when open model:-----",
+            response?.messages
+          );
 
-      setNewMessage(""); // Clear input field
-    } catch (error) {
-      console.error("Error loading chat data:", error);
-      setMessages([]); // Fallback to empty messages on error
-    }
-  };
+          setChatMessages(response.messages);
+        }
+      }
+    };
+    fetchChatMessages();
+  }, [isOpen, recipientUserId]);
 
-  // Memoized handleSendMessage function
   const handleSendMessage = async (e) => {
     e.preventDefault();
 
-    if (!newMessage.trim()) return alert("Message is empty");
+    if (!newMessageSent.trim()) return alert("Message is empty");
 
-    console.log("Sending message:", newMessage);
-    console.log("Receiver ID:", recipientUserId);
     try {
-      const newMessagesResp = await sendMessage(recipientUserId, newMessage);
+      const response = await apiRequest.post("/chats/addMessage", {
+        text: newMessageSent,
+        receiverId: recipientUserId,
+      });
 
-      console.log("New message sent:", newMessagesResp);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { ...newMessagesResp, userId: currentUserInfo.id },
-      ]);
+      if (response?.data) {
+        console.log("Sent Message:", response.data.message.text);
+        setChatMessages((prev) => [...prev, response.data.message]);
 
-      setNewMessage(""); // Clear input field
+        setNewMessageSent(""); // Clear input after sending
+        // return response.data;
+      }
     } catch (error) {
-      console.error("Error loading chat data:", error);
-      setMessages([]); // Fallback to empty messages on error
+      console.error("Error sending message:", error);
     }
-
-    // fetchChatData(newMessage);
   };
 
   const handleContentClick = useCallback((e) => {
@@ -88,8 +75,8 @@ const ChatModal = ({
           <h2>Send a Message</h2>
         </div>
         <div className="flex-1 overflow-auto md:px-4">
-          {messages?.length > 0 ? (
-            messages?.map((msg, index) => (
+          {chatMessages?.length > 0 ? (
+            chatMessages?.map((msg, index) => (
               <div
                 key={index}
                 className={`flex mb-2 ${
@@ -144,8 +131,8 @@ const ChatModal = ({
               type="text"
               className="flex-1 border border-gray-300 rounded px-4 py-2"
               placeholder="Type your message..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
+              value={newMessageSent}
+              onChange={(e) => setNewMessageSent(e.target.value)}
             />
             <button
               className="bg-[#2bbcff] text-black font-bold px-4 py-2 rounded ml-2 hover:bg-blue-600"
@@ -161,3 +148,45 @@ const ChatModal = ({
 };
 
 export default ChatModal;
+
+// const { singleChat, setSingleChat, sendModelChatMessage, handleOpenChat } =
+//     useChatContext();
+
+//   // Fetch chat messages when modal is opened
+//   useEffect(() => {
+//     const fetchChatMessages = async () => {
+//       if (isOpen && recipientUserId) {
+//         const fetchedChat = await handleOpenChat(recipientUserId);
+//         if (fetchedChat) {
+//           console.log("Fetched Messages:", fetchedChat);
+//           setSingleChat(fetchedChat.messages);
+//         }
+//       }
+//     };
+//     fetchChatMessages();
+//   }, [isOpen, recipientUserId, handleOpenChat, setSingleChat]);
+
+//   useEffect(() => {
+//     if (messageEndRef.current) {
+//       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+//     }
+//   }, [singleChat]);
+
+//   // Memoized handleSendMessage function
+//   const handleSendMessage = async (e) => {
+//     e.preventDefault();
+
+//     if (!newMessage.trim()) return alert("Message is empty");
+
+//     try {
+//       const sentMessage = await sendModelChatMessage(
+//         recipientUserId,
+//         newMessage
+//       );
+//       setSingleChat((prevMessages) => [...prevMessages, sentMessage]); // Update chat with the new message
+
+//       setNewMessage(""); // Clear input after sending
+//     } catch (error) {
+//       console.error("Error sending message:", error);
+//     }
+//   };

@@ -1,10 +1,12 @@
 import { createContext } from "react";
 import { useState, useEffect, useContext } from "react";
 import apiRequest from "../lib/apiRequest";
+import { AuthContext } from "./AuthContext";
 
 const PostsContext = createContext();
 
 export const PostsProvider = ({ children }) => {
+  const { currentUserInfo } = useContext(AuthContext);
   const [savedPosts, setSavedPosts] = useState([]);
   const [createdPosts, setCreatedPosts] = useState([]); // Add state for created posts
 
@@ -21,7 +23,7 @@ export const PostsProvider = ({ children }) => {
   };
   // Fetch saved posts from backend on mount
   useEffect(() => {
-    fetchSavedPosts(); // Call the fetch function when the component mounts
+    if (currentUserInfo) fetchSavedPosts(); // Call the fetch function when the component mounts
   }, []);
 
   const savePost = async (postId) => {

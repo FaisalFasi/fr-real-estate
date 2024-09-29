@@ -25,7 +25,6 @@ const Profile = () => {
   const handleLogout = async () => {
     try {
       await apiRequest.post("/auth/logout");
-      console.log("Logout Response:  ");
       updateUser(null);
       navigate("/");
     } catch (err) {
@@ -102,10 +101,8 @@ const Profile = () => {
               >
                 {(postResponse) => (
                   <ListComp
-                    // posts={postResponse.data.savedPosts}
                     posts={savedPostsByContext}
                     postOwner={data?.postResponse?.data?.postOwner}
-                    isSaved={true}
                     onUnsavePost={unsavePost}
                   />
                 )}
@@ -122,7 +119,9 @@ const Profile = () => {
               errorElement={<p>Failed to load chats!</p>}
             >
               {(chatResponse) => {
-                return <Chat chats={chatResponse.data} />;
+                return <Chat />;
+
+                // return <Chat chats={chatResponse.data} />;
               }}
             </Await>
           </Suspense>

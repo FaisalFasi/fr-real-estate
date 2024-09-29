@@ -34,7 +34,7 @@ const ListPage = () => {
                   return postResponse.data.map((post) => (
                     <Card
                       key={post.id}
-                      item={post}
+                      post={post}
                       isSaved={isPostSaved(post.id)}
                       onSave={() => savePost(post.id)}
                       onUnsavePost={() => unsavePost(post.id)}
