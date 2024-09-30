@@ -5,8 +5,16 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 40px;
+  box-shadow: #29bbff 0px 0px 5px;
 
-  a {
+  @include md {
+    padding: 0px 20px;
+  }
+  @include sm {
+    padding: 0px 10px;
+  }
+  Link {
     transition: all 0.3s ease;
 
     @include sm {
@@ -24,6 +32,55 @@ nav {
     align-items: center;
     gap: 20px;
 
+    .links {
+      @include md {
+        display: flex;
+        gap: 10px;
+      }
+      @include sm {
+        display: none;
+      }
+
+      a {
+        text-decoration: none;
+        color: #333;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 500;
+        position: relative;
+        transition: background-color 0.3s ease, color 0.3s ease,
+          box-shadow 0.3s ease;
+
+        &:hover {
+          background-color: #4b8bd0;
+          color: white;
+          box-shadow: 0 0 12px rgba(75, 139, 208, 0.7);
+        }
+
+        &:active {
+          background-color: white;
+          color: #4b8bd0;
+          box-shadow: 0 0 12px rgba(75, 139, 208, 0.7);
+        }
+
+        &.active {
+          &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 50%;
+            height: 2px;
+            background-color: #4b8bd0;
+            transform: translateX(-50%);
+          }
+
+          color: #4b8bd0;
+          background-color: white;
+        }
+      }
+    }
+
     .logo {
       font-size: 20px;
       font-weight: bold;
@@ -32,7 +89,7 @@ nav {
       gap: 10px;
 
       img {
-        width: 28px;
+        width: 45px;
       }
 
       span {
@@ -43,6 +100,9 @@ nav {
           display: initial;
         }
       }
+      &:hover {
+        color: #4b8bd0; /* Change logo color on hover to match icon color */
+      }
     }
   }
   .right {
@@ -51,7 +111,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    background-color: #2bbcff;
+    // background-color: #2bbcff;
     overflow: hidden;
 
     @include md {
@@ -63,18 +123,29 @@ nav {
     }
     a {
       padding: 12px 24px;
-      margin: 20px;
+      // margin: 20px;
     }
 
     .user {
       display: flex;
       align-items: center;
       font-weight: bold;
+      gap: 20px;
+
+      .userName {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        @include sm {
+          margin-right: 20px;
+        }
+      }
       img {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        margin-right: 20px;
+
         object-fit: cover;
       }
       span {
@@ -85,22 +156,38 @@ nav {
 
       .profile {
         padding: 12px 24px;
-        background-color: #8cdbff;
+        background-color: #2bbcff;
         cursor: pointer;
         border: none;
-        // color: white;
         position: relative;
+
+        @include md {
+          display: block;
+        }
+        @include sm {
+          display: none;
+        }
+
+        &:hover {
+          background-color: #4b8bd0;
+          color: white;
+        }
 
         .notification {
           position: absolute;
           top: -8px;
-          right: -8px;
+          right: 2px;
           background-color: red;
           color: white;
-          padding: 2px 6px;
+          padding: 2px;
           border-radius: 50%;
           width: 20px;
           height: 20px;
+          font-size: smaller;
+          text-align: center;
+        }
+        span {
+          font-weight: semibold;
         }
       }
     }
@@ -115,7 +202,7 @@ nav {
     }
     .menuIcon {
       display: none;
-      z-index: 100;
+      z-index: 40;
       img {
         width: 36px;
         height: 36px;

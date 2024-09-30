@@ -11,13 +11,10 @@ const initializeDatabase = async () => {
           // Define any default properties for the chat table here
         },
       });
-      console.log("Chat table created successfully.");
 
       // Now create a message associated with this chat
       await createMessage(createdChat.id); // Create message for the created chat
     } else {
-      console.log("Chat table already exists.");
-
       // Check if there are existing messages in this chat
       const existingMessages = await prisma.message.findMany({
         where: { chatId: existingChat.id },
@@ -60,7 +57,6 @@ const createMessage = async (chatId, userId) => {
         chat: { connect: { id: chatId } }, // Connect the message to the chat
       },
     });
-    console.log("Message created successfully.");
   } catch (error) {
     console.error("Error creating message:", error);
   }

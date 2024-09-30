@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma.js";
-import Jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+// import { ObjectId } from "mongodb";
 
 export const getPosts = async (req, res) => {
   const {
@@ -29,6 +30,14 @@ export const getPosts = async (req, res) => {
         latitude: latitude ? latitude.toString() : undefined,
         longitude: longitude ? longitude.toString() : undefined,
       },
+      include: {
+        user: {
+          select: {
+            username: true, // Include the username of the user who created the post
+            avatar: true, // Include the avatar of the user who created the post
+          },
+        },
+      },
     });
 
     res.status(200).json(posts);
@@ -40,7 +49,9 @@ export const getPosts = async (req, res) => {
 export const getPost = async (req, res) => {
   const id = req.params.id;
 
+  // console.log("Get single post by id :", id);
   try {
+    // Fetch the post from the database
     const post = await prisma.post.findUnique({
       where: {
         id,
@@ -51,35 +62,57 @@ export const getPost = async (req, res) => {
           select: {
             username: true,
             avatar: true,
+            id: true,
           },
         },
       },
     });
 
-    // we need to verify if the user is logged in or not while saving a post
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
 
+    // Initialize the isSaved variable
+    let isSaved = false;
+
+    // Check if the user is logged in
     const token = req.cookies?.token;
 
     if (token) {
-      Jwt.verify(token, process.env.JWT_SECRET, async (err, payload) => {
-        if (!err) {
-          const saved = await prisma.savedPost.findFirst({
-            where: {
-              userId_postId: {
-                postId: id,
-                userId: payload.id, // payload is the user id
-              },
-            },
+      try {
+        // Promisify the JWT verification
+        const payload = await new Promise((resolve, reject) => {
+          jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(decoded);
+            }
           });
+        });
 
-          res.status(200).json({ ...post, isSaved: saved ? true : false });
-        }
-      });
+        // Check if the post is saved by the user
+        const saved = await prisma.savedPost.findUnique({
+          where: {
+            userId_postId: {
+              postId: id,
+              userId: payload.id,
+            },
+          },
+        });
+
+        isSaved = !!saved;
+      } catch (err) {
+        console.error("Token verification or database query error:", err);
+        // Continue with default isSaved value if there's an error
+      }
     }
 
-    res.status(200).json({ ...post, isSaved: false });
+    // Send the response after all async operations are completed
+    res.status(200).json({ ...post, isSaved });
   } catch (error) {
-    res.status(500).json({ message: "Error creating post" });
+    console.error("Error fetching post:", error);
+    res.status(500).json({ message: "Error fetching post" });
   }
 };
 
@@ -89,11 +122,6 @@ export const addPost = async (req, res) => {
   const tokenUserId = req.userId;
 
   try {
-    // const normalizedPostData = {
-    //   ...body.postData,
-    //   city: postData.city ? postData.city.toString().toLowerCase() : undefined,
-    //   // Add other fields that need normalization here
-    // };
     const newPost = await prisma.post.create({
       data: {
         ...body.postData, // This will overwrite the normalized fields
@@ -119,14 +147,33 @@ export const updatePost = async (req, res) => {
 export const deletePost = async (req, res) => {
   const id = req.params.id;
   const tokenUserId = req.userId;
+
   try {
     const post = await prisma.post.findUnique({
       where: {
         id: id,
       },
+      include: { postDetail: true }, // Include related postDetail
     });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
     if (post.userId !== tokenUserId) {
       return res.status(403).json({ message: "Not Authorized" });
+    }
+
+    // First delete the associated PostDetail (if it exists)
+    if (post.postDetail) {
+      await prisma.postDetail.delete({
+        where: { id: post.postDetail.id },
+      });
+    }
+    if (post.savedPost) {
+      await prisma.savedPost.delete({
+        where: { id: post.savedPost.id },
+      });
     }
     await prisma.post.delete({
       where: {
@@ -135,6 +182,7 @@ export const deletePost = async (req, res) => {
     });
     res.status(200).json({ message: "Post deleted" });
   } catch (error) {
+    console.error("Error deleting post:", error);
     res.status(500).json({ message: "Error creating post" });
   }
 };

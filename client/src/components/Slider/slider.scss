@@ -5,6 +5,16 @@
   height: 350px;
   display: flex;
   gap: 20px;
+  overflow: hidden;
+
+  @include md {
+    height: 100%;
+    flex-direction: column;
+  }
+  @include sm {
+    height: 100%;
+    flex-direction: column;
+  }
 
   .fullSlider {
     position: absolute;
@@ -68,6 +78,11 @@
 
   .bigImage {
     flex: 3;
+    @include md {
+      flex: none;
+      width: 100%;
+      height: 350px;
+    }
   }
   .smallImages {
     flex: 1;
@@ -76,9 +91,18 @@
     flex-direction: column;
     justify-content: space-between;
     gap: 20px;
-
     overflow-y: scroll;
 
+    @include md {
+      flex-direction: row;
+      flex: none;
+      overflow-x: scroll;
+    }
+    @include sm {
+      flex-direction: row;
+      flex: none;
+      overflow-x: scroll;
+    }
     img {
       height: 100px;
     }

@@ -27,7 +27,6 @@ const Map = ({ items }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-
       {itemsArray?.map((item) => {
         return <PinMapMarker key={item.id} item={item} />; // adding marker on the places
       })}

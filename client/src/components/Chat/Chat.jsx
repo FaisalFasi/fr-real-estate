@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import "./chat.scss";
 import { useState, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -6,25 +6,39 @@ import apiRequest from "../../lib/apiRequest.js";
 import { format } from "timeago.js";
 import { SocketContext } from "../../context/SocketContext";
 import { useNotificationStore } from "../../lib/notificationStore.js";
+import ShowText from "../ShowText/ShowText.jsx";
+import { ChatContext } from "../../context/ChatContext";
 
-const Chat = ({ chats }) => {
+const Chat = () => {
   const { currentUserInfo } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
+  const {
+    chats,
+    setChatMessages,
+    chatMessages,
+    getChatMessages,
+    currentChat,
+    setCurrentChat,
+  } = useContext(ChatContext);
 
-  const [singleChat, setSingleChat] = useState(null);
+  const [openChat, setOpenChat] = useState(false);
+
   const messageEndRef = useRef(null);
+
   const decreaseNoti = useNotificationStore((state) => state.decrease);
 
-  const handleOpenChat = async (id, receiver) => {
-    try {
-      // open chat
-      const res = await apiRequest.get("/chats/" + id);
+  const handleOpenChat = async (chatId, receiver) => {
+    setOpenChat(!openChat);
+    setCurrentChat({ chatId: chatId, receiver: receiver });
 
-      if (!res.data.seenBy.includes(currentUserInfo.id)) {
+    try {
+      const res = await getChatMessages(receiver.id);
+
+      if (!res.seenBy.includes(currentUserInfo.id)) {
         decreaseNoti();
       }
 
-      setSingleChat({ ...res.data, receiver });
+      setChatMessages(res?.messages);
     } catch (err) {
       console.error(err);
     }
@@ -34,100 +48,113 @@ const Chat = ({ chats }) => {
     e.preventDefault();
 
     const formtData = new FormData(e.target);
-    const text = formtData.get("text");
+    const inputText = formtData.get("text");
 
-    if (!text) return alert("Please enter a message");
+    if (!inputText.trim()) return alert("Message is empty");
 
     try {
-      const response = await apiRequest.post("/messages/" + singleChat.id, {
-        text,
+      const response = await apiRequest.post("/chats/addMessage", {
+        text: inputText,
+        receiverId: currentChat?.receiver.id,
       });
-      setSingleChat((prev) => ({
-        ...prev,
-        messages: [...prev.messages, response.data],
-      }));
-      e.target.reset();
 
-      socket.emit("sendMessage", {
-        receiverId: singleChat.receiver.id,
-        data: response.data,
-      });
-    } catch (err) {
-      console.error(err);
+      if (response?.data) {
+        setChatMessages((prev) => [...prev, response.data.message]);
+
+        e.target.reset();
+
+        socket.emit("sendMessage", {
+          receiverId: currentChat.receiver?.id,
+          data: response?.data,
+        });
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
     }
   };
 
   useEffect(() => {
     const read = async () => {
       try {
-        return await apiRequest.put("/chats/read/" + singleChat.id);
+        await apiRequest.put("/chats/read/" + currentChat?.chatId);
       } catch (err) {
         console.log(err);
       }
     };
 
-    if (singleChat && socket) {
-      socket.on("getMessage", (data) => {
-        if (singleChat.id === data.chatId) {
-          setSingleChat((prev) => ({
-            ...prev,
-            messages: [...prev.messages, data],
-          }));
-          read();
-        }
-      });
-    }
-    return () => {
-      socket.off("getMessage");
+    const handleIncomingMessage = (data) => {
+      if (currentChat?.chatId === data?.chatId) {
+        setChatMessages((prev) => [...prev, data?.message]);
+        read();
+      }
     };
-  }, [socket, singleChat, chats]);
+
+    if (socket && currentChat?.chatId) {
+      socket.on("getMessage", handleIncomingMessage);
+    }
+
+    return () => {
+      socket.off("getMessage", handleIncomingMessage);
+    };
+  }, [socket, currentChat]);
 
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [singleChat]);
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatMessages]);
 
   return (
     <div className="chat">
       <div className="messages">
-        <h1>Messages</h1>
-        {chats?.map((chat) => (
-          <div
-            className="message"
-            key={chat.id}
-            style={{
-              backgroundColor:
-                chat.seenBy.includes(currentUserInfo.id) ||
-                singleChat?.id === chat.id
-                  ? "white"
-                  : "lightblue",
-            }}
-            onClick={() => handleOpenChat(chat.id, chat.receiver)}
-          >
-            <img src={chat.receiver.avatar || "/noavatar.jpg"} alt="icon" />
-            <span>{chat.receiver.username}</span>
-            <p>{chats.lastMessage}</p>
-          </div>
-        ))}
+        <h1 className=" ">Your Chats</h1>
+        {chats?.length > 0 ? (
+          chats.map((chat, index) => (
+            <div
+              key={`${chat?.id}-${index}`} // Use message ID combined with index to ensure uniqueness
+              className="message"
+              style={{
+                backgroundColor:
+                  chat.seenBy.includes(currentUserInfo.id) ||
+                  chatMessages?.id === chat.id
+                    ? "white"
+                    : "lightblue",
+              }}
+              onClick={() => handleOpenChat(chat.id, chat.receiver)}
+            >
+              <img src={chat?.receiver?.avatar || "/noavatar.jpg"} alt="icon" />
+              <span>{chat?.receiver?.username}</span>
+              <p>{chats?.lastMessage}</p>
+            </div>
+          ))
+        ) : (
+          <ShowText message="No Chat found" />
+        )}
       </div>
-      {singleChat && (
+      {chatMessages && openChat && (
         <div className="chatBox">
           <div className="top">
             <div className="user">
               <img
-                src={singleChat.receiver.avatar || "/noavatar.jpg"}
+                src={currentChat.receiver?.avatar || "/noavatar.jpg"}
                 alt="icon"
               />
-              {singleChat.receiver.username}
+              {/* {currentChat?.receiver?.username} */}
             </div>
-            <span className="close" onClick={() => setSingleChat(false)}>
+            <h2>{currentChat?.receiver?.username || "User Name"}</h2>
+            <span className="close" onClick={() => setOpenChat(!openChat)}>
               X
             </span>
           </div>
           <div className="center">
-            {singleChat.messages.map((message) => (
+            {chatMessages?.map((message, index) => (
               <div
-                className="chatMessage"
-                key={message.id}
+                key={`${message.id}-${index}`} // Use message ID combined with index to ensure uniqueness
+                className={` chatMessage ${
+                  message.userId === currentUserInfo.id
+                    ? "bg-[#b2d7fc]"
+                    : "bg-gray-200"
+                }`}
                 style={{
                   alignSelf:
                     message.userId === currentUserInfo.id

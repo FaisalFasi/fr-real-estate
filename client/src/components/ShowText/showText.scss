@@ -1,0 +1,15 @@
+.no-posts-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
+
+  p {
+    font-size: 16px;
+    color: #555;
+  }
+}

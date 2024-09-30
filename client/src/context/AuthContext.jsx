@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import apiRequest from "../lib/apiRequest";
 
 export const AuthContext = createContext();
 
@@ -12,7 +13,27 @@ export const AuthContextProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(data));
   };
 
+  const checkUserSession = async () => {
+    try {
+      const response = await apiRequest.get("/auth/checkSession");
+      if (response.status === 200) {
+        setCurrentUserInfo(response.data);
+        localStorage.setItem("user", JSON.stringify(response.data));
+      } else {
+        setCurrentUserInfo(null);
+        localStorage.removeItem("user");
+        navigate("/login"); // Redirect to login page
+      }
+    } catch (error) {
+      console.error("Error checking user session:", error);
+      setCurrentUserInfo(null);
+      localStorage.removeItem("user");
+      navigate("/login"); // Redirect to login page
+    }
+  };
+
   useEffect(() => {
+    // checkUserSession();
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
       if (storedUser) {
