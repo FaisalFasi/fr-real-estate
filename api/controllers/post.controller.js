@@ -17,8 +17,6 @@ export const getPosts = async (req, res) => {
   const normalizedCity = city ? city.toString().toLowerCase() : undefined;
 
   try {
-    // console.log("Get All posts :");
-
     const posts = await prisma.post.findMany({
       where: {
         city: normalizedCity,
@@ -41,8 +39,6 @@ export const getPosts = async (req, res) => {
         },
       },
     });
-
-    // console.log("posts", posts);
 
     res.status(200).json(posts);
   } catch (error) {
@@ -120,66 +116,10 @@ export const getPost = async (req, res) => {
   }
 };
 
-// export const getPost = async (req, res) => {
-//   const id = req.params.id;
-
-//   try {
-//     const post = await prisma.post.findUnique({
-//       where: {
-//         id,
-//       },
-//       include: {
-//         postDetail: true,
-//         user: {
-//           select: {
-//             username: true,
-//             avatar: true,
-//           },
-//         },
-//       },
-//     });
-
-//     if (!post) {
-//       return res.status(404).json({ message: "Post not found" });
-//     }
-//     // we need to verify if the user is logged in or not while saving a post
-
-//     const token = req.cookies?.token;
-//     let isSaved = false;
-
-//     if (token) {
-//       jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
-//         if (!err) {
-//           console.log("payload ---", payload);
-//           const saved = await prisma.savedPost.findUnique({
-//             where: {
-//               userId_postId: {
-//                 postId: id,
-//                 userId: payload.id,
-//               },
-//             },
-//           });
-
-//           console.log("saved ---", saved);
-//           isSaved = !!saved;
-//           console.log(" is saved ---", isSaved);
-
-//           // res.status(200).json({ ...post, isSaved: saved ? true : false });
-//         }
-//       });
-//     }
-//     console.log(" isSaved after ---", isSaved);
-//     res.status(200).json({ ...post, isSaved: isSaved });
-//   } catch (error) {
-//     res.status(500).json({ message: "Error creating post" });
-//   }
-// };
-
 export const addPost = async (req, res) => {
   const body = req.body;
 
   const tokenUserId = req.userId;
-  // console.log("tokenUserId", tokenUserId);
 
   try {
     const newPost = await prisma.post.create({

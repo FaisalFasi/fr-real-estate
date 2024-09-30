@@ -2,17 +2,18 @@ import { createContext, useContext, useEffect } from "react";
 import { useState } from "react";
 import apiRequest from "../lib/apiRequest";
 import { AuthContext } from "./AuthContext"; // Import AuthContext
-import { useNotificationStore } from "../lib/notificationStore";
 
 const ChatContext = createContext();
 
 const ChatContextProvider = ({ children }) => {
   const { currentUserInfo } = useContext(AuthContext); // Access auth context
 
-  const [chatMessages, setChatMessages] = useState([]);
-
   const [chats, setChats] = useState([]);
-  const decreaseNoti = useNotificationStore((state) => state.decrease);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [currentChat, setCurrentChat] = useState({
+    receiver: {},
+    chatId: "",
+  });
 
   // Fetch chats
   const fetchChats = async () => {
@@ -20,7 +21,6 @@ const ChatContextProvider = ({ children }) => {
       const response = await apiRequest("/chats");
       if (!response) return console.log("No chats found");
 
-      console.log("Chats>>>>>:", response.data);
       setChats(response?.data);
     } catch (error) {
       console.error("Error fetching chats", error);
@@ -31,30 +31,8 @@ const ChatContextProvider = ({ children }) => {
   useEffect(() => {
     if (currentUserInfo) {
       fetchChats();
-      console.log("Chat received ----: ", chats);
     }
   }, [currentUserInfo]);
-
-  // Listen for incoming messages via socket and update UI
-  // useEffect(() => {
-  //   if (socket) {
-  //     socket.on("newMessage", (newMessage) => {
-  //       // Update the chat with the new message
-  //       setChats((prevChats) =>
-  //         prevChats.map((chat) =>
-  //           chat.id === newMessage.chatId
-  //             ? { ...chat, lastMessage: newMessage.text }
-  //             : chat
-  //         )
-  //       );
-  //       setSingleChat((prev) =>
-  //         prev && prev.id === newMessage.chatId
-  //           ? { ...prev, messages: [...prev.messages, newMessage] }
-  //           : prev
-  //       );
-  //     });
-  //   }
-  // }, [socket]);
 
   const getChatMessages = async (receiverId) => {
     try {
@@ -68,12 +46,14 @@ const ChatContextProvider = ({ children }) => {
   return (
     <ChatContext.Provider
       value={{
-        chatMessages,
-        setChatMessages,
-        getChatMessages,
         chats,
         setChats,
         fetchChats,
+        chatMessages,
+        setChatMessages,
+        currentChat,
+        setCurrentChat,
+        getChatMessages,
       }}
     >
       {children}

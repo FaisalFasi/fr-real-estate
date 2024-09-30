@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   const { username, password, email } = req.body;
-  console.log("req.body :", req.body);
   try {
     // HASH THE PASSWORD
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -29,7 +28,6 @@ export const register = async (req, res) => {
         password: hashedPassword,
       },
     });
-    console.log("newUser :", newUser);
 
     res.status(201).json({ message: "User created successfully", newUser });
   } catch (error) {
@@ -79,8 +77,8 @@ export const login = async (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Set secure only in production
         maxAge: age,
-        sameSite: "lax",
-        // sameSite: "none", // for localhost use lax and for production use none SameSite attribute to prevent CSRF attacks
+        // sameSite: "lax",
+        sameSite: "none", // for localhost use lax and for production use none SameSite attribute to prevent CSRF attacks
 
         // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         path: "/", // Root path

@@ -8,7 +8,6 @@ export const useNotificationStore = create((set) => ({
     try {
       const res = await apiRequest("/users/notification");
 
-      console.log("Response Notifications: ", res?.data);
       set({ number: res?.data });
     } catch (error) {
       console.error("Error fetching notifications:", error);

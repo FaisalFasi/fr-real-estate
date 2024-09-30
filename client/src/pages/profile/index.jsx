@@ -119,9 +119,9 @@ const Profile = () => {
               errorElement={<p>Failed to load chats!</p>}
             >
               {(chatResponse) => {
-                return <Chat />;
+                // return <Chat />;
 
-                // return <Chat chats={chatResponse.data} />;
+                return <Chat chats={chatResponse.data} />;
               }}
             </Await>
           </Suspense>

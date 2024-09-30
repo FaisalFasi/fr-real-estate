@@ -65,7 +65,6 @@ const Signup = () => {
 
       // add alert on successful registration and redirect to login page
       window.alert("Account created successfully! Please login to continue.");
-      console.log("Response register: ", response.data);
       if (response?.data) {
         navigate("/login");
       }

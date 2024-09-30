@@ -27,8 +27,6 @@ const UpdateProfile = () => {
         avatar: avatar[0],
       });
 
-      console.log("Update user Response: ", res?.data);
-
       updateUser(res?.data);
       navigate("/profile");
     } catch (err) {

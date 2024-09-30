@@ -34,8 +34,6 @@ export const PostsProvider = ({ children }) => {
       if (response.status === 200) {
         setSavedPosts((prevPosts) => [...prevPosts, { id: postId }]);
         fetchSavedPosts();
-
-        console.log("Post saved successfully");
       }
     } catch (error) {
       console.error("Error saving post:", error);
@@ -54,7 +52,6 @@ export const PostsProvider = ({ children }) => {
       if (response.status !== 200) {
         throw new Error("Failed to unsave post");
       }
-      console.log("Post unsaved successfully");
     } catch (error) {
       console.error("Error unsaving post:", error);
       // Revert state if the unsave operation fails
@@ -66,7 +63,6 @@ export const PostsProvider = ({ children }) => {
       const response = await apiRequest.delete(`/posts/deletePost/${postId}`);
 
       if (response.status >= 200 && response.status < 300) {
-        console.log("Post deleted successfully");
         alert("Post deleted successfully");
         fetchSavedPosts();
       } else {

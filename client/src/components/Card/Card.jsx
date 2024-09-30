@@ -19,15 +19,17 @@ const Card = ({
   const { currentUserInfo } = useContext(AuthContext);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+
   const handleCloseModal = () => {
     setIsOpenModal(false);
   };
   const handleOpenModal = () => {
-    if (!currentUserInfo) return alert("Please login to start a chat");
-    else setIsOpenModal(true);
+    if (!currentUserInfo) {
+      return alert("Please login to start a chat");
+    } else {
+      setIsOpenModal(true);
+    }
   };
-
-  console.log("Post in Card: ", post);
   const handleSaveOrUnsave = () => {
     if (!currentUserInfo) {
       return alert("Please login to save the post");

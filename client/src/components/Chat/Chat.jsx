@@ -12,10 +12,15 @@ import { ChatContext } from "../../context/ChatContext";
 const Chat = () => {
   const { currentUserInfo } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
-  const { chats, setChatMessages, chatMessages, getChatMessages } =
-    useContext(ChatContext);
+  const {
+    chats,
+    setChatMessages,
+    chatMessages,
+    getChatMessages,
+    currentChat,
+    setCurrentChat,
+  } = useContext(ChatContext);
 
-  const [chatReceiver, setChatReceiver] = useState(null);
   const [openChat, setOpenChat] = useState(false);
 
   const messageEndRef = useRef(null);
@@ -23,18 +28,17 @@ const Chat = () => {
   const decreaseNoti = useNotificationStore((state) => state.decrease);
 
   const handleOpenChat = async (chatId, receiver) => {
+    setOpenChat(!openChat);
+    setCurrentChat({ chatId: chatId, receiver: receiver });
+
     try {
-      setOpenChat(!openChat);
-      setChatReceiver(receiver);
       const res = await getChatMessages(receiver.id);
 
-      if (!res) return console.log("No Messages found");
-
-      setChatMessages(res?.messages);
-
-      if (res.seenBy.includes(currentUserInfo.id)) {
+      if (!res.seenBy.includes(currentUserInfo.id)) {
         decreaseNoti();
       }
+
+      setChatMessages(res?.messages);
     } catch (err) {
       console.error(err);
     }
@@ -47,10 +51,11 @@ const Chat = () => {
     const inputText = formtData.get("text");
 
     if (!inputText.trim()) return alert("Message is empty");
+
     try {
       const response = await apiRequest.post("/chats/addMessage", {
         text: inputText,
-        receiverId: chatReceiver?.id,
+        receiverId: currentChat?.receiver.id,
       });
 
       if (response?.data) {
@@ -59,7 +64,7 @@ const Chat = () => {
         e.target.reset();
 
         socket.emit("sendMessage", {
-          receiverId: chatMessages?.receiver?.id,
+          receiverId: currentChat.receiver?.id,
           data: response?.data,
         });
       }
@@ -68,32 +73,30 @@ const Chat = () => {
     }
   };
 
-  const read = useCallback(async () => {
-    try {
-      return await apiRequest.put("/chats/read/" + chatMessages?.id);
-    } catch (err) {
-      console.log(err);
-    }
-  }, [chatMessages?.id]);
-
   useEffect(() => {
-    const handleMessage = (data) => {
-      if (chatMessages?.id === data.chatId) {
-        setChatMessages((prev) => ({
-          ...prev,
-          messages: [...prev.messages, data],
-        }));
+    const read = async () => {
+      try {
+        await apiRequest.put("/chats/read/" + currentChat?.chatId);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const handleIncomingMessage = (data) => {
+      if (currentChat?.chatId === data?.chatId) {
+        setChatMessages((prev) => [...prev, data?.message]);
         read();
       }
     };
 
-    if (chatMessages && socket) {
-      socket.on("getMessage", handleMessage);
+    if (socket && currentChat?.chatId) {
+      socket.on("getMessage", handleIncomingMessage);
     }
+
     return () => {
-      socket.off("getMessage", handleMessage);
+      socket.off("getMessage", handleIncomingMessage);
     };
-  }, [socket, chatMessages, chats]);
+  }, [socket, currentChat]);
 
   useEffect(() => {
     if (messageEndRef.current) {
@@ -104,12 +107,12 @@ const Chat = () => {
   return (
     <div className="chat">
       <div className="messages">
-        <h1 className="">Your Chats</h1>
+        <h1 className=" ">Your Chats</h1>
         {chats?.length > 0 ? (
-          chats.map((chat) => (
+          chats.map((chat, index) => (
             <div
+              key={`${chat?.id}-${index}`} // Use message ID combined with index to ensure uniqueness
               className="message"
-              key={chat.id}
               style={{
                 backgroundColor:
                   chat.seenBy.includes(currentUserInfo.id) ||
@@ -132,22 +135,26 @@ const Chat = () => {
         <div className="chatBox">
           <div className="top">
             <div className="user">
-              <img src={chatReceiver?.avatar || "/noavatar.jpg"} alt="icon" />
-              {chatMessages?.receiver?.username}
+              <img
+                src={currentChat.receiver?.avatar || "/noavatar.jpg"}
+                alt="icon"
+              />
+              {/* {currentChat?.receiver?.username} */}
             </div>
+            <h2>{currentChat?.receiver?.username || "User Name"}</h2>
             <span className="close" onClick={() => setOpenChat(!openChat)}>
               X
             </span>
           </div>
           <div className="center">
-            {chatMessages?.map((message) => (
+            {chatMessages?.map((message, index) => (
               <div
+                key={`${message.id}-${index}`} // Use message ID combined with index to ensure uniqueness
                 className={` chatMessage ${
                   message.userId === currentUserInfo.id
                     ? "bg-[#b2d7fc]"
                     : "bg-gray-200"
                 }`}
-                key={message.id}
                 style={{
                   alignSelf:
                     message.userId === currentUserInfo.id

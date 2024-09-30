@@ -25,8 +25,6 @@ const SinglePage = () => {
   };
   const res = useLoaderData();
 
-  console.log("Posts in list page: ", res);
-
   const handleSave = async () => {
     // After react 19 update to useOptimisticReact Hook
     if (!currentUserInfo) {
@@ -43,7 +41,6 @@ const SinglePage = () => {
 
       // Check response status and handle success
       if (response.status === 200) {
-        console.log("Post saved successfully:", response.data);
         alert("Post saved successfully.");
       }
     } catch (error) {

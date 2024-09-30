@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import Modal from "../Modal/Modal"; // Adjust the path as necessary
 import apiRequest from "../../lib/apiRequest";
 import { useChatContext } from "../../context/ChatContext";
+import { useSocketContext } from "../../context/SocketContext";
 
 const ChatModal = ({
   isOpen,
@@ -10,8 +11,16 @@ const ChatModal = ({
   postOwner,
   currentUserInfo,
 }) => {
+  const { socket } = useSocketContext();
+
   const [newMessageSent, setNewMessageSent] = useState("");
-  const { chatMessages, setChatMessages, getChatMessages } = useChatContext();
+  const {
+    chatMessages,
+    setChatMessages,
+    getChatMessages,
+    currentChat,
+    setCurrentChat,
+  } = useChatContext();
 
   const messageEndRef = useRef(null);
 
@@ -25,14 +34,11 @@ const ChatModal = ({
     const fetchChatMessages = async () => {
       if (isOpen && recipientUserId) {
         const response = await getChatMessages(recipientUserId);
-        if (response) {
-          console.log(
-            "Chat Messages when open model:-----",
-            response?.messages
-          );
-
-          setChatMessages(response.messages);
-        }
+        setCurrentChat({
+          chatId: response.chatId,
+          receiver: response.receiverUser,
+        });
+        setChatMessages(response.messages);
       }
     };
     fetchChatMessages();
@@ -50,7 +56,6 @@ const ChatModal = ({
       });
 
       if (response?.data) {
-        console.log("Sent Message:", response.data.message.text);
         setChatMessages((prev) => [...prev, response.data.message]);
 
         setNewMessageSent(""); // Clear input after sending
@@ -72,7 +77,7 @@ const ChatModal = ({
         onClick={handleContentClick}
       >
         <div className="mb-4 p-4 font-bold text-xl text-center bg-[#2bbcff] rounded-lg">
-          <h2>Send a Message</h2>
+          <h2>{currentChat?.receiver?.username || "Send a Message"}</h2>
         </div>
         <div className="flex-1 overflow-auto md:px-4">
           {chatMessages?.length > 0 ? (
@@ -105,13 +110,13 @@ const ChatModal = ({
                     </span>
                   ) : (
                     <span className="flex items-center gap-4">
-                      {/* <img
-                        src={receiverUser?.avatar}
+                      <img
+                        src={currentChat?.receiver?.avatar}
                         width={30}
                         height={30}
                         alt="User Avatar"
                         className="w-[30px] object-cover h-[30px] rounded-full"
-                      /> */}
+                      />
                       <span>{msg.text}</span>
                     </span>
                   )}
@@ -148,45 +153,3 @@ const ChatModal = ({
 };
 
 export default ChatModal;
-
-// const { singleChat, setSingleChat, sendModelChatMessage, handleOpenChat } =
-//     useChatContext();
-
-//   // Fetch chat messages when modal is opened
-//   useEffect(() => {
-//     const fetchChatMessages = async () => {
-//       if (isOpen && recipientUserId) {
-//         const fetchedChat = await handleOpenChat(recipientUserId);
-//         if (fetchedChat) {
-//           console.log("Fetched Messages:", fetchedChat);
-//           setSingleChat(fetchedChat.messages);
-//         }
-//       }
-//     };
-//     fetchChatMessages();
-//   }, [isOpen, recipientUserId, handleOpenChat, setSingleChat]);
-
-//   useEffect(() => {
-//     if (messageEndRef.current) {
-//       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-//     }
-//   }, [singleChat]);
-
-//   // Memoized handleSendMessage function
-//   const handleSendMessage = async (e) => {
-//     e.preventDefault();
-
-//     if (!newMessage.trim()) return alert("Message is empty");
-
-//     try {
-//       const sentMessage = await sendModelChatMessage(
-//         recipientUserId,
-//         newMessage
-//       );
-//       setSingleChat((prevMessages) => [...prevMessages, sentMessage]); // Update chat with the new message
-
-//       setNewMessage(""); // Clear input after sending
-//     } catch (error) {
-//       console.error("Error sending message:", error);
-//     }
-//   };

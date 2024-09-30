@@ -8,7 +8,6 @@ import { usePostsContext } from "../../context/PostsContext";
 
 const ListPage = () => {
   const data = useLoaderData();
-  console.log("Data in List Page: ", data);
   const { savedPosts, savePost, unsavePost } = usePostsContext();
 
   const isPostSaved = (postId) => {

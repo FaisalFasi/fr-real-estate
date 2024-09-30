@@ -37,7 +37,6 @@ const Login = () => {
       // add localStorage to store user data
       // adding user also adds the cookie( jwt token) coming from the server
       // localStorage.setItem("user", JSON.stringify(response.data));
-      console.log("Response login: ", response.data);
 
       updateUser(response.data);
       navigate("/");

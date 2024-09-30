@@ -28,3 +28,5 @@ export const SocketContextProvider = ({ children }) => {
     </SocketContext.Provider>
   );
 };
+
+export const useSocketContext = () => useContext(SocketContext);

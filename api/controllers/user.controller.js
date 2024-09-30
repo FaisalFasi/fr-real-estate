@@ -13,7 +13,7 @@ const getUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
   const id = req.params.id;
-  console.log("ID ---:", id);
+
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -29,7 +29,6 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const id = req.params.id;
   const tokenUserId = req.userId;
-  // console.log(id, tokenUserId);
   const { password, avatar, ...inputs } = req.body;
 
   if (id !== tokenUserId) {

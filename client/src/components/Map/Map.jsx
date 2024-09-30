@@ -15,8 +15,6 @@ const Map = ({ items }) => {
       ? [itemsArray[0].latitude, itemsArray[0].longitude]
       : germanyCoordinates;
 
-  console.log(itemsArray);
-  console.log(position);
   return (
     <MapContainer
       center={position} // map view position
