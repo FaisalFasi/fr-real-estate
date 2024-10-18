@@ -28,6 +28,8 @@ const Map = ({ items }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {itemsArray?.map((item) => {
+        console.log("Rendering marker for item:", item); // Add logging for troubleshooting
+
         return <PinMapMarker key={item.id} item={item} />; // adding marker on the places
       })}
     </MapContainer>
