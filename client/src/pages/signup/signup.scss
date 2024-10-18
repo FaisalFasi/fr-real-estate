@@ -52,6 +52,14 @@
           cursor: not-allowed;
         }
       }
+      .error {
+        color: red;
+        font-size: 18px;
+      }
+      .loading {
+        color: #000000;
+        font-size: 18px;
+      }
 
       span {
         color: rgba(255, 0, 0, 0.591);

@@ -78,9 +78,9 @@ export const login = async (req, res) => {
         secure: process.env.NODE_ENV === "production", // Set secure only in production
         maxAge: age,
         // sameSite: "lax",
-        sameSite: "none", // for localhost use lax and for production use none SameSite attribute to prevent CSRF attacks
+        // sameSite: "none", // for localhost use lax and for production use none SameSite attribute to prevent CSRF attacks
 
-        // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         path: "/", // Root path
       })
       .status(200)

@@ -6,11 +6,9 @@ import { useLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest.js";
-import { useNavigate } from "react-router-dom";
 import ChatModal from "../../components/ChatModal/ChatModal.jsx";
 
 const SinglePage = () => {
-  const navigate = useNavigate();
   const post = useLoaderData();
   const [saved, setSaved] = useState(post.isSaved);
   const { currentUserInfo } = useContext(AuthContext);

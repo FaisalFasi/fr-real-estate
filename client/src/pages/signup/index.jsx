@@ -106,7 +106,9 @@ const Signup = () => {
                 placeholder="Password"
               />
               <button disabled={loading}>Register</button>
-              {error && <span className="error">{error}</span>}
+              {error && <span className="error">Error...!</span>}
+              {loading && <span className="loading">Loading...!</span>}
+
               <Link to="/login">Do you have an account?</Link>
             </form>
           </div>
