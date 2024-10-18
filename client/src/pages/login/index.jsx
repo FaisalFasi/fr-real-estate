@@ -60,13 +60,6 @@ const Login = () => {
           <div className="formContainer">
             <form onSubmit={handleSubmit}>
               <h1 className="text-xl font-bold">Welcome Back</h1>
-              {/* <input
-                name="email"
-                autoComplete="on"
-                required
-                type="text"
-                placeholder="Email"
-              /> */}
               <input
                 name="username"
                 autoComplete="on"
@@ -82,7 +75,10 @@ const Login = () => {
                 placeholder="Password"
               />
               <button disabled={loading}>Login</button>
-              {error && <span className="error">{error}</span>}
+
+              {error && <span className="error">Error...!</span>}
+              {loading && <span className="loading">Loading...!</span>}
+
               <Link to="/register">{"Don't"} you have an account?</Link>
             </form>
           </div>

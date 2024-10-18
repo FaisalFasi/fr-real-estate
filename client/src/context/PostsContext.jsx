@@ -10,7 +10,7 @@ export const PostsProvider = ({ children }) => {
   const [savedPosts, setSavedPosts] = useState([]);
   const [createdPosts, setCreatedPosts] = useState([]); // Add state for created posts
 
-  const fetchSavedPosts = async () => {
+  const fetchSaved_Created_Posts = async () => {
     try {
       const response = await apiRequest.get("users/savedPostsByUser");
       if (response.status === 200) {
@@ -23,7 +23,7 @@ export const PostsProvider = ({ children }) => {
   };
   // Fetch saved posts from backend on mount
   useEffect(() => {
-    if (currentUserInfo) fetchSavedPosts(); // Call the fetch function when the component mounts
+    if (currentUserInfo) fetchSaved_Created_Posts(); // Call the fetch function when the component mounts
   }, []);
 
   const savePost = async (postId) => {
@@ -33,7 +33,7 @@ export const PostsProvider = ({ children }) => {
       });
       if (response.status === 200) {
         setSavedPosts((prevPosts) => [...prevPosts, { id: postId }]);
-        fetchSavedPosts();
+        fetchSaved_Created_Posts();
       }
     } catch (error) {
       console.error("Error saving post:", error);
@@ -64,7 +64,7 @@ export const PostsProvider = ({ children }) => {
 
       if (response.status >= 200 && response.status < 300) {
         alert("Post deleted successfully");
-        fetchSavedPosts();
+        fetchSaved_Created_Posts();
       } else {
         console.error("Error deleting post:", response.data.message);
         alert(response.data.message || "Error deleting post");
@@ -82,6 +82,7 @@ export const PostsProvider = ({ children }) => {
         savePost,
         unsavePost,
         handleDeletePost,
+        fetchSaved_Created_Posts,
       }}
     >
       {children}

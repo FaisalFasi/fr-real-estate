@@ -261,15 +261,8 @@
           }
 
           &:hover {
-            background-color: lightblue; /* Change button background color on hover */
+            background-color: #00d5ff; /* Change button background color on hover */
             cursor: pointer;
-            img {
-              background-color: lightblue; /* Change image background color on hover */
-            }
-
-            label {
-              background-color: lightblue; /* Change label background color on hover */
-            }
           }
         }
       }
@@ -278,6 +271,3 @@
     }
   }
 }
-// .singlePage::-webkit-scrollbar {
-//   display: none;
-// }

@@ -9,6 +9,9 @@
   padding: 20px;
   transition: all 0.3s ease;
 
+  @include sm {
+    gap: 0px;
+  }
   &:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.1);
     transform: translateY(-5px);

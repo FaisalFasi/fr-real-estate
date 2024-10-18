@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import ListComp from "../../components/ListComp/ListComp";
 import "./profile.scss";
 import Chat from "../../components/Chat/Chat";
@@ -20,6 +20,7 @@ const Profile = () => {
     unsavePost,
     handleDeletePost,
     createdPosts,
+    fetchSaved_Created_Posts,
   } = usePostsContext();
 
   const handleLogout = async () => {
@@ -31,6 +32,11 @@ const Profile = () => {
       console.error("Logout error:", err);
     }
   };
+  useEffect(() => {
+    if (currentUserInfo) {
+      fetchSaved_Created_Posts();
+    }
+  }, [currentUserInfo]);
 
   // Check if user is authenticated
   if (!currentUserInfo) {

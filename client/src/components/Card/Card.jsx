@@ -36,8 +36,10 @@ const Card = ({
     }
     if (isSaved) {
       onUnsavePost(post.id);
+      alert("Post unsaved");
     } else {
       onSave(post.id);
+      alert("Post saved");
     }
   };
 
@@ -99,7 +101,7 @@ const Card = ({
           {post?.userId != currentUserInfo?.id ? (
             <div className="icons">
               <div
-                className={`${isSaved ? "bg-green-300" : ""} icon`}
+                className={`${isSaved ? "bg-[#00ff7b]" : ""} icon`}
                 onClick={handleSaveOrUnsave}
               >
                 <img src="/save.png" alt="Save for later image" />

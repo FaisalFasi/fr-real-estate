@@ -168,13 +168,15 @@ const SinglePage = () => {
           </div>
           {post?.userId != currentUserInfo?.id && (
             <div className="buttons">
-              <button onClick={handleOpenModal}>
+              <button onClick={handleOpenModal} className="p-2 rounded-md">
                 <img src="/chat.png" alt="chat icon" />
                 <label htmlFor="">Send a Message</label>
               </button>
               <button
                 onClick={handleSave}
-                style={{ backgroundColor: saved ? "#2bbcff" : "" }}
+                className={`p-2 rounded-md hover:bg-[#00d5ff] ${
+                  saved ? "bg-[#00ff7b]" : ""
+                }`}
               >
                 <img src="/save.png" alt="save icon" />
                 <label htmlFor="">
