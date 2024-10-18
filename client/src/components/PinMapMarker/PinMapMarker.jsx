@@ -14,7 +14,7 @@ const PinMapMarker = ({ item }) => {
   return (
     <Marker position={[item.latitude, item.longitude]} icon={customIcon}>
       <Popup>
-        <div className="popupContainer ">
+        <div className="popupContainer">
           <img src={item.images[0] || "/noavatar.jpg"} alt="image" />
           <div className="textContainer">
             <Link to={`/${item.id}`}>
