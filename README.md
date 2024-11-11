@@ -43,7 +43,7 @@ A full-stack real estate platform where users can browse listings, save favorite
 ### 1. Clone the repository
 Clone both the **frontend** and **backend** repositories to your local machine.
 
-```bash
+
 git clone this repository
 cd fr-real-estate
 
