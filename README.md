@@ -69,7 +69,7 @@ Create a `.env` file in both the frontend and backend directories and add the fo
 ### Frontend
 
 
-Visit [http://localhost:3000](http://localhost:3000) to view the frontend.
+Visit [http://localhost:5173](http://localhost:5173) to view the frontend.
 
 ### Backend
 
