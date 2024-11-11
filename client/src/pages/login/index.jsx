@@ -37,7 +37,6 @@ const Login = () => {
       // add localStorage to store user data
       // adding user also adds the cookie( jwt token) coming from the server
       // localStorage.setItem("user", JSON.stringify(response.data));
-      console.log("Response login: ", response.data);
 
       updateUser(response.data);
       navigate("/");
@@ -51,30 +50,39 @@ const Login = () => {
 
   return (
     <div className="login">
-      <div className="formContainer">
-        <form onSubmit={handleSubmit}>
-          <h1>Welcome back</h1>
-          <input
-            name="username"
-            autoComplete="on"
-            required
-            type="text"
-            placeholder="Username"
-          />
-          <input
-            name="password"
-            required
-            autoComplete="on"
-            type="password"
-            placeholder="Password"
-          />
-          <button disabled={loading}>Login</button>
-          {error && <span className="error">{error}</span>}
-          <Link to="/register">{"Don't"} you have an account?</Link>
-        </form>
-      </div>
-      <div className="imgContainer">
-        <img src="/bg.png" alt="" />
+      <div className="relative w-full h-full min-h-[500px] max-h-[630px]">
+        <img
+          src="/images/bgSignUp.jpg"
+          alt="BG"
+          className="absolute top-0 left-0 w-full min-h-[500px] max-h-[630px] object-cover bg-black "
+        />
+        <div className="relative w-full h-fit flex  ">
+          <div className="formContainer">
+            <form onSubmit={handleSubmit}>
+              <h1 className="text-xl font-bold">Welcome Back</h1>
+              <input
+                name="username"
+                autoComplete="on"
+                required
+                type="text"
+                placeholder="Username"
+              />
+              <input
+                name="password"
+                required
+                autoComplete="on"
+                type="password"
+                placeholder="Password"
+              />
+              <button disabled={loading}>Login</button>
+
+              {error && <span className="error">Error...!</span>}
+              {loading && <span className="loading">Loading...!</span>}
+
+              <Link to="/register">{"Don't"} you have an account?</Link>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );

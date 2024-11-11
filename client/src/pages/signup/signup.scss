@@ -1,18 +1,36 @@
+@import "../../responsive.scss";
+
 .register {
   height: 100%;
   display: flex;
 
   .formContainer {
+    padding-top: 20px;
     flex: 3;
     height: 100%;
+    width: fit-content;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 30px 20px;
 
     form {
       display: flex;
       flex-direction: column;
       gap: 20px;
+      background: #fff;
+      padding: 20px;
+
+      @include lg {
+        padding: 60px;
+      }
+      @include md {
+        padding: 40px;
+      }
+      @include sm {
+        padding: 20px;
+        width: 100%;
+      }
 
       input {
         padding: 20px;
@@ -33,6 +51,14 @@
           background-color: #bed9d8;
           cursor: not-allowed;
         }
+      }
+      .error {
+        color: red;
+        font-size: 18px;
+      }
+      .loading {
+        color: #000000;
+        font-size: 18px;
       }
 
       span {

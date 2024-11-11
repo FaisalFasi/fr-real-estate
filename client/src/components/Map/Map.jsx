@@ -21,13 +21,12 @@ const Map = ({ items }) => {
       zoom={5} // map zoom
       scrollWheelZoom={true} // if we want to zoom the map with scrollbar
       attributionControl={false} // Disable Leaflet attribution
-      className="map"
+      className="map w-full h-full"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-
       {itemsArray?.map((item) => {
         return <PinMapMarker key={item.id} item={item} />; // adding marker on the places
       })}

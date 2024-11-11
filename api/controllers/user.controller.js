@@ -29,7 +29,6 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const id = req.params.id;
   const tokenUserId = req.userId;
-  console.log(id, tokenUserId);
   const { password, avatar, ...inputs } = req.body;
 
   if (id !== tokenUserId) {
@@ -65,9 +64,7 @@ const deleteUser = async (req, res) => {
   const id = req.params.id;
   const tokenUserId = req.userId;
 
-  console.log(id, tokenUserId);
   if (id !== tokenUserId) {
-    console.log("Not Authorized");
     return res.status(403).json({ message: "Not Authorized" });
   }
   try {
@@ -121,11 +118,11 @@ const savePost = async (req, res) => {
   }
 };
 
-const profilePosts = async (req, res) => {
+const savedPostsByUser = async (req, res) => {
   const tokenUserId = req.userId;
 
   try {
-    const allPosts = await prisma.post.findMany({
+    const createdPosts = await prisma.post.findMany({
       where: {
         userId: tokenUserId,
       },
@@ -136,12 +133,21 @@ const profilePosts = async (req, res) => {
       },
       include: {
         post: true,
+        user: {
+          select: {
+            username: true,
+            avatar: true,
+          },
+        },
       },
     });
 
     const savedPosts = saved.map((item) => item.post);
+    const postOwner = saved.length > 0 ? saved[0].user : null;
 
-    res.status(200).json({ allPosts, savedPosts });
+    // const postOwner = saved[0].user;
+
+    res.status(200).json({ createdPosts: createdPosts, savedPosts, postOwner });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "failed to get profile posts!" });
@@ -151,7 +157,6 @@ const profilePosts = async (req, res) => {
 const getNotificationNumber = async (req, res) => {
   const tokenUserId = req.userId;
 
-  console.log("Token User ID In Notification : ", tokenUserId);
   try {
     let number = await prisma.chat.count({
       where: {
@@ -165,7 +170,7 @@ const getNotificationNumber = async (req, res) => {
         },
       },
     });
-    console.log("Notification Count: ", number);
+
     res.status(200).json(number);
   } catch (err) {
     console.log("Failed to get notification number", err);
@@ -181,6 +186,6 @@ export {
   updateUser,
   deleteUser,
   savePost,
-  profilePosts,
+  savedPostsByUser,
   getNotificationNumber,
 };

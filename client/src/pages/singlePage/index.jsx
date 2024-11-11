@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./singlePage.scss";
 import Slider from "../../components/Slider/Slider";
 import Map from "../../components/Map/Map";
@@ -6,18 +6,28 @@ import { useLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest.js";
-import { useNavigate } from "react-router-dom";
+import ChatModal from "../../components/ChatModal/ChatModal.jsx";
 
 const SinglePage = () => {
-  const navigate = useNavigate();
   const post = useLoaderData();
   const [saved, setSaved] = useState(post.isSaved);
   const { currentUserInfo } = useContext(AuthContext);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const handleCloseModal = () => {
+    setIsOpenModal(false);
+  };
+  const handleOpenModal = () => {
+    if (!currentUserInfo) return alert("Please login to start a chat");
+    else setIsOpenModal(true);
+  };
+  const res = useLoaderData();
 
   const handleSave = async () => {
     // After react 19 update to useOptimisticReact Hook
     if (!currentUserInfo) {
-      navigate("/login");
+      alert("Please login to save the post");
+      // navigate("/login");
       return;
     }
 
@@ -27,13 +37,10 @@ const SinglePage = () => {
     try {
       const response = await apiRequest.post("users/save", { postId: post.id });
 
-      // Check response status and handle success (if needed)
+      // Check response status and handle success
       if (response.status === 200) {
-        console.log("Post saved successfully:", response.data);
-        // Optionally update UI or perform additional actions on success
+        alert("Post saved successfully.");
       }
-
-      console.log("Post saved successfully:", response.data);
     } catch (error) {
       console.error("Error saving post:", error);
 
@@ -53,7 +60,11 @@ const SinglePage = () => {
           <div className="info">
             <div className="top">
               <div className="post">
-                <h1>{post.title}</h1>
+                <h1>
+                  {post.title.length <= 30
+                    ? post.title
+                    : `${post.title.slice(0, 30)}...`}
+                </h1>
                 <div className="address">
                   <img src="/pin.png" alt="pin image" />
                   <span>{post.address}</span>
@@ -67,6 +78,8 @@ const SinglePage = () => {
             </div>
             <div
               className="bottom"
+              // what does the DOMPurify.sanitize do?
+              // It sanitizes the HTML string and removes any malicious code from it.
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(post.postDetail.description),
               }}
@@ -76,7 +89,7 @@ const SinglePage = () => {
       </div>
       <div className="features">
         <div className="wrapper">
-          <p className="title">General</p>
+          <h3 className="title">General</h3>
           <div className="listVertical">
             <div className="feature">
               <img src="/utility.png" alt="feature image" />
@@ -108,7 +121,7 @@ const SinglePage = () => {
               </div>
             </div>
           </div>
-          <p className="title"> Sizes</p>
+          <h3 className="title"> Sizes</h3>
           <div className="sizes">
             <div className="size">
               <img src="/size.png" alt="size image" />
@@ -123,7 +136,7 @@ const SinglePage = () => {
               <span>{post.bathroom} bathroom</span>
             </div>
           </div>
-          <p className="title">Nearby Places </p>
+          <h3 className="title">Nearby Places </h3>
           <div className="listHorizontal">
             <div className="feature">
               <img src="/school.png" alt="school image" />
@@ -143,29 +156,44 @@ const SinglePage = () => {
               <img src="/restaurant.png" alt="restaurant image" />
               <div className="featureText">
                 <span>Restaurant</span>
-                <p>{post.postDetail.resturant}m away</p>
+                <p>{post.postDetail.restaurant}m away</p>
               </div>
             </div>
           </div>
-          <p className="title">Location</p>
+          <h3 className="title">Location</h3>
           <div className="mapContainer">
             <Map items={post} />
           </div>
-          <div className="buttons">
-            <button>
-              <img src="/chat.png" alt="chat icon" />
-              Send a Message
-            </button>
-            <button
-              onClick={handleSave}
-              style={{ backgroundColor: saved ? "#fece51" : "white" }}
-            >
-              <img src="/save.png" alt="save icon" />
-              {saved ? "Place is Saved" : "Save The Place"}
-            </button>
-          </div>
+          {post?.userId != currentUserInfo?.id && (
+            <div className="buttons">
+              <button onClick={handleOpenModal} className="p-2 rounded-md">
+                <img src="/chat.png" alt="chat icon" />
+                <label htmlFor="">Send a Message</label>
+              </button>
+              <button
+                onClick={handleSave}
+                className={`p-2 rounded-md hover:bg-[#00d5ff] ${
+                  saved ? "bg-[#00ff7b]" : ""
+                }`}
+              >
+                <img src="/save.png" alt="save icon" />
+                <label htmlFor="">
+                  {saved ? "Place is Saved" : "Save The Place"}
+                </label>
+              </button>
+            </div>
+          )}
         </div>
       </div>
+
+      <ChatModal
+        isOpen={isOpenModal}
+        onClose={handleCloseModal}
+        postId={post?.id}
+        // postOwner={postOwner} // Pass the recipient user info
+        recipientUserId={post?.userId} // Pass the recipient user ID
+        currentUserInfo={currentUserInfo} // Pass current user info
+      />
     </div>
   );
 };

@@ -47,7 +47,7 @@ const UploadWidget = ({ uwConfig, setState }) => {
   return (
     <button
       id="upload_widget"
-      className="cloudinary-button"
+      className=" bg-[#2bbcff] px-4 py-2 font-bold mb-4 "
       onClick={handleUploadClick}
       disabled={!loaded} // Disable the button if Cloudinary SDK is not yet loaded
     >

@@ -1,50 +1,76 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import "./navbar.scss";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNotificationStore } from "../../lib/notificationStore.js";
+import MobileNavbar from "../MobileNavbar/MobileNavbar";
+const links = [
+  { path: "/", label: "Home" },
+  { path: "/about", label: "About" },
+  { path: "/contact", label: "Contact" },
+  { path: "/agents", label: "Agents" },
+];
 
 const Navbar = () => {
-  const [open, setOpen] = useState(false);
-  const { currentUserInfo } = useContext(AuthContext);
+  const currentPath = useLocation().pathname;
 
+  const [state, setState] = useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false,
+  });
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
+  };
+
+  const { currentUserInfo } = useContext(AuthContext);
   const fetchNotifications = useNotificationStore((state) => state.fetch);
   const number = useNotificationStore((state) => state.number);
 
-  // if (currentUserInfo) fetch();
-
-  useEffect(() => {
-
-    if (currentUserInfo) {
-      fetchNotifications().catch((error) => {
-        console.error("Error fetching notifications:", error);
-        // Optionally, you can handle the error here, e.g., show a message to the user
-      });
-    }
-  }, [currentUserInfo, fetchNotifications]);
+  if (currentUserInfo) fetchNotifications();
 
   return (
     <nav>
       <div className="left">
-        <a href="/" className="logo">
-          <img src="/logo.png" alt="logo" />
+        <Link href="/" className="logo">
+          <img src="/frEstate.png" alt="logo" />
           <span>FR-ESTATE</span>
-        </a>
-        <a href="">Home</a>
-        <a href="">About</a>
-        <a href="">Contact</a>
-        <a href="">Agents</a>
+        </Link>
+        <div className="links flex gap-6">
+          {links.map(({ path, label }) => (
+            <Link
+              key={path}
+              to={path}
+              className={`text-lg font-medium py-2 px-4 rounded transition duration-300 ease-in-out ${
+                currentPath === path ? "active" : ""
+              }`}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
       </div>
       <div className="right">
         {currentUserInfo ? (
           <div className="user">
-            <img
-              src={currentUserInfo.avatar || "/noavatar.jpg"}
-              alt="user image"
-            />
-            <span>{currentUserInfo.username}</span>
+            <div className="userName">
+              <img
+                src={currentUserInfo.avatar || "/noavatar.jpg"}
+                alt="user image"
+              />
+              <span>{currentUserInfo.username}</span>
+            </div>
             <Link to="/profile" className="profile">
               {number > 0 && <div className="notification">{number}</div>}
               <span>Profile</span>
@@ -62,17 +88,15 @@ const Navbar = () => {
           <img
             src="/menu.png"
             alt="menu"
-            onClick={() => setOpen((prev) => !prev)}
+            onClick={toggleDrawer("right", true)}
           />
         </div>
-        <div className={open ? "menu active" : "menu"}>
-          <a href="">Home</a>
-          <a href="">About</a>
-          <a href="">Contact</a>
-          <a href="">Agents</a>
-          <a href="">Sign in </a>
-          <a href="">Sign up</a>
-        </div>
+        <MobileNavbar
+          anchor="right"
+          state={state}
+          toggleDrawer={toggleDrawer}
+          currentUserInfo={currentUserInfo}
+        />
       </div>
     </nav>
   );

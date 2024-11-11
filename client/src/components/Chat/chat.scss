@@ -1,19 +1,23 @@
 @import "../../responsive.scss";
 
 .chat {
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
+
+  @include sm {
+    padding: 0 4px;
+  }
 
   .messages {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 20px 10px;
+    padding: 20px 0px;
 
     @include lg {
-      height: 300px;
+      height: 400px;
       overflow-y: scroll;
     }
     @include md {
@@ -26,7 +30,8 @@
     }
 
     h1 {
-      font-weight: 300;
+      font-size: 24px;
+      font-weight: 600;
     }
     .message {
       background-color: #fff;
@@ -53,8 +58,10 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    // justify-content: space-between;
+    justify-content: space-between;
     background-color: #fff;
+    border: 1px solid #2bbcff;
+    max-height: 500px;
 
     @include lg {
       justify-content: space-between;
@@ -70,7 +77,7 @@
     }
 
     .top {
-      background-color: #ffc68d;
+      background-color: #2bbcff;
       padding: 20px;
       display: flex;
       font-weight: bold;
@@ -94,15 +101,15 @@
       }
     }
     .center {
-      // height: 350px;
-      overflow-y: scroll;
+      overflow-y: auto; // Use auto to show scroll bar only when needed
       padding: 20px;
       display: flex;
       flex-direction: column;
       gap: 20px;
+      height: 100%; // Ensure it takes available height in the container
 
       @include lg {
-        height: 250px;
+        height: 450px;
       }
 
       @include md {
@@ -113,7 +120,7 @@
       }
 
       .chatMessage {
-        background-color: #b2d7fc;
+        // background-color: #b2d7fc;
         border-radius: 10px;
         padding: 4px 12px;
         display: flex;
@@ -139,7 +146,7 @@
       }
     }
     .bottom {
-      border-top: 2px solid #ffc68d;
+      border-top: 2px solid #2bbcff;
       height: 60px;
       display: flex;
       align-items: center;
@@ -155,7 +162,7 @@
       button {
         flex: 1;
         height: 100%;
-        background-color: #ffc68d;
+        background-color: #2bbcff;
         border: none;
         cursor: pointer;
         font-weight: bold;

@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import ListComp from "../../components/ListComp/ListComp";
 import "./profile.scss";
 import Chat from "../../components/Chat/Chat";
@@ -7,27 +7,36 @@ import { useLoaderData, useNavigate, Await } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
+import { usePostsContext } from "../../context/PostsContext.jsx";
 
 const Profile = () => {
   const { currentUserInfo, updateUser } = useContext(AuthContext);
-  const data = useLoaderData();
 
+  const data = useLoaderData();
   const navigate = useNavigate();
+
+  const {
+    savedPosts: savedPostsByContext,
+    unsavePost,
+    handleDeletePost,
+    createdPosts,
+    fetchSaved_Created_Posts,
+  } = usePostsContext();
 
   const handleLogout = async () => {
     try {
       await apiRequest.post("/auth/logout");
-
-      // remove user from local storage and redirect to home page
-      // removing user also removes the cookie (token)
-      console.log("Logout Response:  ");
-
       updateUser(null);
       navigate("/");
     } catch (err) {
       console.error("Logout error:", err);
     }
   };
+  useEffect(() => {
+    if (currentUserInfo) {
+      fetchSaved_Created_Posts();
+    }
+  }, [currentUserInfo]);
 
   // Check if user is authenticated
   if (!currentUserInfo) {
@@ -65,35 +74,47 @@ const Profile = () => {
           <div className="title">
             {/* <ListComp /> */}
 
-            <h1>My List</h1>
+            <h1>My Created Posts</h1>
             <Link to="/add">
               <button>Create New Post</button>
             </Link>
           </div>
-          <Suspense fallback={<p>Loading...</p>}>
-            <Await
-              resolve={data.postResponse}
-              errorElement={<p>Failed to load data</p>}
-            >
-              {(postResponse) => (
-                <ListComp posts={postResponse.data.allPosts} />
-              )}
-            </Await>
-          </Suspense>
+          <div className="postsComponents">
+            <Suspense fallback={<p>Loading...</p>}>
+              <Await
+                resolve={data.postResponse}
+                errorElement={<p>Failed to load data</p>}
+              >
+                {(postResponse) => (
+                  <ListComp
+                    posts={createdPosts}
+                    handleDeletePost={handleDeletePost}
+                  />
+                )}
+              </Await>
+            </Suspense>
+          </div>
+
           {/* <ListComp /> */}
           <div className="title">
             <h1>Saved List</h1>
           </div>
-          <Suspense fallback={<p>Loading...</p>}>
-            <Await
-              resolve={data.postResponse}
-              errorElement={<p>Failed to load data</p>}
-            >
-              {(postResponse) => (
-                <ListComp posts={postResponse.data.savedPosts} />
-              )}
-            </Await>
-          </Suspense>
+          <div className="postsComponents">
+            <Suspense fallback={<p>Loading...</p>}>
+              <Await
+                resolve={data.postResponse}
+                errorElement={<p>Failed to load data</p>}
+              >
+                {(postResponse) => (
+                  <ListComp
+                    posts={savedPostsByContext}
+                    postOwner={data?.postResponse?.data?.postOwner}
+                    onUnsavePost={unsavePost}
+                  />
+                )}
+              </Await>
+            </Suspense>
+          </div>
         </div>
       </div>
       <div className="chatContainer">
@@ -104,7 +125,8 @@ const Profile = () => {
               errorElement={<p>Failed to load chats!</p>}
             >
               {(chatResponse) => {
-                console.log(chatResponse?.data);
+                // return <Chat />;
+
                 return <Chat chats={chatResponse.data} />;
               }}
             </Await>

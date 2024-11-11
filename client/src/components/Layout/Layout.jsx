@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./layout.scss";
 import { Navigate, Outlet } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
@@ -8,7 +8,7 @@ import { AuthContext } from "../../context/AuthContext";
 const Layout = () => {
   return (
     <div className="layout">
-      <div className="navbar">
+      <div className="navbar ">
         <Navbar />
       </div>
       <div className="content">

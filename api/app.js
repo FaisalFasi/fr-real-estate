@@ -25,7 +25,8 @@ app.use(cookieParser(cookieParserSecret));
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000", // Replace with your client domain
+    origin: process.env.CLIENT_URL, // Replace with your client domain
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true, // Allow credentials (cookies)
   })
 );
@@ -36,6 +37,11 @@ app.use("/api/posts", postRoute);
 app.use("/api/test", testRoute);
 app.use("/api/chats", chatRoute);
 app.use("/api/messages", messageRoute);
+
+// The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "client/build", "index.html"));
+// });
 
 const server = http.createServer(app); // Create HTTP server using Express app
 const io = setupSocket(server); // Setup socket.io

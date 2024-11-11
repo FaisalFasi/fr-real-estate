@@ -1,31 +1,58 @@
+@import "../../responsive.scss";
+
 .profileUpdatePage {
   height: 100%;
   display: flex;
+  flex-direction: column;
+  // gap: 20px;
 
   .formContainer {
     flex: 3;
+    height: 100%;
+    width: fit-content;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px;
+
+    @include sm {
+      padding: 20px 10px;
+    }
+
     form {
       display: flex;
       flex-direction: column;
       gap: 20px;
+      background: #fff;
+      padding: 20px;
 
-      .item {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
+      h1 {
+        font-weight: 400;
+        font-size: 2.5rem;
 
-        label {
-        }
-
-        input {
-          padding: 20px;
-          border-radius: 5px;
-          border: 1px solid gray;
+        @include sm {
+          font-weight: 400;
+          font-size: 2rem;
+          padding: 10px;
         }
       }
+      @include lg {
+        padding: 40px;
+      }
+      @include md {
+        padding: 40px;
+      }
+      @include sm {
+        padding: 20px;
+        width: 100%;
+      }
+      input {
+        padding: 20px;
+        border: 1px solid gray;
+        border-radius: 5px;
+        width: 100%;
+      }
+
       button {
         padding: 20px;
         border-radius: 5px;
@@ -34,22 +61,65 @@
         color: white;
         font-weight: bold;
         cursor: pointer;
+
+        &:disabled {
+          background-color: #bed9d8;
+          cursor: not-allowed;
+        }
+      }
+
+      span {
+        color: rgba(255, 0, 0, 0.591);
+      }
+
+      a {
+        font-size: 14px;
+        color: gray;
+        border-bottom: 1px solid gray;
+        width: max-content;
       }
     }
   }
 
-  .sideContainer {
+  .imgContainer {
     flex: 2;
     background-color: #fcf5f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 100%;
+    }
+  }
+  .sideContainer {
+    flex: 2;
+    background-color: #d4eafb;
     display: flex;
     flex-direction: column;
     gap: 20px;
     align-items: center;
     justify-content: center;
+    padding: 40px 20px; // Increased padding for better spacing
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Subtle shadow for depth
+    transition: transform 0.3s ease, box-shadow 0.3s ease; // Smooth transition effects
+
+    &:hover {
+      transform: translateY(-5px); // Lift effect on hover
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); // Enhanced shadow on hover
+    }
 
     .avatar {
-      width: 50%;
+      width: 250px;
+      height: 250px;
       object-fit: cover;
+      border-radius: 10%; // Circular avatar
+      border: 4px solid #fff; // White border around avatar
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Subtle shadow for the avatar
+      transition: transform 0.3s ease; // Smooth transition for avatar
+
+      &:hover {
+        transform: scale(1.05); // Slight scale up on hover
+      }
     }
   }
 }

@@ -4,7 +4,7 @@ const setupSocket = (server) => {
   const io = new Server(server, {
     cors: {
       origin: process.env.CLIENT_URL || "http://localhost:5173", // Replace with your client domain
-      methods: ["GET", "POST"],
+      methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
     },
   });

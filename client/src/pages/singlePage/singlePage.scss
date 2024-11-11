@@ -3,21 +3,24 @@
 .singlePage {
   display: flex;
   height: 100%;
+  padding: 40px 40px;
 
   @include md {
     flex-direction: column;
     overflow: auto;
+    padding: 20px;
   }
   @include sm {
     flex-direction: column;
     overflow: auto;
+    padding: 20px 10px;
   }
 
   .details {
     flex: 3;
     height: 100%;
     overflow-y: scroll;
-    margin-top: 20px;
+
     @include md {
       flex: none;
       height: max-content;
@@ -31,7 +34,8 @@
     }
 
     .wrapper {
-      padding-right: 50px;
+      padding-right: 20px;
+
       @include md {
         padding-right: 0px;
       }
@@ -43,6 +47,7 @@
         .top {
           display: flex;
           justify-content: space-between;
+          gap: 20px;
 
           .post {
             display: flex;
@@ -50,7 +55,26 @@
             gap: 20px;
 
             h1 {
-              font-weight: 400;
+              width: 100%;
+              text-wrap: wrap;
+              font-size: 24px;
+              font-weight: 500;
+              font-weight: 600;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              // max-width: 20ch;
+
+              @include sm {
+                font-size: 20px;
+                text-overflow: ellipsis;
+                max-height: 6ch;
+                max-width: 20ch;
+
+                // overflow: hidden;
+                text-overflow: break-word;
+                word-break: break-all;
+                hyphens: auto;
+              }
             }
             .address {
               display: flex;
@@ -65,28 +89,37 @@
             }
             .price {
               padding: 5px;
-              background-color: rgba(254, 205, 81, 0.438);
+              background-color: #2bbcff;
               border-radius: 5px;
               width: max-content;
             }
           }
         }
         .user {
+          height: 100%;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           gap: 20px;
-          padding: 0px 50px;
+          padding: 20px 40px;
           border-radius: 10px;
-          background-color: rgba(254, 205, 81, 0.238);
+          background-color: #2bbcff;
           font-weight: 600;
+
+          @include sm {
+            max-height: fit-content;
+            padding: 20px;
+          }
 
           img {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
+          }
+          span {
+            text-align: center;
           }
         }
         .bottom {
@@ -103,6 +136,7 @@
     background: #2bbcff;
     height: 100%;
     overflow-y: scroll;
+    border-radius: 10px;
 
     @include md {
       flex: none;
@@ -137,7 +171,7 @@
         align-items: center;
 
         img {
-          background-color: rgba(254, 205, 81, 0.238);
+          background-color: #2bbcff53;
         }
         .featureText {
           span {
@@ -165,6 +199,13 @@
         gap: 20px;
         background-color: #fff;
         border-radius: 10px;
+        flex-wrap: wrap;
+
+        img {
+          @include sm {
+            display: none;
+          }
+        }
       }
 
       .sizes {
@@ -173,6 +214,10 @@
 
         @include lg {
           font-size: 12px;
+        }
+        @include sm {
+          font-size: 12px;
+          font-weight: 600;
         }
 
         .size {
@@ -204,12 +249,25 @@
         background-color: #fff;
         border: 1px solid #1900ff;
         border-radius: 5px;
-        cursor: pointer;
+
+        button {
+          display: flex;
+          gap: 10px;
+          align-items: center; /* Ensure alignment */
+
+          @include sm {
+            flex-direction: column;
+            align-items: center;
+          }
+
+          &:hover {
+            background-color: #00d5ff; /* Change button background color on hover */
+            cursor: pointer;
+          }
+        }
       }
+
       padding-bottom: 20px;
     }
   }
 }
-// .singlePage::-webkit-scrollbar {
-//   display: none;
-// }

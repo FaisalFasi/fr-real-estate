@@ -1,76 +1,158 @@
+@import "../../responsive.scss";
+
 .newPostPage {
   height: 100%;
   display: flex;
+  padding: 20px 40px;
+  flex-direction: column;
+  width: 100%;
 
-  .formContainer {
-    flex: 3;
-    overflow: scroll;
+  @include md {
+    padding: 10px 20px;
+  }
+  @include sm {
+    padding: 10px 10px;
+  }
+  .container {
+    display: flex;
+    min-width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
 
-    .wrapper {
-      margin: 30px 50px 100px 0px;
+    @include lg {
+      min-width: 100%;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    @include md {
+      flex-direction: column-reverse;
+    }
+    @include sm {
+      flex-direction: column-reverse;
+    }
 
-      form {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 20px;
+    .formContainer {
+      flex: 3;
+      overflow: scroll;
 
-        .item {
-          width: 30%;
+      @include md {
+        padding: 20px 0px;
+      }
+      @include sm {
+        padding: 20px 0px;
+        flex-direction: column-reverse;
+        overflow: hidden;
+      }
+      .wrapper {
+        // margin: 30px 50px 100px 0px;
+
+        @include sm {
+          width: 100%;
+        }
+
+        form {
           display: flex;
-          flex-direction: column;
-          gap: 5px;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 20px;
 
-          label {
+          .item {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            @include sm {
+              width: 100%;
+            }
+            input {
+              padding: 20px;
+              // border-radius: 5px;
+              border: 1px solid gray;
+
+              @include sm {
+                padding: 10px;
+              }
+            }
+
+            select {
+              border: 1px solid gray;
+              padding: 20px 5px;
+
+              @include md {
+                padding: 20px 5px;
+              }
+              @include sm {
+                padding: 10px;
+              }
+            }
+
+            &.description {
+              width: 100%;
+              // height: 320px;
+
+              .quill > .ql-container {
+                height: 320px;
+
+                @include sm {
+                  height: 220px;
+                }
+              }
+
+              .quill > .ql-container > .ql-editor {
+                height: 100%;
+                font-size: 16px;
+              }
+            }
           }
-
-          input {
-            padding: 20px;
+          .sendButton {
+            width: 30%;
             border-radius: 5px;
-            border: 1px solid gray;
-          }
+            border: none;
+            background-color: teal;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
 
-          select {
-            padding: 19px;
-          }
-
-          &.description {
-            width: 100%;
-            height: 320px;
-
-            .quill > .ql-container > .ql-editor {
-              height: 200px;
-              font-size: 16px;
+            @include sm {
+              padding: 10px 20px;
             }
           }
         }
-        .sendButton {
-          width: 30%;
-          border-radius: 5px;
-          border: none;
-          background-color: teal;
-          color: white;
-          font-weight: bold;
-          cursor: pointer;
-        }
       }
     }
-  }
 
-  .sideContainer {
-    flex: 2;
-    background-color: #fcf5f3;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-    justify-content: center;
-
-    img {
-      width: 50%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 5px;
+    .sideContainer {
+      flex: 2;
+      max-height: 80vh;
+      background: #caeeff;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      // padding: 20px;
+      .uploadImages {
+        display: flex;
+        // flex-direction: column;
+        flex-wrap: wrap;
+        width: 100%;
+        height: fit-content;
+        justify-content: center;
+        align-items: center;
+        overflow-y: scroll;
+        gap: 10px;
+        padding: 20px 0px;
+      }
+      img {
+        max-width: 40%;
+        width: 200px;
+        max-height: 180px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
     }
   }
 }

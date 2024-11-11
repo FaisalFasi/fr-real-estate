@@ -16,11 +16,21 @@ export const listPageLoader = async ({ request, params }) => {
 };
 
 export const profilePageLoader = async ({ request, params }) => {
-  const postPromise = await apiRequest("/users/profilePosts");
+  const postPromise = await apiRequest("/users/savedPostsByUser");
   const chatPromise = await apiRequest("/chats");
 
   return defer({
     postResponse: postPromise,
+    chatResponse: chatPromise,
+  });
+};
+
+export const sendMessageLoader = async ({ request, params }) => {
+  const messagePromise = await apiRequest("/message");
+  const chatPromise = await apiRequest("/chats");
+
+  return defer({
+    messagePromise: messagePromise,
     chatResponse: chatPromise,
   });
 };
