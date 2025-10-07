@@ -40,10 +40,13 @@ export const login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    //check if user exists
-    const user = await prisma.user.findUnique({
+    //check if user exists by username or email
+    const user = await prisma.user.findFirst({
       where: {
-        username,
+        OR: [
+          { username: username },
+          { email: username }
+        ]
       },
     });
 

@@ -64,13 +64,13 @@ const Signup = () => {
       // const response = await apiRequest.post("/auth/register", data);
 
       // add alert on successful registration and redirect to login page
-      window.alert("Account created successfully! Please login to continue.");
-      if (response?.data) {
+      if (response?.status === 201) {
+        window.alert("Account created successfully! Please login to continue.");
         navigate("/login");
       }
     } catch (err) {
-      console.log(err);
-      setError(err.response.data.message);
+      console.log("Signup error:", err);
+      setError(err.response?.data?.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -106,7 +106,7 @@ const Signup = () => {
                 placeholder="Password"
               />
               <button disabled={loading}>Register</button>
-              {error && <span className="error">Error...!</span>}
+              {error && <span className="error">{error}</span>}
               {loading && <span className="loading">Loading...!</span>}
 
               <Link to="/login">Do you have an account?</Link>

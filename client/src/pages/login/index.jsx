@@ -41,8 +41,8 @@ const Login = () => {
       updateUser(response.data);
       navigate("/");
     } catch (err) {
-      console.log(err.response.data.message);
-      setError(err.response.data.message);
+      console.log("Login error:", err);
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,7 @@ const Login = () => {
                 autoComplete="on"
                 required
                 type="text"
-                placeholder="Username"
+                placeholder="Username or Email"
               />
               <input
                 name="password"
@@ -76,7 +76,7 @@ const Login = () => {
               />
               <button disabled={loading}>Login</button>
 
-              {error && <span className="error">Error...!</span>}
+              {error && <span className="error">{error}</span>}
               {loading && <span className="loading">Loading...!</span>}
 
               <Link to="/register">{"Don't"} you have an account?</Link>
