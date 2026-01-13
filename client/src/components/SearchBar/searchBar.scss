@@ -1,98 +1,200 @@
 @import "../../responsive.scss";
+
 .searchBar {
   height: auto;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+    0 4px 16px rgba(43, 188, 255, 0.1);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2),
+      0 8px 24px rgba(43, 188, 255, 0.15);
+  }
 
   .type {
     display: flex;
+    background: rgba(248, 250, 252, 0.8);
+
     button {
-      padding: 16px 32px;
-      border: 1px solid #999;
+      flex: 1;
+      padding: 14px 24px;
+      border: none;
       cursor: pointer;
-      background: white;
+      background: transparent;
       text-transform: capitalize;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #666;
+      transition: all 0.3s ease;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: #2bbcff;
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
 
       &.active {
-        background: black;
-        color: white;
+        background: white;
+        color: #2bbcff;
+
+        &::after {
+          transform: scaleX(1);
+        }
       }
 
-      &:first-child {
-        border-top-left-radius: 5px;
-        border-right: none;
-      }
-      &:last-child {
-        border-top-right-radius: 5px;
-        border-left: none;
+      &:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.5);
+        color: #333;
       }
 
       @include sm {
-        padding: 5px 10px;
+        padding: 12px 16px;
+        font-size: 0.85rem;
       }
     }
   }
+
   form {
     display: flex;
     justify-content: space-between;
-    // gap: 5px;
+    align-items: stretch;
+    gap: 0;
 
     @include sm {
       flex-direction: column;
+      gap: 0;
     }
+
     input {
-      padding: 0px 10px;
-      width: 200px;
+      flex: 1;
+      padding: 0 20px;
       height: 64px;
-      flex: auto;
+      border: none;
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      background: white;
+      font-size: 0.95rem;
+      color: #333;
+      transition: all 0.2s ease;
+
+      &::placeholder {
+        color: #999;
+      }
+
+      &:focus {
+        outline: none;
+        background: rgba(43, 188, 255, 0.05);
+        border-color: #2bbcff;
+      }
+
+      &:last-of-type {
+        border-right: none;
+      }
 
       @include lg {
-        padding: 0px 10px;
+        padding: 0 18px;
+        font-size: 0.9rem;
 
         &:nth-child(2),
         &:nth-child(3) {
-          width: 140px;
-          border-left: 1px solid #999;
+          min-width: 140px;
         }
       }
+
       @include md {
-        width: 200px;
+        padding: 0 15px;
+        font-size: 0.9rem;
 
         &:nth-child(2),
         &:nth-child(3) {
-          width: 160px;
-          border-left: 1px solid #999;
+          min-width: 120px;
         }
       }
 
       @include sm {
-        height: 30px;
+        height: 50px;
         width: 100%;
-        padding: 10px;
-        border-bottom: 1px solid black;
+        padding: 12px 15px;
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+        &:last-of-type {
+          border-bottom: none;
+        }
       }
     }
 
     a {
       display: flex;
-      flex: 1;
+      flex: 0 0 auto;
       justify-content: center;
       align-items: center;
-      background-color: #2bbcff;
+      background: linear-gradient(135deg, #2bbcff 0%, #1a8cd8 100%);
+      min-width: 80px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
 
       &:hover {
-        background: #4b8bd0; /* Change logo color on hover to match icon color */
+        background: linear-gradient(135deg, #1a8cd8 0%, #2bbcff 100%);
+        box-shadow: 0 4px 12px rgba(43, 188, 255, 0.4);
+
+        &::before {
+          left: 100%;
+        }
       }
+
       button {
         border: none;
         cursor: pointer;
-        // background-color: #2bbcff;
+        background: transparent;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
 
         @include sm {
-          padding: 10px;
+          padding: 12px;
         }
 
         img {
           width: 24px;
           height: 24px;
+          filter: brightness(0) invert(1);
+          transition: transform 0.3s ease;
+        }
+
+        &:hover img {
+          transform: scale(1.1) rotate(5deg);
         }
       }
     }

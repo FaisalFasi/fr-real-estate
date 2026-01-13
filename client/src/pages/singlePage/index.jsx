@@ -136,27 +136,27 @@ const SinglePage = () => {
               <span>{post.bathroom} bathroom</span>
             </div>
           </div>
-          <h3 className="title">Nearby Places </h3>
+          <h3 className="title">Nearby Places</h3>
           <div className="listHorizontal">
             <div className="feature">
-              <img src="/school.png" alt="school image" />
+              <img src="/school.png" alt="school" />
               <div className="featureText">
                 <span>School</span>
-                <p>{post.postDetail.school}m away</p>
+                <p>{post.postDetail?.school || "N/A"}m away</p>
               </div>
             </div>
             <div className="feature">
-              <img src="/pet.png" alt="pet image" />
+              <img src="/bus.png" alt="bus stop" />
               <div className="featureText">
                 <span>Bus Stop</span>
-                <p>{post.postDetail.bus}m away</p>
+                <p>{post.postDetail?.bus || "N/A"}m away</p>
               </div>
             </div>
             <div className="feature">
-              <img src="/restaurant.png" alt="restaurant image" />
+              <img src="/restaurant.png" alt="restaurant" />
               <div className="featureText">
                 <span>Restaurant</span>
-                <p>{post.postDetail.restaurant}m away</p>
+                <p>{post.postDetail?.restaurant || "N/A"}m away</p>
               </div>
             </div>
           </div>

@@ -3,21 +3,25 @@
 .layout {
   min-height: 100vh;
   height: 100%;
-  margin-top: 100px;
+  margin-top: 72px;
 
   display: flex;
   flex-direction: column;
-  // background-color: #f7f7f7;
-  // background-color: #f4f4f4;
-  // background-color: #d0e4f3; /* Light Blue */
-  // background-color: #f5f5dc; /* Beige */
-  // background: linear-gradient(to bottom, #ffffff, #f0f4f8);
+
+  @include md {
+    margin-top: 70px;
+  }
+
+  @include sm {
+    margin-top: 68px;
+  }
 
   .navbar {
     position: fixed;
     top: 0;
-    background: #fff;
-    z-index: 50;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
     width: 100%;
   }
   .content {

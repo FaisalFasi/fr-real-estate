@@ -43,18 +43,16 @@ const Navbar = () => {
   return (
     <nav>
       <div className="left">
-        <Link href="/" className="logo">
+        <Link to="/" className="logo">
           <img src="/frEstate.png" alt="logo" />
           <span>FR-ESTATE</span>
         </Link>
-        <div className="links flex gap-6">
+        <div className="links">
           {links.map(({ path, label }) => (
             <Link
               key={path}
               to={path}
-              className={`text-lg font-medium py-2 px-4 rounded transition duration-300 ease-in-out ${
-                currentPath === path ? "active" : ""
-              }`}
+              className={currentPath === path ? "active" : ""}
             >
               {label}
             </Link>

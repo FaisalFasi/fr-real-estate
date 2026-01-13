@@ -111,20 +111,18 @@ const Chat = () => {
         {chats?.length > 0 ? (
           chats.map((chat, index) => (
             <div
-              key={`${chat?.id}-${index}`} // Use message ID combined with index to ensure uniqueness
-              className="message"
-              style={{
-                backgroundColor:
-                  chat.seenBy.includes(currentUserInfo.id) ||
-                  chatMessages?.id === chat.id
-                    ? "white"
-                    : "lightblue",
-              }}
+              key={`${chat?.id}-${index}`}
+              className={`message ${
+                chat.seenBy.includes(currentUserInfo.id) ||
+                chatMessages?.id === chat.id
+                  ? "seen"
+                  : "unseen"
+              }`}
               onClick={() => handleOpenChat(chat.id, chat.receiver)}
             >
               <img src={chat?.receiver?.avatar || "/noavatar.jpg"} alt="icon" />
               <span>{chat?.receiver?.username}</span>
-              <p>{chats?.lastMessage}</p>
+              <p>{chat?.lastMessage || "No messages yet"}</p>
             </div>
           ))
         ) : (
@@ -149,20 +147,10 @@ const Chat = () => {
           <div className="center">
             {chatMessages?.map((message, index) => (
               <div
-                key={`${message.id}-${index}`} // Use message ID combined with index to ensure uniqueness
-                className={` chatMessage ${
-                  message.userId === currentUserInfo.id
-                    ? "bg-[#b2d7fc]"
-                    : "bg-gray-200"
+                key={`${message.id}-${index}`}
+                className={`chatMessage ${
+                  message.userId === currentUserInfo.id ? "own" : "other"
                 }`}
-                style={{
-                  alignSelf:
-                    message.userId === currentUserInfo.id
-                      ? "flex-end"
-                      : "flex-start",
-                  textAlign:
-                    message.userId === currentUserInfo.id ? "right" : "left",
-                }}
               >
                 <p>{message.text}</p>
                 <span>{format(message.createdAt)}</span>

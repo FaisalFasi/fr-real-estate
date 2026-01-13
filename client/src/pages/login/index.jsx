@@ -10,7 +10,7 @@ import { AuthContext } from "../../context/AuthContext";
 const Login = () => {
   const { updateUser } = useContext(AuthContext);
 
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -41,8 +41,15 @@ const Login = () => {
       updateUser(response.data);
       navigate("/");
     } catch (err) {
-      console.log("Login error:", err);
-      setError(err.response?.data?.message || "Login failed. Please try again.");
+      console.error("Login error:", err);
+      const errorMessage = err.response?.data?.message || err.message || "Login failed. Please try again.";
+      setError(errorMessage);
+      console.error("Error details:", {
+        message: errorMessage,
+        response: err.response,
+        request: err.request,
+        config: err.config
+      });
     } finally {
       setLoading(false);
     }
@@ -76,7 +83,7 @@ const Login = () => {
               />
               <button disabled={loading}>Login</button>
 
-              {error && <span className="error">{error}</span>}
+              {error && <span className="error" style={{ color: 'red', fontWeight: 'bold' }}>{error}</span>}
               {loading && <span className="loading">Loading...!</span>}
 
               <Link to="/register">{"Don't"} you have an account?</Link>

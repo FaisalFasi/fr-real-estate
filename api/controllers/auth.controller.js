@@ -10,7 +10,10 @@ export const register = async (req, res) => {
 
     const isUserExists = await prisma.user.findFirst({
       where: {
-        username,
+        OR: [
+          { username },
+          { email }
+        ]
       },
     });
 
@@ -31,9 +34,10 @@ export const register = async (req, res) => {
 
     res.status(201).json({ message: "User created successfully", newUser });
   } catch (error) {
+    console.error("Error registering user:", error);
     res
       .status(500)
-      .json({ message: "An error occurred while creating the user" });
+      .json({ message: error.message || "An error occurred while creating the user" });
   }
 };
 export const login = async (req, res) => {

@@ -7,7 +7,7 @@ import apiRequest from "../../lib/apiRequest.js";
 import { z } from "zod";
 
 const Signup = () => {
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -69,8 +69,15 @@ const Signup = () => {
         navigate("/login");
       }
     } catch (err) {
-      console.log("Signup error:", err);
-      setError(err.response?.data?.message || "Registration failed. Please try again.");
+      console.error("Signup error:", err);
+      const errorMessage = err.response?.data?.message || err.message || "Registration failed. Please try again.";
+      setError(errorMessage);
+      console.error("Error details:", {
+        message: errorMessage,
+        response: err.response,
+        request: err.request,
+        config: err.config
+      });
     } finally {
       setLoading(false);
     }
@@ -106,7 +113,7 @@ const Signup = () => {
                 placeholder="Password"
               />
               <button disabled={loading}>Register</button>
-              {error && <span className="error">{error}</span>}
+              {error && <span className="error" style={{ color: 'red', fontWeight: 'bold' }}>{error}</span>}
               {loading && <span className="loading">Loading...!</span>}
 
               <Link to="/login">Do you have an account?</Link>
